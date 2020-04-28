@@ -46,7 +46,7 @@ end
 
 function weave_all()
   for folder in readdir(joinpath(repo_directory,"tutorials"))
-    folder == "test.jmd" && continue
+    folder == "appendix.jl" && continue
     weave_folder(folder)
   end
 end
