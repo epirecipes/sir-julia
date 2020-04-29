@@ -1,6 +1,6 @@
 
 using Pkg
-pkg"add https://github.com/sdwfrost/Gillespie.jl"
+Pkg.add(PackageSpec(url="https://github.com/sdwfrost/Gillespie.jl", rev="master"))
 
 
 using Gillespie
@@ -16,31 +16,31 @@ function sir_rates(x,parms)
   infection = β*c*I/N*S
   recovery = γ*I
   [infection,recovery]
-end
+end;
 
 
-sir_transitions = [[-1 1 0];[0 -1 1]]
+sir_transitions = [[-1 1 0];[0 -1 1]];
 
 
-tmax = 40.0
+tmax = 40.0;
 
 
-u0 = [990,10,0] # S,I,R
+u0 = [990,10,0]; # S,I,R
 
 
-p = [0.05,10.0,0.25] # β,c,γ
+p = [0.05,10.0,0.25]; # β,c,γ
 
 
 Random.seed!(1234);
 
 
-sir_result = ssa(u0,sir_rates,sir_transitions,p,tmax)
+sol_jump = ssa(u0,sir_rates,sir_transitions,p,tmax);
 
 
-sir_data = ssa_data(sir_result)
+df_jump = ssa_data(sol_jump);
 
 
-@df sir_data plot(:time,
+@df df_jump plot(:time,
     [:x1 :x2 :x3],
     label=["S" "I" "R"],
     xlabel="Time",

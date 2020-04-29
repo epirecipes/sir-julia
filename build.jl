@@ -40,7 +40,8 @@ function weave_file(folder,file,build_list=(:script,:html,:pdf,:github,:notebook
     dir = joinpath(repo_directory,"notebook",folder)
     isdir(dir) || mkdir(dir)
     args[:doctype] = "notebook"
-    Weave.convert_doc(tmp,joinpath(dir,file[1:end-4]*".ipynb"))
+    weave(tmp,doctype = "notebook",out_path=dir,args=args; kwargs...)
+    #Weave.convert_doc(tmp,joinpath(dir,file[1:end-4]*".ipynb"))
   end
 end
 

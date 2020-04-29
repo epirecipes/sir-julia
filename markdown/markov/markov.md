@@ -1,3 +1,6 @@
+# Markov model
+Simon Frost (@sdwfrost), 2020-04-27
+
 ## Introduction
 
 The Markov model approach taken here is:
@@ -27,12 +30,7 @@ using BenchmarkTools
 ````julia
 @inline function rate_to_proportion(r::Float64,t::Float64)
     1-exp(-r*t)
-end
-````
-
-
-````
-rate_to_proportion (generic function with 1 method)
+end;
 ````
 
 
@@ -56,12 +54,7 @@ function sir_markov!(du,u,p,t)
         du[3] = R+recovery
     end
     nothing
-end
-````
-
-
-````
-sir_markov! (generic function with 1 method)
+end;
 ````
 
 
@@ -87,15 +80,7 @@ t = 0.0:δt:tmax;
 ## Initial conditions
 
 ````julia
-u0 = [990,10,0]
-````
-
-
-````
-3-element Array{Int64,1}:
- 990
-  10
-   0
+u0 = [990,10,0]; # S,I,R
 ````
 
 
@@ -105,16 +90,7 @@ u0 = [990,10,0]
 ## Parameter values
 
 ````julia
-p = [0.05,10.0,0.25,δt]
-````
-
-
-````
-4-element Array{Float64,1}:
-  0.05
- 10.0
-  0.25
-  0.1
+p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
 ````
 
 
@@ -196,10 +172,10 @@ BenchmarkTools.Trial:
   memory estimate:  59.11 KiB
   allocs estimate:  479
   --------------
-  minimum time:     94.801 μs (0.00% GC)
-  median time:      134.499 μs (0.00% GC)
-  mean time:        153.808 μs (3.59% GC)
-  maximum time:     12.325 ms (97.72% GC)
+  minimum time:     103.600 μs (0.00% GC)
+  median time:      144.400 μs (0.00% GC)
+  mean time:        154.864 μs (2.98% GC)
+  maximum time:     8.473 ms (97.14% GC)
   --------------
   samples:          10000
   evals/sample:     1

@@ -1,3 +1,6 @@
+# Jump process
+Simon Frost (@sdwfrost), 2020-04-27
+
 ## Introduction
 
 This implementation defines the model as a combination of two jump processes, infection and recovery, simulated using the [Doob-Gillespie algorithm](https://en.wikipedia.org/wiki/Gillespie_algorithm).
@@ -32,14 +35,7 @@ function infection!(integrator)
   integrator.u[1] -= 1
   integrator.u[2] += 1
 end
-infection_jump = ConstantRateJump(infection_rate,infection!)
-````
-
-
-````
-DiffEqJump.ConstantRateJump{typeof(Main.WeaveSandBox40.infection_rate),type
-of(Main.WeaveSandBox40.infection!)}(Main.WeaveSandBox40.infection_rate, Mai
-n.WeaveSandBox40.infection!)
+infection_jump = ConstantRateJump(infection_rate,infection!);
 ````
 
 
@@ -54,14 +50,7 @@ function recovery!(integrator)
   integrator.u[2] -= 1
   integrator.u[3] += 1
 end
-recovery_jump = ConstantRateJump(recovery_rate,recovery!)
-````
-
-
-````
-DiffEqJump.ConstantRateJump{typeof(Main.WeaveSandBox40.recovery_rate),typeo
-f(Main.WeaveSandBox40.recovery!)}(Main.WeaveSandBox40.recovery_rate, Main.W
-eaveSandBox40.recovery!)
+recovery_jump = ConstantRateJump(recovery_rate,recovery!);
 ````
 
 
@@ -73,12 +62,7 @@ eaveSandBox40.recovery!)
 
 ````julia
 tmax = 40.0
-tspan = (0.0,tmax)
-````
-
-
-````
-(0.0, 40.0)
+tspan = (0.0,tmax);
 ````
 
 
@@ -89,12 +73,7 @@ For plotting, we can also define a separate time series.
 
 ````julia
 δt = 0.1
-t = 0:δt:tmax
-````
-
-
-````
-0.0:0.1:40.0
+t = 0:δt:tmax;
 ````
 
 
@@ -104,15 +83,7 @@ t = 0:δt:tmax
 ## Initial conditions
 
 ````julia
-u0 = [990,10,0] # S,I,R
-````
-
-
-````
-3-element Array{Int64,1}:
- 990
-  10
-   0
+u0 = [990,10,0]; # S,I,R
 ````
 
 
@@ -122,15 +93,7 @@ u0 = [990,10,0] # S,I,R
 ## Parameter values
 
 ````julia
-p = [0.05,10.0,0.25] # β,c,γ
-````
-
-
-````
-3-element Array{Float64,1}:
-  0.05
- 10.0
-  0.25
+p = [0.05,10.0,0.25]; # β,c,γ
 ````
 
 
@@ -171,7 +134,7 @@ u0: [990, 10, 0]
 
 
 ````julia
-prob_sir_jump = JumpProblem(prob,Direct(),infection_jump,recovery_jump)
+prob_jump = JumpProblem(prob,Direct(),infection_jump,recovery_jump)
 ````
 
 
@@ -185,55 +148,7 @@ Number of variable rate jumps: 0
 
 
 ````julia
-sol_sir_jump = solve(prob_sir_jump,FunctionMap())
-````
-
-
-````
-retcode: Success
-Interpolation: left-endpoint piecewise constant
-t: 3142-element Array{Float64,1}:
-  0.0
-  0.0
-  0.2228384006419953
-  0.2228384006419953
-  0.3025326037808457
-  0.3025326037808457
-  0.43465637905081045
-  0.43465637905081045
-  0.5087279128992886
-  0.5087279128992886
-  ⋮
- 38.27988753050961
- 38.33822817393438
- 38.33822817393438
- 38.57812734478321
- 38.57812734478321
- 39.57812734478321
- 39.8116742916962
- 39.8116742916962
- 40.0
-u: 3142-element Array{Array{Int64,1},1}:
- [990, 10, 0]
- [990, 10, 0]
- [990, 10, 0]
- [989, 11, 0]
- [989, 11, 0]
- [989, 10, 1]
- [989, 10, 1]
- [988, 11, 1]
- [988, 11, 1]
- [987, 12, 1]
- ⋮
- [209, 6, 785]
- [209, 6, 785]
- [209, 5, 786]
- [209, 5, 786]
- [208, 6, 786]
- [208, 6, 786]
- [208, 6, 786]
- [208, 5, 787]
- [208, 5, 787]
+sol_jump = solve(prob_jump,FunctionMap());
 ````
 
 
@@ -245,33 +160,7 @@ u: 3142-element Array{Array{Int64,1},1}:
 In order to get output comparable across implementations, we output the model at a fixed set of times.
 
 ````julia
-out_sir_jump = sol_sir_jump(t)
-````
-
-
-````
-t: 0.0:0.1:40.0
-u: 401-element Array{Array{Int64,1},1}:
- [990, 10, 0]
- [990, 10, 0]
- [990, 10, 0]
- [989, 11, 0]
- [989, 10, 1]
- [988, 11, 1]
- [987, 12, 1]
- [987, 12, 1]
- [987, 12, 1]
- [987, 12, 1]
- ⋮
- [208, 6, 786]
- [208, 6, 786]
- [208, 6, 786]
- [208, 6, 786]
- [208, 6, 786]
- [208, 6, 786]
- [208, 6, 786]
- [208, 5, 787]
- [208, 5, 787]
+out_jump = sol_jump(t);
 ````
 
 
@@ -281,8 +170,8 @@ u: 401-element Array{Array{Int64,1},1}:
 We can convert to a dataframe for convenience.
 
 ````julia
-df_sir_jump = DataFrame(out_sir_jump')
-df_sir_jump[!,:t] = out_sir_jump.t;
+df_jump = DataFrame(out_jump')
+df_jump[!,:t] = out_jump.t;
 ````
 
 
@@ -294,7 +183,7 @@ df_sir_jump[!,:t] = out_sir_jump.t;
 We can now plot the results.
 
 ````julia
-@df df_sir_jump plot(:t,
+@df df_jump plot(:t,
     [:x1 :x2 :x3],
     label=["S" "I" "R"],
     xlabel="Time",
@@ -309,7 +198,7 @@ We can now plot the results.
 ## Benchmarking
 
 ````julia
-@benchmark solve(prob_sir_jump,FunctionMap())
+@benchmark solve(prob_jump,FunctionMap())
 ````
 
 
@@ -318,12 +207,12 @@ BenchmarkTools.Trial:
   memory estimate:  13.14 KiB
   allocs estimate:  121
   --------------
-  minimum time:     15.099 μs (0.00% GC)
-  median time:      580.750 μs (0.00% GC)
-  mean time:        709.480 μs (6.23% GC)
-  maximum time:     12.771 ms (94.04% GC)
+  minimum time:     14.600 μs (0.00% GC)
+  median time:      543.600 μs (0.00% GC)
+  mean time:        583.277 μs (5.72% GC)
+  maximum time:     6.527 ms (90.03% GC)
   --------------
-  samples:          7002
+  samples:          8538
   evals/sample:     1
 ````
 

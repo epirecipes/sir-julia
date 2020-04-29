@@ -8,7 +8,7 @@ using BenchmarkTools
 
 @inline function rate_to_proportion(r::Float64,t::Float64)
     1-exp(-r*t)
-end
+end;
 
 
 function sir_map!(du,u,p,t)
@@ -23,7 +23,7 @@ function sir_map!(du,u,p,t)
         du[3] = R+recovery
     end
     nothing
-end
+end;
 
 
 δt = 0.1
@@ -33,16 +33,16 @@ tspan = (0.0,nsteps)
 t = 0.0:δt:tmax;
 
 
-u0 = [990.0,10.0,0.0]
+u0 = [990.0,10.0,0.0];
 
 
-p = [0.05,10.0,0.25,δt] # β,c,γ,δt
+p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
 
 
 prob_map = DiscreteProblem(sir_map!,u0,tspan,p)
 
 
-sol_map = solve(prob_map,solver=FunctionMap)
+sol_map = solve(prob_map,solver=FunctionMap);
 
 
 df_map = DataFrame(sol_map')

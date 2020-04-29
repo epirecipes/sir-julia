@@ -1,3 +1,6 @@
+# Ordinary differential equation model
+Simon Frost (@sdwfrost), 2020-04-27
+
 ## Introduction
 
 The classical ODE version of the SIR model is:
@@ -61,15 +64,7 @@ t = 0.0:δt:tmax;
 ## Initial conditions
 
 ````julia
-u0 = [990.0,10.0,0.0]
-````
-
-
-````
-3-element Array{Float64,1}:
- 990.0
-  10.0
-   0.0
+u0 = [990.0,10.0,0.0]; # S,I.R
 ````
 
 
@@ -79,7 +74,7 @@ u0 = [990.0,10.0,0.0]
 ## Parameter values
 
 ````julia
-p = [0.05,10.0,0.25];
+p = [0.05,10.0,0.25]; # β,c,γ
 ````
 
 
@@ -150,10 +145,10 @@ BenchmarkTools.Trial:
   memory estimate:  31.23 KiB
   allocs estimate:  334
   --------------
-  minimum time:     34.101 μs (0.00% GC)
-  median time:      38.100 μs (0.00% GC)
-  mean time:        47.370 μs (5.92% GC)
-  maximum time:     14.498 ms (98.70% GC)
+  minimum time:     32.899 μs (0.00% GC)
+  median time:      42.199 μs (0.00% GC)
+  mean time:        51.336 μs (6.20% GC)
+  maximum time:     11.317 ms (98.68% GC)
   --------------
   samples:          10000
   evals/sample:     1

@@ -1,8 +1,5 @@
----
-title: Markov model
-author: Simon Frost (@sdwfrost)
-date: 2020-04-27
----
+# Markov model
+Simon Frost (@sdwfrost), 2020-04-27
 
 ## Introduction
 
@@ -29,7 +26,7 @@ using BenchmarkTools
 ```julia
 @inline function rate_to_proportion(r::Float64,t::Float64)
     1-exp(-r*t)
-end
+end;
 ```
 
 ## Transitions
@@ -49,7 +46,7 @@ function sir_markov!(du,u,p,t)
         du[3] = R+recovery
     end
     nothing
-end
+end;
 ```
 
 ## Time domain
@@ -67,13 +64,13 @@ t = 0.0:δt:tmax;
 ## Initial conditions
 
 ```julia
-u0 = [990,10,0]
+u0 = [990,10,0]; # S,I,R
 ```
 
 ## Parameter values
 
 ```julia
-p = [0.05,10.0,0.25,δt]
+p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
 ```
 
 ## Random number seed

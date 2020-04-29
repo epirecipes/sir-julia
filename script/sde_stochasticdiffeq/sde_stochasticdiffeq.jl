@@ -17,7 +17,7 @@ function sir_ode!(du,u,p,t)
         du[3] = γ*I
     end
     nothing
-end
+end;
 
 
 # Define a sparse matrix by making a dense matrix and setting some values as not zero
@@ -26,7 +26,7 @@ A[1,1] = 1
 A[2,1] = 1
 A[2,2] = 1
 A[3,2] = 1
-A = SparseArrays.sparse(A)
+A = SparseArrays.sparse(A);
 
 
 # Make `g` write the sparse matrix values
@@ -40,7 +40,7 @@ function sir_noise!(du,u,p,t)
     du[2,1] = sqrt(ifrac)
     du[2,2] = -sqrt(rfrac)
     du[3,2] = sqrt(rfrac)
-end
+end;
 
 
 δt = 0.1
@@ -49,10 +49,10 @@ tspan = (0.0,tmax)
 t = 0.0:δt:tmax;
 
 
-u0 = [990.0,10.0,0.0]
+u0 = [990.0,10.0,0.0]; # S,I,R
 
 
-p = [0.05,10.0,0.25]
+p = [0.05,10.0,0.25]; # β,c,γ
 
 
 Random.seed!(1234);
@@ -61,7 +61,7 @@ Random.seed!(1234);
 prob_sde = SDEProblem(sir_ode!,sir_noise!,u0,tspan,p,noise_rate_prototype=A)
 
 
-sol_sde = solve(prob_sde,SRA1())
+sol_sde = solve(prob_sde,SRA1());
 
 
 df_sde = DataFrame(sol_sde(t)')

@@ -1,8 +1,5 @@
----
-title: Jump process
-author: Simon Frost (@sdwfrost)
-date: 2020-04-27
----
+# Jump process
+Simon Frost (@sdwfrost), 2020-04-27
 
 ## Introduction
 
@@ -34,7 +31,7 @@ function infection!(integrator)
   integrator.u[1] -= 1
   integrator.u[2] += 1
 end
-infection_jump = ConstantRateJump(infection_rate,infection!)
+infection_jump = ConstantRateJump(infection_rate,infection!);
 ```
 
 ```julia
@@ -47,7 +44,7 @@ function recovery!(integrator)
   integrator.u[2] -= 1
   integrator.u[3] += 1
 end
-recovery_jump = ConstantRateJump(recovery_rate,recovery!)
+recovery_jump = ConstantRateJump(recovery_rate,recovery!);
 ```
 
 
@@ -55,26 +52,26 @@ recovery_jump = ConstantRateJump(recovery_rate,recovery!)
 
 ```julia
 tmax = 40.0
-tspan = (0.0,tmax)
+tspan = (0.0,tmax);
 ```
 
 For plotting, we can also define a separate time series.
 
 ```julia
 δt = 0.1
-t = 0:δt:tmax
+t = 0:δt:tmax;
 ```
 
 ## Initial conditions
 
 ```julia
-u0 = [990,10,0] # S,I,R
+u0 = [990,10,0]; # S,I,R
 ```
 
 ## Parameter values
 
 ```julia
-p = [0.05,10.0,0.25] # β,c,γ
+p = [0.05,10.0,0.25]; # β,c,γ
 ```
 
 ## Random number seed
@@ -98,11 +95,11 @@ prob = DiscreteProblem(u0,tspan,p)
 ```
 
 ```julia
-prob_sir_jump = JumpProblem(prob,Direct(),infection_jump,recovery_jump)
+prob_jump = JumpProblem(prob,Direct(),infection_jump,recovery_jump)
 ```
 
 ```julia
-sol_sir_jump = solve(prob_sir_jump,FunctionMap())
+sol_jump = solve(prob_jump,FunctionMap());
 ```
 
 ## Post-processing
@@ -110,14 +107,14 @@ sol_sir_jump = solve(prob_sir_jump,FunctionMap())
 In order to get output comparable across implementations, we output the model at a fixed set of times.
 
 ```julia
-out_sir_jump = sol_sir_jump(t)
+out_jump = sol_jump(t);
 ```
 
 We can convert to a dataframe for convenience.
 
 ```julia
-df_sir_jump = DataFrame(out_sir_jump')
-df_sir_jump[!,:t] = out_sir_jump.t;
+df_jump = DataFrame(out_jump')
+df_jump[!,:t] = out_jump.t;
 ```
 
 ## Plotting
@@ -125,7 +122,7 @@ df_sir_jump[!,:t] = out_sir_jump.t;
 We can now plot the results.
 
 ```julia
-@df df_sir_jump plot(:t,
+@df df_jump plot(:t,
     [:x1 :x2 :x3],
     label=["S" "I" "R"],
     xlabel="Time",
@@ -135,7 +132,7 @@ We can now plot the results.
 ## Benchmarking
 
 ```julia
-@benchmark solve(prob_sir_jump,FunctionMap())
+@benchmark solve(prob_jump,FunctionMap())
 ```
 
 ```{julia; echo=false; skip="notebook"}

@@ -1,8 +1,5 @@
----
-title: Jump process using Gillespie.jl
-author: Simon Frost (@sdwfrost)
-date: 2020-04-27
----
+# Jump process using Gillespie.jl
+Simon Frost (@sdwfrost), 2020-04-27
 
 ## Introduction
 
@@ -14,7 +11,7 @@ We will need to install the (unregistered) package, `Gillespie.jl`
 
 ```{julia;echo=false}
 using Pkg
-pkg"add https://github.com/sdwfrost/Gillespie.jl"
+Pkg.add(PackageSpec(url="https://github.com/sdwfrost/Gillespie.jl", rev="master"))
 ```
 
 The library can now be loaded along with the other packages.
@@ -38,13 +35,13 @@ function sir_rates(x,parms)
   infection = β*c*I/N*S
   recovery = γ*I
   [infection,recovery]
-end
+end;
 ```
 
 The transitions are defined as an array of arrays.
 
 ```julia
-sir_transitions = [[-1 1 0];[0 -1 1]]
+sir_transitions = [[-1 1 0];[0 -1 1]];
 ```
 
 This means that the first rate results in the first variable going down by one, and the second variable going up by one, with the third variable remaining unchanged, etc..
@@ -53,19 +50,19 @@ This means that the first rate results in the first variable going down by one, 
 ## Time domain
 
 ```julia
-tmax = 40.0
+tmax = 40.0;
 ```
 
 ## Initial conditions
 
 ```julia
-u0 = [990,10,0] # S,I,R
+u0 = [990,10,0]; # S,I,R
 ```
 
 ## Parameter values
 
 ```julia
-p = [0.05,10.0,0.25] # β,c,γ
+p = [0.05,10.0,0.25]; # β,c,γ
 ```
 
 
@@ -80,7 +77,7 @@ Random.seed!(1234);
 ## Running the model
 
 ```julia
-sir_result = ssa(u0,sir_rates,sir_transitions,p,tmax)
+sol_jump = ssa(u0,sir_rates,sir_transitions,p,tmax);
 ```
 
 ## Post-processing
@@ -88,7 +85,7 @@ sir_result = ssa(u0,sir_rates,sir_transitions,p,tmax)
 `Gillespie.jl` has a convenience function to convert output to a `DataFrame`.
 
 ```julia
-sir_data = ssa_data(sir_result)
+df_jump = ssa_data(sol_jump);
 ```
 
 ## Plotting
@@ -96,7 +93,7 @@ sir_data = ssa_data(sir_result)
 We can now plot the results.
 
 ```julia
-@df sir_data plot(:time,
+@df df_jump plot(:time,
     [:x1 :x2 :x3],
     label=["S" "I" "R"],
     xlabel="Time",

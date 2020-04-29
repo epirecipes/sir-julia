@@ -25,7 +25,7 @@ function sir_sde!(du,u,p,t)
         if du[i] < 0 du[i]=0 end
     end
     nothing
-end
+end;
 
 
 δt = 0.1
@@ -35,19 +35,19 @@ tspan = (0.0,nsteps)
 t = 0.0:δt:tmax;
 
 
-u0 = [990.0,10.0,0.0]
+u0 = [990.0,10.0,0.0]; # S,I,R
 
 
-p = [0.05,10.0,0.25,δt]
+p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
 
 
 Random.seed!(1234);
 
 
-prob_sde = DiscreteProblem(sir_sde!,u0,tspan,p);
+prob_sde = DiscreteProblem(sir_sde!,u0,tspan,p)
 
 
-sol_sde = solve(prob_sde,solver=FunctionMap)
+sol_sde = solve(prob_sde,solver=FunctionMap);
 
 
 df_sde = DataFrame(sol_sde')

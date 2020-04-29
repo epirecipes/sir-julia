@@ -1,8 +1,5 @@
----
-title: Ordinary differential equation model
-author: Simon Frost (@sdwfrost)
-date: 2020-04-27
----
+# Ordinary differential equation model
+Simon Frost (@sdwfrost), 2020-04-27
 
 ## Introduction
 
@@ -55,13 +52,13 @@ t = 0.0:δt:tmax;
 ## Initial conditions
 
 ```julia
-u0 = [990.0,10.0,0.0]
+u0 = [990.0,10.0,0.0]; # S,I.R
 ```
 
 ## Parameter values
 
 ```julia
-p = [0.05,10.0,0.25];
+p = [0.05,10.0,0.25]; # β,c,γ
 ```
 
 ## Running the model

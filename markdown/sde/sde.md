@@ -1,3 +1,6 @@
+# Stochastic differential equation
+Simon Frost (@sdwfrost), 2020-04-27
+
 ## Introduction
 
 A stochastic differential equation version of the SIR model is:
@@ -42,12 +45,7 @@ function sir_sde!(du,u,p,t)
         if du[i] < 0 du[i]=0 end
     end
     nothing
-end
-````
-
-
-````
-sir_sde! (generic function with 1 method)
+end;
 ````
 
 
@@ -73,15 +71,7 @@ t = 0.0:δt:tmax;
 ## Initial conditions
 
 ````julia
-u0 = [990.0,10.0,0.0]
-````
-
-
-````
-3-element Array{Float64,1}:
- 990.0
-  10.0
-   0.0
+u0 = [990.0,10.0,0.0]; # S,I,R
 ````
 
 
@@ -91,16 +81,7 @@ u0 = [990.0,10.0,0.0]
 ## Parameter values
 
 ````julia
-p = [0.05,10.0,0.25,δt]
-````
-
-
-````
-4-element Array{Float64,1}:
-  0.05
- 10.0
-  0.25
-  0.1
+p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
 ````
 
 
@@ -120,61 +101,21 @@ Random.seed!(1234);
 ## Running the model
 
 ````julia
-prob_sde = DiscreteProblem(sir_sde!,u0,tspan,p);
+prob_sde = DiscreteProblem(sir_sde!,u0,tspan,p)
+````
+
+
+````
+DiscreteProblem with uType Array{Float64,1} and tType Float64. In-place: tr
+ue
+timespan: (0.0, 400.0)
+u0: [990.0, 10.0, 0.0]
 ````
 
 
 
 ````julia
-sol_sde = solve(prob_sde,solver=FunctionMap)
-````
-
-
-````
-retcode: Success
-Interpolation: left-endpoint piecewise constant
-t: 401-element Array{Float64,1}:
-   0.0
-   1.0
-   2.0
-   3.0
-   4.0
-   5.0
-   6.0
-   7.0
-   8.0
-   9.0
-   ⋮
- 392.0
- 393.0
- 394.0
- 395.0
- 396.0
- 397.0
- 398.0
- 399.0
- 400.0
-u: 401-element Array{Array{Float64,1},1}:
- [990.0, 10.0, 0.0]
- [988.8947671522094, 11.30610475571904, 0.0]
- [988.7055274430037, 11.69272699154772, 0.0]
- [987.4706638900711, 11.439388577532924, 1.4882019669473676]
- [986.5057382330858, 12.263646921629789, 1.6288692798357647]
- [985.5104541149187, 13.238597190929257, 1.6492031287034035]
- [985.3109877737326, 13.118197077827924, 1.9690695829908509]
- [984.5620377717174, 12.478152468995, 3.3580641938389024]
- [984.5966431703534, 12.070101461308104, 3.731509802889783]
- [984.1962508229602, 11.965649933497922, 4.23635367809324]
- ⋮
- [203.93798918731858, 20.11670266219165, 776.3435625850418]
- [203.93331045829538, 17.890067678388853, 778.5748762978678]
- [203.96220308765527, 17.43879995813703, 778.9972513887598]
- [203.76541827427786, 17.296012920495063, 779.3368232397792]
- [203.69082753114262, 15.647193547495467, 781.060233355914]
- [203.4023893577508, 16.33385318992283, 780.6620118868784]
- [203.51099967961449, 16.85237753507438, 780.0348772198632]
- [203.65506395608364, 15.662816464260057, 781.0803740142084]
- [203.17463327529836, 14.383186887926252, 782.8404342713275]
+sol_sde = solve(prob_sde,solver=FunctionMap);
 ````
 
 
@@ -223,10 +164,10 @@ BenchmarkTools.Trial:
   memory estimate:  59.11 KiB
   allocs estimate:  479
   --------------
-  minimum time:     70.499 μs (0.00% GC)
-  median time:      75.900 μs (0.00% GC)
-  mean time:        91.896 μs (6.36% GC)
-  maximum time:     12.356 ms (98.98% GC)
+  minimum time:     69.800 μs (0.00% GC)
+  median time:      81.500 μs (0.00% GC)
+  mean time:        91.846 μs (5.49% GC)
+  maximum time:     9.010 ms (98.59% GC)
   --------------
   samples:          10000
   evals/sample:     1

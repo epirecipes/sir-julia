@@ -1,8 +1,5 @@
----
-title: Stochastic differential equation
-author: Simon Frost (@sdwfrost)
-date: 2020-04-27
----
+# Stochastic differential equation
+Simon Frost (@sdwfrost), 2020-04-27
 
 ## Introduction
 
@@ -44,7 +41,7 @@ function sir_sde!(du,u,p,t)
         if du[i] < 0 du[i]=0 end
     end
     nothing
-end
+end;
 ```
 
 ## Time domain
@@ -62,13 +59,13 @@ t = 0.0:δt:tmax;
 ## Initial conditions
 
 ```julia
-u0 = [990.0,10.0,0.0]
+u0 = [990.0,10.0,0.0]; # S,I,R
 ```
 
 ## Parameter values
 
 ```julia
-p = [0.05,10.0,0.25,δt]
+p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
 ```
 
 ## Random number seed
@@ -80,11 +77,11 @@ Random.seed!(1234);
 ## Running the model
 
 ```julia
-prob_sde = DiscreteProblem(sir_sde!,u0,tspan,p);
+prob_sde = DiscreteProblem(sir_sde!,u0,tspan,p)
 ```
 
 ```julia
-sol_sde = solve(prob_sde,solver=FunctionMap)
+sol_sde = solve(prob_sde,solver=FunctionMap);
 ```
 
 ## Post-processing

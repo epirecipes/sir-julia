@@ -1,8 +1,5 @@
----
-title: Stochastic differential equation model using StochasticDiffEq.jl
-author: Simon Frost (@sdwfrost)
-date: 2020-04-27
----
+# Stochastic differential equation model using StochasticDiffEq.jl
+Simon Frost (@sdwfrost), 2020-04-27
 
 ## Introduction
 
@@ -40,7 +37,7 @@ function sir_ode!(du,u,p,t)
         du[3] = γ*I
     end
     nothing
-end
+end;
 ```
 
 ```julia
@@ -50,7 +47,7 @@ A[1,1] = 1
 A[2,1] = 1
 A[2,2] = 1
 A[3,2] = 1
-A = SparseArrays.sparse(A)
+A = SparseArrays.sparse(A);
 ```
 
 ```julia
@@ -65,7 +62,7 @@ function sir_noise!(du,u,p,t)
     du[2,1] = sqrt(ifrac)
     du[2,2] = -sqrt(rfrac)
     du[3,2] = sqrt(rfrac)
-end
+end;
 ```
 
 ## Time domain
@@ -82,13 +79,13 @@ t = 0.0:δt:tmax;
 ## Initial conditions
 
 ```julia
-u0 = [990.0,10.0,0.0]
+u0 = [990.0,10.0,0.0]; # S,I,R
 ```
 
 ## Parameter values
 
 ```julia
-p = [0.05,10.0,0.25]
+p = [0.05,10.0,0.25]; # β,c,γ
 ```
 
 ## Random number seed
@@ -104,7 +101,7 @@ prob_sde = SDEProblem(sir_ode!,sir_noise!,u0,tspan,p,noise_rate_prototype=A)
 ```
 
 ```julia
-sol_sde = solve(prob_sde,SRA1())
+sol_sde = solve(prob_sde,SRA1());
 ```
 
 ## Post-processing

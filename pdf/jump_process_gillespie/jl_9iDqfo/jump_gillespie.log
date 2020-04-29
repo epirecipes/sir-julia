@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999992 (MiKTeX 2.9.7380 64-bit) (preloaded format=xelatex 2020.4.26)  28 APR 2020 15:58
+This is XeTeX, Version 3.14159265-2.6-0.999992 (MiKTeX 2.9.7380 64-bit) (preloaded format=xelatex 2020.4.26)  28 APR 2020 22:10
 entering extended mode
 **./jump_gillespie.tex
 (jump_gillespie.tex
@@ -439,12 +439,7 @@ Package mhchem Warning: You did not specify a 'version' option for the mhchem
 .
 
 )
-("C:\Users\sdwfr\AppData\Local\Programs\MiKTeX 2.9\tex/generic/stringenc\se-asc
-ii-print.def"
-File: se-ascii-print.def 2019/11/29 v1.12 stringenc: Printable ASCII characters
-
-)
-Package hyperref Info: Option `colorlinks' set `true' on input line 21.
+Package hyperref Info: Option `colorlinks' set `true' on input line 20.
 
 ("C:\Users\sdwfr\AppData\Local\Programs\MiKTeX 2.9\tex/latex/upquote\upquote.st
 y"
@@ -502,31 +497,31 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
 No file jump_gillespie.aux.
 \openout1 = `jump_gillespie.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 124.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 117.
 LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 1
-24.
+17.
 ("C:\Users\sdwfr\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\ts1cmr.fd"
 File: ts1cmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 124.
-LaTeX Font Info:    ... okay on input line 124.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
 
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -563,7 +558,7 @@ LaTeX Font Info:    ... okay on input line 124.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Info: Redefining \microtypecontext on input line 124.
+LaTeX Info: Redefining \microtypecontext on input line 117.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: No adjustment of tracking.
@@ -576,7 +571,7 @@ File: mt-LatinModernRoman.cfg 2013/03/13 v1.0 microtype config. file: Latin Mod
 ern Roman (RS)
 )
 \AtBeginShipoutBox=\box51
-Package hyperref Info: Link coloring ON on input line 124.
+Package hyperref Info: Link coloring ON on input line 117.
 
 ("C:\Users\sdwfr\AppData\Local\Programs\MiKTeX 2.9\tex/latex/hyperref\nameref.s
 ty"
@@ -592,9 +587,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count288
 )
-LaTeX Info: Redefining \ref on input line 124.
-LaTeX Info: Redefining \pageref on input line 124.
-LaTeX Info: Redefining \nameref on input line 124.
+LaTeX Info: Redefining \ref on input line 117.
+LaTeX Info: Redefining \pageref on input line 117.
+LaTeX Info: Redefining \nameref on input line 117.
 \@outlinefile=\write3
 \openout3 = `jump_gillespie.out'.
 
@@ -603,89 +598,42 @@ LaTeX Info: Redefining \nameref on input line 124.
 Package hyperref Warning: Rerun to get /PageLabels entry.
 
 
-Package chemgreek Info: Activating mapping `default' on line 124.
+Package chemgreek Info: Activating mapping `default' on line 117.
 
 \c@lstlisting=\count289
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 1
-27.
-("C:\Users\sdwfr\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\ot1lmr.fd"
-File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-Package microtype Info: Loading generic protrusion settings for font family
-(microtype)             `lmr' (encoding: OT1).
-(microtype)             For optimal results, create family-specific settings.
-(microtype)             See the microtype manual for details.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-27.
 
-("C:\Users\sdwfr\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\omllmm.fd"
-File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-127.
+("C:\Users\sdwfr\AppData\Local\Programs\MiKTeX 2.9\tex/generic/stringenc\se-asc
+ii-print.def"
+File: se-ascii-print.def 2019/11/29 v1.12 stringenc: Printable ASCII characters
 
-("C:\Users\sdwfr\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\omslmsy.fd"
-File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-127.
-
-("C:\Users\sdwfr\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\omxlmex.fd"
-File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14.4> on input line 127.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 127.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 127.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 127
-.
-
-("C:\Users\sdwfr\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsa.fd"
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-("C:\Users\sdwfr\AppData\Local\Programs\MiKTeX 2.9\tex/latex/microtype\mt-msa.c
-fg"
-File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 127
-.
-
-("C:\Users\sdwfr\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsb.fd"
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-("C:\Users\sdwfr\AppData\Local\Programs\MiKTeX 2.9\tex/latex/microtype\mt-msb.c
-fg"
-File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `lmtt' (encoding: TU).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-Overfull \hbox (37.84558pt too wide) in paragraph at lines 129--130
+Overfull \hbox (37.84558pt too wide) in paragraph at lines 123--124
 \TU/lmr/m/n/12 This implementation of a jump process uses [][]\TU/lmtt/m/n/12 G
 illespie.jl[][] \TU/lmr/m/n/12 rather than \TU/lmtt/m/n/12 DifferentialEquation
 s.jl\TU/lmr/m/n/12 ,
  []
 
 ! Text line contains an invalid character.
-l.136 ^^[
+l.130 ^^[
          [?25l^^[[2K^^[[?25h
 ? 
 ! Emergency stop.
-l.136 ^^[
+l.130 ^^[
          [?25l^^[[2K^^[[?25h
 End of file on the terminal!
 
  
 Here is how much of TeX's memory you used:
- 14284 strings out of 414183
- 220296 string characters out of 2897191
- 531742 words of memory out of 3000000
- 31620 multiletter control sequences out of 15000+200000
- 555827 words of font info for 56 fonts, out of 3000000 for 9000
+ 14117 strings out of 414183
+ 216991 string characters out of 2897191
+ 531374 words of memory out of 3000000
+ 31502 multiletter control sequences out of 15000+200000
+ 532754 words of font info for 32 fonts, out of 3000000 for 9000
  1348 hyphenation exceptions out of 8191
- 39i,6n,45p,373b,891s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 39i,3n,45p,373b,891s stack positions out of 5000i,500n,10000p,200000b,50000s
 No pages of output.
