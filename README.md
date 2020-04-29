@@ -1,6 +1,8 @@
 # sir-julia
 Various implementations of the classical SIR model in Julia
 
+Try the notebooks out in Binder:
+
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/epirecipes/sir-julia/master?filepath=notebook)
 
 ## Model considered
@@ -19,23 +21,27 @@ GitHub Markdown doesn't parse equations, so here's a description of the underlyi
 
 The above process can be represented in different kinds of ways:
 
-- Ordinary differential equation
-- Stochastic differential equation
-- Function map
-- Stochastic Markov model
-- Jump process (Gillespie)
-- Discrete event simulation
-- Agent-based model
+- [Ordinary differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode/ode.md)
+- [Stochastic differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde/sde.md)
+- [Stochastic differential equation using StochasticDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_stochasticdiffeq/sde_stochasticdiffeq.md)
+- [Function map](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map/function_map.md)
+- [Stochastic Markov model](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov/markov.md)
+- [Jump process (Gillespie) using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process/jump_process.md)
+- [Jump process (Gillespie) using Gillespie.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_gillespie/jump_process_gillespie.md)
+- [Discrete event simulation using SimJulia](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
+- [Agent-based model using Agents.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm/abm.md)
 
 Note that the implementations and choice of parameters may be suboptimal, and are intended to illustrate more-or-less the same underlying biological process with different mathematical representations. I've also tried to transform parameterisations in discrete time as closely as possible to their continuous counterparts. Please see the great work by [Linda Allen](http://www.math.ttu.edu/~lallen/) for how these different representations compare.
 
 ## Types of output
 
-- Jupyter notebooks
-- GitHub markdown
-- PDF
-- HTML
-- Julia script
+Thanks to [`Weave.jl`](https://github.com/JunoLab/Weave.jl), Julia Markdown files (in `tutorials/`) are converted into multiple formats.
+
+- [Jupyter notebooks](https://github.com/epirecipes/sir-julia/tree/master/notebook)
+- [GitHub Markdown](https://github.com/epirecipes/sir-julia/tree/master/markdown)
+- [PDF](https://github.com/epirecipes/sir-julia/tree/master/notebook)
+- [HTML](https://github.com/epirecipes/sir-julia/tree/master/notebook)
+- [Julia script](https://github.com/epirecipes/sir-julia/tree/master/notebook)
 
 ## Running notebooks
 
