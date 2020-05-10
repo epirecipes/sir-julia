@@ -280,15 +280,15 @@ end
 
 ````
 BenchmarkTools.Trial: 
-  memory estimate:  77.99 MiB
-  allocs estimate:  2348034
+  memory estimate:  72.74 MiB
+  allocs estimate:  2189698
   --------------
-  minimum time:     686.746 ms (1.28% GC)
-  median time:      756.386 ms (1.16% GC)
-  mean time:        763.754 ms (1.52% GC)
-  maximum time:     884.180 ms (2.07% GC)
+  minimum time:     2.021 s (0.88% GC)
+  median time:      2.096 s (0.90% GC)
+  mean time:        2.149 s (0.88% GC)
+  maximum time:     2.330 s (0.86% GC)
   --------------
-  samples:          7
+  samples:          3
   evals/sample:     1
 ````
 
@@ -336,6 +336,7 @@ Status `~\.julia\environments\v1.4\Project.toml`
 [523d8e89-b243-5607-941c-87d699ea6713] Gillespie 0.1.0
 [7073ff75-c697-5162-941a-fcdaad2a7d2a] IJulia 1.21.2
 [e5e0dc1b-0480-54bc-9374-aad01c23163d] Juno 0.8.1
+[d8e11817-5142-5d16-987a-aa16d5891078] MLStyle 0.4.0
 [961ee093-0014-501f-94e3-6117800e7a78] ModelingToolkit 3.0.2
 [429524aa-4258-5aef-a3af-852621145aeb] Optim 0.20.6
 [1dea7af3-3e70-54e6-95c3-0bf5283fa5ed] OrdinaryDiffEq 5.34.1
@@ -344,6 +345,7 @@ Status `~\.julia\environments\v1.4\Project.toml`
 [c5292f4c-5179-55e1-98c5-05642aab7184] ResumableFunctions 0.5.1
 [428bdadb-6287-5aa5-874b-9969638295fd] SimJulia 0.8.0
 [05bca326-078c-5bf0-a5bf-ce7c7982d7fd] SimpleDiffEq 1.1.0
+[2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91] StatsBase 0.33.0
 [f3b207a7-027a-5e70-b257-86293d7955fd] StatsPlots 0.14.5
 [789caeaf-c7a9-5a7d-9973-96adeb23e2a0] StochasticDiffEq 6.19.2
 [44d3d7a6-8a23-5bf8-98c5-b353f8df5ec9] Weave 0.9.4

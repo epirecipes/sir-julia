@@ -1,21 +1,23 @@
-# Markov model
-Simon Frost (@sdwfrost), 2020-04-27
+# Ordinary differential equation model using ModelingToolkit
+Simon Frost (@sdwfrost), 2020-05-04
 
 ## Introduction
 
-The Markov model approach taken here is:
+The classical ODE version of the SIR model is:
 
-- Stochastic
-- Discrete in time
-- Discrete in state
+- Deterministic
+- Continuous in time
+- Continuous in state
+
+This version, unlike the 'vanilla' ODE version, uses [ModelingToolkit](https://mtk.sciml.ai/). For small problems such as this, it doesn't make much of a difference for compute time, but it is a little more expressive and lends itself to extending a little better.
 
 ## Libraries
 
 ````julia
 using DifferentialEquations
-using SimpleDiffEq
-using Distributions
-using Random
+using ModelingToolkit
+using OrdinaryDiffEq
+using DataFrames
 using DataFrames
 using StatsPlots
 using BenchmarkTools
@@ -25,36 +27,48 @@ using BenchmarkTools
 
 
 
-## Utility functions
+## Transitions
 
 ````julia
-@inline function rate_to_proportion(r::Float64,t::Float64)
-    1-exp(-r*t)
-end;
+@parameters t β c γ
+@variables S(t) I(t) R(t)
+@derivatives D'~t
+N=S+I+R # This is recognized as a derived variable
+eqs = [D(S) ~ -β*c*I/N*S,
+       D(I) ~ β*c*I/N*S-γ*I,
+       D(R) ~ γ*I]
+````
+
+
+````
+3-element Array{ModelingToolkit.Equation,1}:
+ ModelingToolkit.Equation(derivative(S(t), t), (((-β * c) * I(t)) / ((S(t) 
++ I(t)) + R(t))) * S(t))
+ ModelingToolkit.Equation(derivative(I(t), t), (((β * c) * I(t)) / ((S(t) +
+ I(t)) + R(t))) * S(t) - γ * I(t))
+ ModelingToolkit.Equation(derivative(R(t), t), γ * I(t))
 ````
 
 
 
-
-
-## Transitions
-
 ````julia
-function sir_markov!(du,u,p,t)
-    (S,I,R) = u
-    (β,c,γ,δt) = p
-    N = S+I+R
-    ifrac = rate_to_proportion(β*c*I/N,δt)
-    rfrac = rate_to_proportion(γ,δt)
-    infection=rand(Binomial(S,ifrac))
-    recovery=rand(Binomial(I,rfrac))
-    @inbounds begin
-        du[1] = S-infection
-        du[2] = I+infection-recovery
-        du[3] = R+recovery
-    end
-    nothing
-end;
+sys = ODESystem(eqs)
+sys = ode_order_lowering(sys)
+````
+
+
+````
+ModelingToolkit.ODESystem(ModelingToolkit.Equation[ModelingToolkit.Equation
+(derivative(S(t), t), (((-β * c) * I(t)) / ((S(t) + I(t)) + R(t))) * S(t)),
+ ModelingToolkit.Equation(derivative(I(t), t), (((β * c) * I(t)) / ((S(t) +
+ I(t)) + R(t))) * S(t) - γ * I(t)), ModelingToolkit.Equation(derivative(R(t
+), t), γ * I(t))], t, ModelingToolkit.Variable[S, I, R], ModelingToolkit.Va
+riable[β, c, γ], Base.RefValue{Array{ModelingToolkit.Expression,1}}(Modelin
+gToolkit.Expression[]), Base.RefValue{Array{ModelingToolkit.Expression,2}}(
+Array{ModelingToolkit.Expression}(undef,0,0)), Base.RefValue{Array{Modeling
+Toolkit.Expression,2}}(Array{ModelingToolkit.Expression}(undef,0,0)), Base.
+RefValue{Array{ModelingToolkit.Expression,2}}(Array{ModelingToolkit.Express
+ion}(undef,0,0)), Symbol("##ODESystem#602"), ModelingToolkit.ODESystem[])
 ````
 
 
@@ -63,13 +77,12 @@ end;
 
 ## Time domain
 
-Note that even though we're using fixed time steps, `DifferentialEquations.jl` complains if I pass integer timespans, so I set the timespan to be `Float64`.
+We set the timespan for simulations, `tspan`, initial conditions, `u0`, and parameter values, `p` (which are unpacked above as `[β,γ]`).
 
 ````julia
 δt = 0.1
-nsteps = 400
-tmax = nsteps*δt
-tspan = (0.0,nsteps)
+tmax = 40.0
+tspan = (0.0,tmax)
 t = 0.0:δt:tmax;
 ````
 
@@ -79,8 +92,12 @@ t = 0.0:δt:tmax;
 
 ## Initial conditions
 
+In `ModelingToolkit`, the initial values are defined by a dictionary.
+
 ````julia
-u0 = [990,10,0]; # S,I,R
+u0 = [S => 990.0,
+      I => 10.0,
+      R => 0.0];
 ````
 
 
@@ -89,18 +106,12 @@ u0 = [990,10,0]; # S,I,R
 
 ## Parameter values
 
-````julia
-p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
-````
-
-
-
-
-
-## Random number seed
+Similarly, the parameter values are defined by a dictionary.
 
 ````julia
-Random.seed!(1234);
+p = [β=>0.05,
+     c=>10.0,
+     γ=>0.25];
 ````
 
 
@@ -110,22 +121,21 @@ Random.seed!(1234);
 ## Running the model
 
 ````julia
-prob_markov = DiscreteProblem(sir_markov!,u0,tspan,p)
+prob_ode = ODEProblem(sys,u0,tspan,p;jac=true)
 ````
 
 
 ````
-DiscreteProblem with uType Array{Int64,1} and tType Float64. In-place: true
-timespan: (0.0, 400.0)
-u0: [990, 10, 0]
+ODEProblem with uType Array{Float64,1} and tType Float64. In-place: true
+timespan: (0.0, 40.0)
+u0: [990.0, 10.0, 0.0]
 ````
 
 
 
 ````julia
-sol_markov = solve(prob_markov,solver=FunctionMap);
+sol_ode = solve(prob_ode);
 ````
-
 
 
 
@@ -135,8 +145,8 @@ sol_markov = solve(prob_markov,solver=FunctionMap);
 We can convert the output to a dataframe for convenience.
 
 ````julia
-df_markov = DataFrame(sol_markov')
-df_markov[!,:t] = t;
+df_ode = DataFrame(sol_ode(t)')
+df_ode[!,:t] = t;
 ````
 
 
@@ -148,7 +158,7 @@ df_markov[!,:t] = t;
 We can now plot the results.
 
 ````julia
-@df df_markov plot(:t,
+@df df_ode plot(:t,
     [:x1 :x2 :x3],
     label=["S" "I" "R"],
     xlabel="Time",
@@ -156,26 +166,26 @@ We can now plot the results.
 ````
 
 
-![](figures/markov_11_1.png)
+![](figures/ode_mtk_10_1.png)
 
 
 
 ## Benchmarking
 
 ````julia
-@benchmark solve(prob_markov,solver=FunctionMap)
+@benchmark solve(prob_ode)
 ````
 
 
 ````
 BenchmarkTools.Trial: 
-  memory estimate:  59.11 KiB
-  allocs estimate:  479
+  memory estimate:  31.06 KiB
+  allocs estimate:  325
   --------------
-  minimum time:     92.500 μs (0.00% GC)
-  median time:      152.550 μs (0.00% GC)
-  mean time:        178.631 μs (2.84% GC)
-  maximum time:     10.469 ms (98.19% GC)
+  minimum time:     34.599 μs (0.00% GC)
+  median time:      48.999 μs (0.00% GC)
+  mean time:        55.155 μs (5.24% GC)
+  maximum time:     14.821 ms (98.95% GC)
   --------------
   samples:          10000
   evals/sample:     1
