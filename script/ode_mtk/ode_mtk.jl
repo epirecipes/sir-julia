@@ -14,11 +14,11 @@ using BenchmarkTools
 N=S+I+R # This is recognized as a derived variable
 eqs = [D(S) ~ -β*c*I/N*S,
        D(I) ~ β*c*I/N*S-γ*I,
-       D(R) ~ γ*I]
+       D(R) ~ γ*I];
 
 
 sys = ODESystem(eqs)
-sys = ode_order_lowering(sys)
+sys = ode_order_lowering(sys);
 
 
 δt = 0.1

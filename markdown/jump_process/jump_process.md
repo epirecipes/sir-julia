@@ -118,7 +118,7 @@ Running this model involves:
 
 - Setting up the problem as a `DiscreteProblem`;
 - Adding the jumps and setting the algorithm using `JumpProblem`; and
-- Running the model, specifying `FunctionMap`
+- Running the model, specifying `SSAStepper()`
 
 ````julia
 prob = DiscreteProblem(u0,tspan,p)
@@ -139,8 +139,7 @@ prob_jump = JumpProblem(prob,Direct(),infection_jump,recovery_jump)
 
 
 ````
-DiffEqJump.JumpProblem with problem DiffEqBase.DiscreteProblem and aggregat
-or DiffEqJump.Direct
+JumpProblem with problem DiscreteProblem and aggregator Direct
 Number of constant rate jumps: 2
 Number of variable rate jumps: 0
 ````
@@ -148,7 +147,7 @@ Number of variable rate jumps: 0
 
 
 ````julia
-sol_jump = solve(prob_jump,FunctionMap());
+sol_jump = solve(prob_jump,SSAStepper());
 ````
 
 
@@ -204,15 +203,15 @@ We can now plot the results.
 
 ````
 BenchmarkTools.Trial: 
-  memory estimate:  15.11 KiB
-  allocs estimate:  139
+  memory estimate:  18.70 KiB
+  allocs estimate:  149
   --------------
-  minimum time:     63.599 μs (0.00% GC)
-  median time:      1.308 ms (0.00% GC)
-  mean time:        1.389 ms (5.12% GC)
-  maximum time:     19.618 ms (93.76% GC)
+  minimum time:     67.401 μs (0.00% GC)
+  median time:      1.657 ms (0.00% GC)
+  mean time:        1.899 ms (4.91% GC)
+  maximum time:     31.608 ms (88.85% GC)
   --------------
-  samples:          3575
+  samples:          2613
   evals/sample:     1
 ````
 
@@ -248,7 +247,10 @@ Status `~\.julia\environments\v1.4\Project.toml`
 [717857b8-e6f2-59f4-9121-6e50c889abd2] DSP 0.6.6
 [2445eb08-9709-466a-b3fc-47e12bd697a2] DataDrivenDiffEq 0.2.0
 [a93c6f00-e57d-5684-b7b6-d8193f3e46c0] DataFrames 0.20.2
+[ebbdde9d-f333-5424-9be2-dbf1e9acfb5e] DiffEqBayes 2.12.1
+[eb300fae-53e8-50a0-950c-e21f52c2b7e0] DiffEqBiological 4.3.0
 [aae7a2af-3d4f-5e19-a356-7da93b79d9d0] DiffEqFlux 1.8.1
+[c894b116-72e5-5b58-be3c-e6d8d4ac2b12] DiffEqJump 6.6.3
 [41bf760c-e81c-5289-8e54-58b1f1f8abe2] DiffEqSensitivity 6.13.0
 [6d1b261a-3be8-11e9-3f2f-0b112a9a8436] DiffEqTutorials 0.1.0
 [0c46a032-eb83-5123-abaf-570d42b7fbaa] DifferentialEquations 6.13.0
@@ -260,6 +262,7 @@ Status `~\.julia\environments\v1.4\Project.toml`
 [523d8e89-b243-5607-941c-87d699ea6713] Gillespie 0.1.0
 [7073ff75-c697-5162-941a-fcdaad2a7d2a] IJulia 1.21.2
 [e5e0dc1b-0480-54bc-9374-aad01c23163d] Juno 0.8.1
+[23fbe1c1-3f47-55db-b15f-69d7ec21a316] Latexify 0.12.0
 [d8e11817-5142-5d16-987a-aa16d5891078] MLStyle 0.4.0
 [961ee093-0014-501f-94e3-6117800e7a78] ModelingToolkit 3.0.2
 [429524aa-4258-5aef-a3af-852621145aeb] Optim 0.20.6
@@ -272,6 +275,8 @@ Status `~\.julia\environments\v1.4\Project.toml`
 [2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91] StatsBase 0.33.0
 [f3b207a7-027a-5e70-b257-86293d7955fd] StatsPlots 0.14.5
 [789caeaf-c7a9-5a7d-9973-96adeb23e2a0] StochasticDiffEq 6.19.2
+[a759f4b9-e2f1-59dc-863e-4aeb61b1ea8f] TimerOutputs 0.5.5
+[fce5fe82-541a-59a6-adf8-730c64b5f9a0] Turing 0.11.0
 [44d3d7a6-8a23-5bf8-98c5-b353f8df5ec9] Weave 0.9.4
 [37e2e46d-f89d-539d-b4ee-838fcccc9c8e] LinearAlgebra
 [cf7118a7-6976-5b1a-9a39-7adc72f591a4] UUIDs

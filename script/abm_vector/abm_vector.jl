@@ -25,14 +25,19 @@ function sir_abm(u,p,t)
         # If susceptible
         elseif u[i]==Susceptible
             ncontacts = rand(Poisson(c*δt))
-            idx = sample(1:N,ncontacts,replace=false)
-            for j in 1:length(idx)
-                if j==i continue end
-                a = u[idx[j]]
+            du[i]=Susceptible
+            ncontacts = rand(Poisson(c*δt))
+            while ncontacts > 0
+                j = sample(1:N)
+                if j==i
+                    continue
+                end
+                a = u[j]
                 if a==Infected && rand() < β
                     du[i] = Infected
                     break
                 end
+                ncontacts -= 1
             end
         # If infected
     else u[i]==Infected
@@ -48,28 +53,33 @@ end;
 function sir_abm!(du,u,p,t)
     (β,c,γ,δt) = p
     N = length(u)
+    # Initialize du to u
+    for i in 1:N
+        du[i] = u[i]
+    end
     for i in 1:N # loop through agents
         # If recovered
         if u[i]==Recovered
-            du[i] = u[i]
+            continue
         # If susceptible
         elseif u[i]==Susceptible
             ncontacts = rand(Poisson(c*δt))
-            idx = sample(1:N,ncontacts,replace=false)
-            for j in 1:length(idx)
-                if j==i continue end
-                a = u[idx[j]]
+            while ncontacts > 0
+                j = sample(1:N)
+                if j==i
+                    continue
+                end
+                a = u[j]
                 if a==Infected && rand() < β
                     du[i] = Infected
                     break
                 end
+                ncontacts -= 1
             end
         # If infected
-    else u[i]==Infected
+        else u[i]==Infected
             if rand() < γ
                 du[i] = Recovered
-            else
-                du[i] = u[i]
             end
         end
     end
@@ -181,10 +191,10 @@ df_abm! = sim!(u0,nsteps,δt);
     title="In-place")
 
 
-@benchmark sim(u0,nsteps,δt);
+@benchmark sim(u0,nsteps,δt)
 
 
-@benchmark sim!(u0,nsteps,δt);
+@benchmark sim!(u0,nsteps,δt)
 
 
 include(joinpath(@__DIR__,"tutorials","appendix.jl"))

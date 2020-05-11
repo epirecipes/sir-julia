@@ -9,6 +9,8 @@ The agent-based model approach is:
 - Discrete in time
 - Discrete in state
 
+There are multiple ways in which the model state can be updated. In this implementation, there is the initial state, `u`, and the next state, `u`, and updates occur by looping through all the agents (in this case, just a vector of states), and determining whether a transition occurs each state. This approach is relatively simple as there is a chain of states that an individual passes through (i.e. only one transition type per state). After all states have been updated in `du`, they are then assigned to the current state, `u`.
+
 ## Libraries
 
 ````julia
@@ -61,14 +63,19 @@ function sir_abm(u,p,t)
         # If susceptible
         elseif u[i]==Susceptible
             ncontacts = rand(Poisson(c*δt))
-            idx = sample(1:N,ncontacts,replace=false)
-            for j in 1:length(idx)
-                if j==i continue end
-                a = u[idx[j]]
+            du[i]=Susceptible
+            ncontacts = rand(Poisson(c*δt))
+            while ncontacts > 0
+                j = sample(1:N)
+                if j==i
+                    continue
+                end
+                a = u[j]
                 if a==Infected && rand() < β
                     du[i] = Infected
                     break
                 end
+                ncontacts -= 1
             end
         # If infected
     else u[i]==Infected
@@ -91,28 +98,33 @@ This function is an in-place version.
 function sir_abm!(du,u,p,t)
     (β,c,γ,δt) = p
     N = length(u)
+    # Initialize du to u
+    for i in 1:N
+        du[i] = u[i]
+    end
     for i in 1:N # loop through agents
         # If recovered
         if u[i]==Recovered
-            du[i] = u[i]
+            continue
         # If susceptible
         elseif u[i]==Susceptible
             ncontacts = rand(Poisson(c*δt))
-            idx = sample(1:N,ncontacts,replace=false)
-            for j in 1:length(idx)
-                if j==i continue end
-                a = u[idx[j]]
+            while ncontacts > 0
+                j = sample(1:N)
+                if j==i
+                    continue
+                end
+                a = u[j]
                 if a==Infected && rand() < β
                     du[i] = Infected
                     break
                 end
+                ncontacts -= 1
             end
         # If infected
-    else u[i]==Infected
+        else u[i]==Infected
             if rand() < γ
                 du[i] = Recovered
-            else
-                du[i] = u[i]
             end
         end
     end
@@ -320,13 +332,43 @@ df_abm! = sim!(u0,nsteps,δt);
 ## Benchmarking
 
 ````julia
-@benchmark sim(u0,nsteps,δt);
+@benchmark sim(u0,nsteps,δt)
+````
+
+
+````
+BenchmarkTools.Trial: 
+  memory estimate:  1.80 MiB
+  allocs estimate:  2418
+  --------------
+  minimum time:     287.147 ms (0.00% GC)
+  median time:      342.602 ms (0.00% GC)
+  mean time:        350.453 ms (0.00% GC)
+  maximum time:     428.769 ms (0.00% GC)
+  --------------
+  samples:          15
+  evals/sample:     1
 ````
 
 
 
 ````julia
-@benchmark sim!(u0,nsteps,δt);
+@benchmark sim!(u0,nsteps,δt)
+````
+
+
+````
+BenchmarkTools.Trial: 
+  memory estimate:  74.80 KiB
+  allocs estimate:  1218
+  --------------
+  minimum time:     146.422 ms (0.00% GC)
+  median time:      185.358 ms (0.00% GC)
+  mean time:        193.824 ms (0.00% GC)
+  maximum time:     308.170 ms (0.00% GC)
+  --------------
+  samples:          26
+  evals/sample:     1
 ````
 
 
@@ -361,7 +403,10 @@ Status `~\.julia\environments\v1.4\Project.toml`
 [717857b8-e6f2-59f4-9121-6e50c889abd2] DSP 0.6.6
 [2445eb08-9709-466a-b3fc-47e12bd697a2] DataDrivenDiffEq 0.2.0
 [a93c6f00-e57d-5684-b7b6-d8193f3e46c0] DataFrames 0.20.2
+[ebbdde9d-f333-5424-9be2-dbf1e9acfb5e] DiffEqBayes 2.12.1
+[eb300fae-53e8-50a0-950c-e21f52c2b7e0] DiffEqBiological 4.3.0
 [aae7a2af-3d4f-5e19-a356-7da93b79d9d0] DiffEqFlux 1.8.1
+[c894b116-72e5-5b58-be3c-e6d8d4ac2b12] DiffEqJump 6.6.3
 [41bf760c-e81c-5289-8e54-58b1f1f8abe2] DiffEqSensitivity 6.13.0
 [6d1b261a-3be8-11e9-3f2f-0b112a9a8436] DiffEqTutorials 0.1.0
 [0c46a032-eb83-5123-abaf-570d42b7fbaa] DifferentialEquations 6.13.0
@@ -373,6 +418,7 @@ Status `~\.julia\environments\v1.4\Project.toml`
 [523d8e89-b243-5607-941c-87d699ea6713] Gillespie 0.1.0
 [7073ff75-c697-5162-941a-fcdaad2a7d2a] IJulia 1.21.2
 [e5e0dc1b-0480-54bc-9374-aad01c23163d] Juno 0.8.1
+[23fbe1c1-3f47-55db-b15f-69d7ec21a316] Latexify 0.12.0
 [d8e11817-5142-5d16-987a-aa16d5891078] MLStyle 0.4.0
 [961ee093-0014-501f-94e3-6117800e7a78] ModelingToolkit 3.0.2
 [429524aa-4258-5aef-a3af-852621145aeb] Optim 0.20.6
@@ -385,6 +431,8 @@ Status `~\.julia\environments\v1.4\Project.toml`
 [2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91] StatsBase 0.33.0
 [f3b207a7-027a-5e70-b257-86293d7955fd] StatsPlots 0.14.5
 [789caeaf-c7a9-5a7d-9973-96adeb23e2a0] StochasticDiffEq 6.19.2
+[a759f4b9-e2f1-59dc-863e-4aeb61b1ea8f] TimerOutputs 0.5.5
+[fce5fe82-541a-59a6-adf8-730c64b5f9a0] Turing 0.11.0
 [44d3d7a6-8a23-5bf8-98c5-b353f8df5ec9] Weave 0.9.4
 [37e2e46d-f89d-539d-b4ee-838fcccc9c8e] LinearAlgebra
 [cf7118a7-6976-5b1a-9a39-7adc72f591a4] UUIDs

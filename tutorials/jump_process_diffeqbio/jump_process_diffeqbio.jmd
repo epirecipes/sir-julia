@@ -1,5 +1,5 @@
-# Jump process
-Simon Frost (@sdwfrost), 2020-04-27
+# Jump process using DiffEqBiological
+Simon Frost (@sdwfrost), 2020-05-11
 
 ## Introduction
 
@@ -8,8 +8,7 @@ This implementation defines the model as a combination of two jump processes, in
 ## Libraries
 
 ```julia
-using DifferentialEquations
-using SimpleDiffEq
+using DiffEqBiological
 using Random
 using DataFrames
 using StatsPlots
@@ -18,35 +17,12 @@ using BenchmarkTools
 
 ## Transitions
 
-For each process, we define the rate at which it occurs, and how the state variables change at each jump. Note that these are total rates, not *per capita*, and that the change in state variables occurs in-place.
-
 ```julia
-function infection_rate(u,p,t)
-    (S,I,R) = u
-    (β,c,γ) = p
-    N = S+I+R
-    β*c*I/N*S
+sir_model = @reaction_network sir_rn begin
+  0.5/1000, s + i --> 2i
+  0.25, i --> r
 end
-function infection!(integrator)
-  integrator.u[1] -= 1
-  integrator.u[2] += 1
-end
-infection_jump = ConstantRateJump(infection_rate,infection!);
 ```
-
-```julia
-function recovery_rate(u,p,t)
-    (S,I,R) = u
-    (β,c,γ) = p
-    γ*I
-end
-function recovery!(integrator)
-  integrator.u[2] -= 1
-  integrator.u[3] += 1
-end
-recovery_jump = ConstantRateJump(recovery_rate,recovery!);
-```
-
 
 ## Time domain
 
@@ -68,12 +44,6 @@ t = 0:δt:tmax;
 u0 = [990,10,0]; # S,I,R
 ```
 
-## Parameter values
-
-```julia
-p = [0.05,10.0,0.25]; # β,c,γ
-```
-
 ## Random number seed
 
 We set a random number seed for reproducibility.
@@ -88,14 +58,14 @@ Running this model involves:
 
 - Setting up the problem as a `DiscreteProblem`;
 - Adding the jumps and setting the algorithm using `JumpProblem`; and
-- Running the model, specifying `SSAStepper()`
+- Running the model, specifying `SSAStepper`
 
 ```julia
-prob = DiscreteProblem(u0,tspan,p)
+prob = DiscreteProblem(u0,tspan)
 ```
 
 ```julia
-prob_jump = JumpProblem(prob,Direct(),infection_jump,recovery_jump)
+prob_jump = JumpProblem(prob,Direct(),sir_model)
 ```
 
 ```julia

@@ -1,20 +1,14 @@
-# Stochastic differential equation
-Simon Frost (@sdwfrost), 2020-04-27
+# Jump process using DiffEqBiological
+Simon Frost (@sdwfrost), 2020-05-11
 
 ## Introduction
 
-A stochastic differential equation version of the SIR model is:
-
-- Stochastic
-- Continuous in time
-- Continuous in state
+This implementation defines the model as a combination of two jump processes, infection and recovery, simulated using the [Doob-Gillespie algorithm](https://en.wikipedia.org/wiki/Gillespie_algorithm).
 
 ## Libraries
 
 ````julia
-using DifferentialEquations
-using SimpleDiffEq
-using Distributions
+using DiffEqBiological
 using Random
 using DataFrames
 using StatsPlots
@@ -28,24 +22,15 @@ using BenchmarkTools
 ## Transitions
 
 ````julia
-function sir_sde!(du,u,p,t)
-    (S,I,R) = u
-    (β,c,γ,δt) = p
-    N = S+I+R
-    ifrac = β*c*I/N*S*δt
-    rfrac = γ*I*δt
-    ifrac_noise = sqrt(ifrac)*rand(Normal(0,1))
-    rfrac_noise = sqrt(rfrac)*rand(Normal(0,1))
-    @inbounds begin
-        du[1] = S-(ifrac+ifrac_noise)
-        du[2] = I+(ifrac+ifrac_noise) - (rfrac + rfrac_noise)
-        du[3] = R+(rfrac+rfrac_noise)
-    end
-    for i in 1:3
-        if du[i] < 0 du[i]=0 end
-    end
-    nothing
-end;
+sir_model = @reaction_network sir_rn begin
+  0.5/1000, s + i --> 2i
+  0.25, i --> r
+end
+````
+
+
+````
+(::Main.WeaveSandBox49.sir_rn) (generic function with 2 methods)
 ````
 
 
@@ -54,14 +39,20 @@ end;
 
 ## Time domain
 
-Note that even though we're using fixed time steps, `DifferentialEquations.jl` complains if I pass integer timespans, so I set the timespan to be `Float64`.
+````julia
+tmax = 40.0
+tspan = (0.0,tmax);
+````
+
+
+
+
+
+For plotting, we can also define a separate time series.
 
 ````julia
 δt = 0.1
-nsteps = 400
-tmax = nsteps*δt
-tspan = (0.0,nsteps)
-t = 0.0:δt:tmax;
+t = 0:δt:tmax;
 ````
 
 
@@ -71,17 +62,7 @@ t = 0.0:δt:tmax;
 ## Initial conditions
 
 ````julia
-u0 = [990.0,10.0,0.0]; # S,I,R
-````
-
-
-
-
-
-## Parameter values
-
-````julia
-p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
+u0 = [990,10,0]; # S,I,R
 ````
 
 
@@ -89,6 +70,8 @@ p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
 
 
 ## Random number seed
+
+We set a random number seed for reproducibility.
 
 ````julia
 Random.seed!(1234);
@@ -100,22 +83,41 @@ Random.seed!(1234);
 
 ## Running the model
 
-````julia
-prob_sde = DiscreteProblem(sir_sde!,u0,tspan,p)
-````
+Running this model involves:
 
-
-````
-DiscreteProblem with uType Array{Float64,1} and tType Float64. In-place: tr
-ue
-timespan: (0.0, 400.0)
-u0: [990.0, 10.0, 0.0]
-````
-
-
+- Setting up the problem as a `DiscreteProblem`;
+- Adding the jumps and setting the algorithm using `JumpProblem`; and
+- Running the model, specifying `SSAStepper`
 
 ````julia
-sol_sde = solve(prob_sde,solver=FunctionMap);
+prob = DiscreteProblem(u0,tspan)
+````
+
+
+````
+DiscreteProblem with uType Array{Int64,1} and tType Float64. In-place: true
+timespan: (0.0, 40.0)
+u0: [990, 10, 0]
+````
+
+
+
+````julia
+prob_jump = JumpProblem(prob,Direct(),sir_model)
+````
+
+
+````
+JumpProblem with problem DiscreteProblem and aggregator Direct
+Number of constant rate jumps: 0
+Number of variable rate jumps: 0
+Have a mass action jump
+````
+
+
+
+````julia
+sol_jump = solve(prob_jump,SSAStepper());
 ````
 
 
@@ -124,11 +126,21 @@ sol_sde = solve(prob_sde,solver=FunctionMap);
 
 ## Post-processing
 
-We can convert the output to a dataframe for convenience.
+In order to get output comparable across implementations, we output the model at a fixed set of times.
 
 ````julia
-df_sde = DataFrame(sol_sde')
-df_sde[!,:t] = t;
+out_jump = sol_jump(t);
+````
+
+
+
+
+
+We can convert to a dataframe for convenience.
+
+````julia
+df_jump = DataFrame(out_jump')
+df_jump[!,:t] = out_jump.t;
 ````
 
 
@@ -140,7 +152,7 @@ df_sde[!,:t] = t;
 We can now plot the results.
 
 ````julia
-@df df_sde plot(:t,
+@df df_jump plot(:t,
     [:x1 :x2 :x3],
     label=["S" "I" "R"],
     xlabel="Time",
@@ -148,29 +160,19 @@ We can now plot the results.
 ````
 
 
-![](figures/sde_10_1.png)
+![](figures/jump_process_diffeqbio_12_1.png)
 
 
 
 ## Benchmarking
 
 ````julia
-@benchmark solve(prob_sde,solver=FunctionMap)
+@benchmark solve(prob_jump,FunctionMap())
 ````
 
 
 ````
-BenchmarkTools.Trial: 
-  memory estimate:  59.11 KiB
-  allocs estimate:  479
-  --------------
-  minimum time:     126.900 μs (0.00% GC)
-  median time:      426.800 μs (0.00% GC)
-  mean time:        574.450 μs (2.49% GC)
-  maximum time:     65.138 ms (98.44% GC)
-  --------------
-  samples:          8371
-  evals/sample:     1
+Error: UndefVarError: FunctionMap not defined
 ````
 
 

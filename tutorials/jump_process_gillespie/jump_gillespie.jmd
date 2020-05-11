@@ -3,7 +3,7 @@ Simon Frost (@sdwfrost), 2020-04-27
 
 ## Introduction
 
-This implementation of a jump process uses [`Gillespie.jl`](https://github.com/sdwfrost/Gillespie.jl) rather than `DifferentialEquations.jl`, which gives (slightly) better performance.
+This implementation of a jump process uses [`Gillespie.jl`](https://github.com/sdwfrost/Gillespie.jl) rather than `DifferentialEquations.jl`.
 
 ## Libraries
 

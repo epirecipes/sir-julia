@@ -55,7 +55,7 @@ prob = DiscreteProblem(u0,tspan,p)
 prob_jump = JumpProblem(prob,Direct(),infection_jump,recovery_jump)
 
 
-sol_jump = solve(prob_jump,FunctionMap());
+sol_jump = solve(prob_jump,SSAStepper());
 
 
 out_jump = sol_jump(t);
