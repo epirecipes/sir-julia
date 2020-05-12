@@ -37,7 +37,6 @@ eqs = [D(S) ~ -β*c*I/N*S,
 
 ```julia
 sys = ODESystem(eqs)
-sys = ode_order_lowering(sys);
 ```
 
 ## Time domain
