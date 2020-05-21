@@ -49,7 +49,7 @@ Random.seed!(1234);
 prob_markov = DiscreteProblem(sir_markov!,u0,tspan,p)
 
 
-sol_markov = solve(prob_markov,solver=FunctionMap);
+sol_markov = solve(prob_markov,solver=FunctionMap());
 
 
 df_markov = DataFrame(sol_markov')

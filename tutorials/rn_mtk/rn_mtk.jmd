@@ -1,0 +1,99 @@
+# Reaction network model using ModelingToolkit
+Simon Frost (@sdwfrost), 2020-05-20
+
+## Introduction
+
+One high-level representation of the SIR model is as a reaction network, borrowed from systems biology. [ModelingToolkit](https://mtk.sciml.ai/) allows us to convert this representation to ODEs, SDEs, and jump processes.
+
+## Libraries
+
+```julia
+using DifferentialEquations
+using ModelingToolkit
+using OrdinaryDiffEq
+using StochasticDiffEq
+using DiffEqJump
+using Plots
+```
+
+## Transitions
+
+```julia
+@parameters t β c γ
+@variables S(t) I(t) R(t)
+@derivatives D'~t
+N=S+I+R # This is recognized as a derived variable
+rxs = [Reaction(β, [S,I], [I], [1,1], [2])
+       Reaction(γ, [I], [R])]
+```
+
+```julia
+rs  = ReactionSystem(rxs, t, [S,I,R], [β,γ])
+```
+
+## Time domain
+
+We set the timespan for simulations, `tspan`, initial conditions, `u0`, and parameter values, `p` (which are unpacked above as `[β,γ]`).
+
+```julia
+δt = 0.1
+tmax = 40.0
+tspan = (0.0,tmax)
+t = 0.0:δt:tmax;
+```
+
+## Initial conditions
+
+In `ModelingToolkit`, the initial values are defined by a dictionary.
+
+```julia
+u0 = [S => 990.0,
+      I => 10.0,
+      R => 0.0];
+```
+
+## Parameter values
+
+Similarly, the parameter values are defined by a dictionary.
+
+```julia
+p = [β=>0.05,
+     c=>10.0,
+     γ=>0.25];
+```
+
+## Generating and running models
+
+### As ODEs
+
+```julia
+odesys = convert(ODESystem, rs)
+oprob = ODEProblem(odesys, u0, tspan, p)
+osol = solve(oprob, Tsit5())
+plot(osol)
+```
+
+### As SDEs
+
+```julia
+sdesys = convert(SDESystem, rs)
+sprob = SDEProblem(sdesys, u0, tspan, p)
+ssol = solve(sprob, EM(), dt=.01)
+plot(ssol)
+```
+
+### As jump process
+
+```julia
+jumpsys = convert(JumpSystem, rs)
+u0 = [S => 990, I => 10, R => 0]
+dprob = DiscreteProblem(jumpsys, u0, tspan, p)
+jprob = JumpProblem(jumpsys, dprob, Direct())
+jsol = solve(jprob, SSAStepper())
+plot(jsol)
+```
+
+```{julia; echo=false; skip="notebook"}
+include(joinpath(@__DIR__,"tutorials","appendix.jl"))
+appendix()
+```

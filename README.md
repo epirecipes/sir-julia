@@ -28,7 +28,7 @@ The above process can be represented in different kinds of ways:
 - [Function map](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map/function_map.md)
 - [Stochastic Markov model](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov/markov.md)
 - [Jump process (Gillespie) using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process/jump_process.md)
-- [Jump process (Gillespie) using DiffEqBiological.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_diffeqbio/jump_process.md)
+- [Jump process (Gillespie) using DiffEqBiological.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_diffeqbio/jump_process_diffeqbio.md)
 - [Jump process (Gillespie) using Gillespie.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_gillespie/jump_process_gillespie.md)
 - [Discrete event simulation using SimJulia](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
 - [Agent-based model using base Julia](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector/abm_vector.md)
@@ -94,7 +94,12 @@ include(joinpath(@__DIR__,"tutorials","appendix.jl"))
 appendix()
 ```
 
-Change to the root directory of the repository and run `julia build.jl` from the command line or `include("build.jl")` from within Julia.
+Change to the root directory of the repository and run the following from within Julia.
+
+```julia
+include("build.jl")
+weave_all()
+```
 
 ## Acknowledgements
 

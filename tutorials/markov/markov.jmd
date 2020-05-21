@@ -86,7 +86,7 @@ prob_markov = DiscreteProblem(sir_markov!,u0,tspan,p)
 ```
 
 ```julia
-sol_markov = solve(prob_markov,solver=FunctionMap);
+sol_markov = solve(prob_markov,solver=FunctionMap());
 ```
 
 ## Post-processing

@@ -1,4 +1,4 @@
-# Agent-based model using standard Julia
+# Agent-based model using DifferentialEquations
 Simon Frost (@sdwfrost), 2020-05-03
 
 ## Introduction
@@ -14,6 +14,8 @@ There are multiple ways in which the model state can be updated. In this impleme
 ## Libraries
 
 ````julia
+using DifferentialEquations
+using DiffEqCallbacks
 using Distributions
 using StatsBase
 using Random
@@ -47,52 +49,6 @@ As this is a simple model, the global state of the system is a vector of infecti
 ````
 
 
-
-
-
-This is an inefficient version that returns a new state vector.
-
-````julia
-function sir_abm(u,p,t)
-    du = deepcopy(u)
-    (β,c,γ,δt) = p
-    N = length(u)
-    for i in 1:N # loop through agents
-        # If recovered
-        if u[i]==Recovered continue
-        # If susceptible
-        elseif u[i]==Susceptible
-            ncontacts = rand(Poisson(c*δt))
-            du[i]=Susceptible
-            ncontacts = rand(Poisson(c*δt))
-            while ncontacts > 0
-                j = sample(1:N)
-                if j==i
-                    continue
-                end
-                a = u[j]
-                if a==Infected && rand() < β
-                    du[i] = Infected
-                    break
-                end
-                ncontacts -= 1
-            end
-        # If infected
-    else u[i]==Infected
-            if rand() < γ
-                du[i] = Recovered
-            end
-        end
-    end
-    du
-end;
-````
-
-
-
-
-
-This function is an in-place version.
 
 ````julia
 function sir_abm!(du,u,p,t)
@@ -140,10 +96,8 @@ end;
 
 ````julia
 δt = 0.1
-nsteps = 400
-tf = nsteps*δt
-tspan = (0.0,nsteps)
-t = 0:δt:tf;
+tf = 40.0
+tspan = (0.0,tf);
 ````
 
 
@@ -207,93 +161,86 @@ Random.seed!(1234);
 We need some reporting functions.
 
 ````julia
-susceptible(x) = count(i == Susceptible for i in x)
-infected(x) = count(i == Infected for i in x)
-recovered(x) = count(i == Recovered for i in x);
-````
-
-
-
-
-
-This runs the version that generates new state vectors.
-
-````julia
-function sim(u0,nsteps,dt)
-    u = copy(u0)
-    t = 0.0
-    ta = []
-    Sa = []
-    Ia = []
-    Ra =[]
-    push!(ta,t)
-    push!(Sa,susceptible(u))
-    push!(Ia,infected(u))
-    push!(Ra,recovered(u))
-    for i in 1:nsteps
-        u=sir_abm(u,p,t)
-        t = t + dt
-        push!(ta,t)
-        push!(Sa,susceptible(u))
-        push!(Ia,infected(u))
-        push!(Ra,recovered(u))
-    end
-    DataFrame(t=ta,S=Sa,I=Ia,R=Ra)
-end
-````
-
-
-````
-sim (generic function with 1 method)
-````
-
-
-
-
-
-Now, the in-place version.
-
-````julia
-function sim!(u0,nsteps,dt)
-    u = copy(u0)
-    du = copy(u0)
-    t = 0.0
-    ta = []
-    Sa = []
-    Ia = []
-    Ra =[]
-    push!(ta,t)
-    push!(Sa,susceptible(u))
-    push!(Ia,infected(u))
-    push!(Ra,recovered(u))
-    for i in 1:nsteps
-        sir_abm!(du,u,p,t)
-        u,du = du,u
-        t = t + dt
-        push!(ta,t)
-        push!(Sa,susceptible(u))
-        push!(Ia,infected(u))
-        push!(Ra,recovered(u))
-    end
-    DataFrame(t=ta,S=Sa,I=Ia,R=Ra)
-end
-````
-
-
-````
-sim! (generic function with 1 method)
+susceptible(u) = count(i == Susceptible for i in u)
+infected(u) = count(i == Infected for i in u)
+recovered(u) = count(i == Recovered for i in u);
 ````
 
 
 
 ````julia
-df_abm = sim(u0,nsteps,δt);
+saved_values = SavedValues(Float64, Tuple{Int64,Int64,Int64})
+cb = SavingCallback((u,t,integrator)->(susceptible(u),infected(u),recovered(u)),
+    saved_values,
+    saveat=0:δt:tf)
+````
+
+
+````
+DiffEqBase.DiscreteCallback{DiffEqCallbacks.var"#30#31",DiffEqCallbacks.Sav
+ingAffect{Main.WeaveSandBox8.var"#7#8",Float64,Tuple{Int64,Int64,Int64},Dat
+aStructures.BinaryHeap{Float64,DataStructures.LessThan},Array{Float64,1}},t
+ypeof(DiffEqCallbacks.saving_initialize)}(DiffEqCallbacks.var"#30#31"(), Di
+ffEqCallbacks.SavingAffect{Main.WeaveSandBox8.var"#7#8",Float64,Tuple{Int64
+,Int64,Int64},DataStructures.BinaryHeap{Float64,DataStructures.LessThan},Ar
+ray{Float64,1}}(Main.WeaveSandBox8.var"#7#8"(), SavedValues{tType=Float64, 
+savevalType=Tuple{Int64,Int64,Int64}}
+t:
+Float64[]
+saveval:
+Tuple{Int64,Int64,Int64}[], DataStructures.BinaryHeap{Float64,DataStructure
+s.LessThan}(DataStructures.LessThan(), [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 
+0.7, 0.8, 0.9  …  39.1, 39.2, 39.3, 39.4, 39.5, 39.6, 39.7, 39.8, 39.9, 40.
+0]), [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9  …  39.1, 39.2, 39.3
+, 39.4, 39.5, 39.6, 39.7, 39.8, 39.9, 40.0], false, true, 0), DiffEqCallbac
+ks.saving_initialize, Bool[0, 0])
 ````
 
 
 
 ````julia
-df_abm! = sim!(u0,nsteps,δt);
+prob_abm = DiscreteProblem(sir_abm!,u0,tspan,p)
+````
+
+
+````
+DiscreteProblem with uType Array{Main.WeaveSandBox8.InfectionStatus,1} and 
+tType Float64. In-place: true
+timespan: (0.0, 40.0)
+u0: Main.WeaveSandBox8.InfectionStatus[Main.WeaveSandBox8.Infected, Main.We
+aveSandBox8.Infected, Main.WeaveSandBox8.Infected, Main.WeaveSandBox8.Infec
+ted, Main.WeaveSandBox8.Infected, Main.WeaveSandBox8.Infected, Main.WeaveSa
+ndBox8.Infected, Main.WeaveSandBox8.Infected, Main.WeaveSandBox8.Infected, 
+Main.WeaveSandBox8.Infected  …  Main.WeaveSandBox8.Susceptible, Main.WeaveS
+andBox8.Susceptible, Main.WeaveSandBox8.Susceptible, Main.WeaveSandBox8.Sus
+ceptible, Main.WeaveSandBox8.Susceptible, Main.WeaveSandBox8.Susceptible, M
+ain.WeaveSandBox8.Susceptible, Main.WeaveSandBox8.Susceptible, Main.WeaveSa
+ndBox8.Susceptible, Main.WeaveSandBox8.Susceptible]
+````
+
+
+
+````julia
+sol_abm = solve(prob_abm,
+    solver = FunctionMap(),
+    dt = δt,
+    callback = cb,
+    dense = false,
+    save_on = false);
+````
+
+
+
+
+
+## Post-processing
+
+We can convert the output to a dataframe for convenience.
+
+````julia
+df_abm = DataFrame(saved_values.saveval)
+rename!(df_abm,[:S,:I,:R])
+df_abm[!,:t] = saved_values.t;
 ````
 
 
@@ -302,72 +249,42 @@ df_abm! = sim!(u0,nsteps,δt);
 
 ## Plotting
 
-
 ````julia
 @df df_abm plot(:t,
     [:S :I :R],
     label=["S" "I" "R"],
     xlabel="Time",
-    ylabel="Number",
-    title="New state")
+    ylabel="Number")
 ````
 
 
-![](figures/abm_vector_15_1.png)
-
-````julia
-@df df_abm! plot(:t,
-    [:S :I :R],
-    label=["S" "I" "R"],
-    xlabel="Time",
-    ylabel="Number",
-    title="In-place")
-````
-
-
-![](figures/abm_vector_16_1.png)
+![](figures/abm_vector_diffeq_14_1.png)
 
 
 
 ## Benchmarking
 
 ````julia
-@benchmark sim(u0,nsteps,δt)
+@benchmark solve(prob_abm,
+    solver=FunctionMap,
+    dt=δt,
+    callback=cb,
+    dense=false,
+    save_on=false)
 ````
 
 
 ````
 BenchmarkTools.Trial: 
-  memory estimate:  1.80 MiB
-  allocs estimate:  2417
+  memory estimate:  43.41 KiB
+  allocs estimate:  79
   --------------
-  minimum time:     180.369 ms (0.00% GC)
-  median time:      226.737 ms (0.00% GC)
-  mean time:        224.382 ms (0.00% GC)
-  maximum time:     279.076 ms (0.00% GC)
+  minimum time:     83.574 ms (0.00% GC)
+  median time:      120.873 ms (0.00% GC)
+  mean time:        123.896 ms (0.00% GC)
+  maximum time:     190.101 ms (0.00% GC)
   --------------
-  samples:          23
-  evals/sample:     1
-````
-
-
-
-````julia
-@benchmark sim!(u0,nsteps,δt)
-````
-
-
-````
-BenchmarkTools.Trial: 
-  memory estimate:  74.75 KiB
-  allocs estimate:  1216
-  --------------
-  minimum time:     110.239 ms (0.00% GC)
-  median time:      132.940 ms (0.00% GC)
-  mean time:        135.727 ms (0.00% GC)
-  maximum time:     194.989 ms (0.00% GC)
-  --------------
-  samples:          37
+  samples:          41
   evals/sample:     1
 ````
 

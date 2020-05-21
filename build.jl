@@ -62,4 +62,4 @@ function weave_folder(folder)
   end
 end
 
-weave_all()
+#weave_all()

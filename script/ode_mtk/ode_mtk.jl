@@ -18,7 +18,6 @@ eqs = [D(S) ~ -β*c*I/N*S,
 
 
 sys = ODESystem(eqs)
-sys = ode_order_lowering(sys);
 
 
 δt = 0.1
