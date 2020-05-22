@@ -6,7 +6,6 @@ using Random
 using Distributions
 using DiffEqParamEstim
 using DataFrames
-using DataFrames
 using StatsPlots
 using BenchmarkTools
 
@@ -61,6 +60,9 @@ df_ode[!,:t] = obstimes;
     ylabel="Number")
 
 
+Random.seed!(1234);
+
+
 data = rand.(Poisson.(df_ode[!,:x4]))
 
 
@@ -92,12 +94,10 @@ upper1 = 1.0
 initial_x1 = 0.1
 
 
-opt1_ss = optimize(ss1,lower1,upper1)
-opt1_ss.minimizer
+opt1_ss = Optim.optimize(ss1,lower1,upper1)
 
 
-opt1_nll = optimize(nll1,lower1,upper1)
-opt1_nll.minimizer
+opt1_nll = Optim.optimize(nll1,lower1,upper1)
 
 
 function ss2(x)
@@ -125,12 +125,10 @@ upper2 = [1.0,1.0]
 initial_x2 = [0.01,0.1]
 
 
-opt2_ss = optimize(ss2,lower2,upper2,initial_x2)
-opt2_ss.minimizer
+opt2_ss = Optim.optimize(ss2,lower2,upper2,initial_x2)
 
 
-opt2_nll = optimize(nll2,lower2,upper2,initial_x2)
-opt2_nll.minimizer
+opt2_nll = Optim.optimize(nll2,lower2,upper2,initial_x2)
 
 
 function loss_function(sol)
@@ -140,8 +138,8 @@ end
 
 
 prob_generator = (prob,q) -> remake(prob,
-                            u0=[1000-(q[1]*1000),q[1]*1000,0.0,0.0],
-                            p=[q[2],10.0,0.25])
+    u0=[1000-(q[1]*1000),q[1]*1000,0.0,0.0],
+    p=[q[2],10.0,0.25])
 
 
 cost_function = build_loss_objective(prob_ode,
@@ -154,7 +152,6 @@ cost_function = build_loss_objective(prob_ode,
 
 
 opt_pe1 = Optim.optimize(cost_function,lower2,upper2,initial_x2)
-opt_pe1.minimizer
 
 
 using NLopt

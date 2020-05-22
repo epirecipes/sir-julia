@@ -1,4 +1,4 @@
-# Ordinary differential equation model
+# Ordinary differential equation model with inference
 Simon Frost (@sdwfrost), 2020-04-27
 
 ## Introduction
@@ -9,6 +9,8 @@ The classical ODE version of the SIR model is:
 - Continuous in time
 - Continuous in state
 
+In this notebook, we try to infer the parameter values from a simulated dataset.
+
 ## Libraries
 
 ```julia
@@ -18,7 +20,6 @@ using DiffEqCallbacks
 using Random
 using Distributions
 using DiffEqParamEstim
-using DataFrames
 using DataFrames
 using StatsPlots
 using BenchmarkTools
@@ -73,6 +74,8 @@ p = [0.05,10.0,0.25]; # β,c,γ
 
 ## Accumulator interface
 
+In order to fit counts of new infections every time unit, we add a callback that sets $Y$ to zero at the observation times. This will result in two observations (one with non-zero `Y`, one with `Y`=0) at each observation time. However, the standard saving behaviour is turned off, so we don't need to have a special saving callback.
+
 ```julia
 affect!(integrator) = integrator.u[4] = 0.0
 cb_zero = PresetTimeCallback(obstimes,affect!)
@@ -83,6 +86,8 @@ cb_zero = PresetTimeCallback(obstimes,affect!)
 ```julia
 prob_ode = ODEProblem(sir_ode!,u0,tspan,p)
 ```
+
+The callback that resets `Y` is added to the system. Note that this requires `DiffEqCallbacks`. If multiple callbacks are required, then a `CallbackSet` can be passed instead.
 
 ```julia
 sol_ode = solve(prob_ode,callback=cb_zero);
@@ -110,6 +115,12 @@ We can now plot the results.
 
 ## Generating data
 
+Although the ODE system is deterministic, we can add measurement error to the counts of new cases. Here, a Poisson distribution is used, although a negative binomial could also be used (which would introduce an additional parameter for the variance).
+
+```julia
+Random.seed!(1234);
+```
+
 ```julia
 data = rand.(Poisson.(df_ode[!,:x4]))
 ```
@@ -127,7 +138,7 @@ using Optim
 
 ### Single parameter optimization
 
-Sum of squares for a single parameter model (β).
+This function calculates the sum of squares for a single parameter fit (β). Note how the original `ODEProblem` is remade using the `remake` function.
 
 ```julia
 function ss1(β)
@@ -138,7 +149,7 @@ function ss1(β)
 end
 ```
 
-Negative log-likelihood for a single parameter, β.
+Optimisation routines typically *minimise* functions, so for maximum likelihood estimates, we have to define the *negative* log-likelihood - here, for a single parameter, β.
 
 ```julia
 function nll1(β)
@@ -149,7 +160,7 @@ function nll1(β)
 end
 ```
 
-Bounds and initial values for optimization.
+In this model, β is positive and (through the meaning of the parameter) bounded between 0 and 1. For point estimates, we could use constrained optimisation, or transform β to an unconstrained scale. Here is the first approach, defining the bounds and initial values for optimization.
 
 ```julia
 lower1 = 0.0
@@ -157,18 +168,16 @@ upper1 = 1.0
 initial_x1 = 0.1
 ```
 
-Model fit using sum of squares.
+Model fit using sum of squares. The output isn't suppressed, as the output of the outcome of the optimisation, such as whether it has converged, is important.
 
 ```julia
-opt1_ss = optimize(ss1,lower1,upper1)
-opt1_ss.minimizer
+opt1_ss = Optim.optimize(ss1,lower1,upper1)
 ```
 
 Model fit using (negative) log likelihood.
 
 ```julia
-opt1_nll = optimize(nll1,lower1,upper1)
-opt1_nll.minimizer
+opt1_nll = Optim.optimize(nll1,lower1,upper1)
 ```
 
 ### Multiparameter optimization
@@ -208,16 +217,16 @@ initial_x2 = [0.01,0.1]
 ```
 
 ```julia
-opt2_ss = optimize(ss2,lower2,upper2,initial_x2)
-opt2_ss.minimizer
+opt2_ss = Optim.optimize(ss2,lower2,upper2,initial_x2)
 ```
 
 ```julia
-opt2_nll = optimize(nll2,lower2,upper2,initial_x2)
-opt2_nll.minimizer
+opt2_nll = Optim.optimize(nll2,lower2,upper2,initial_x2)
 ```
 
 ## Using DiffEqParamEstim
+
+The advantage of using a framework such as DiffEqParamEstim is that a number of different frameworks can be employed easily. Firstly, the loss function is defined.
 
 ```julia
 function loss_function(sol)
@@ -226,11 +235,15 @@ function loss_function(sol)
 end
 ```
 
+Secondly, a function that generates the `Problem` to be solved.
+
 ```julia
 prob_generator = (prob,q) -> remake(prob,
-                            u0=[1000-(q[1]*1000),q[1]*1000,0.0,0.0],
-                            p=[q[2],10.0,0.25])
+    u0=[1000-(q[1]*1000),q[1]*1000,0.0,0.0],
+    p=[q[2],10.0,0.25])
 ```
+
+The loss function and the problem generator then get combined to build the objective function.
 
 ```julia
 cost_function = build_loss_objective(prob_ode,
@@ -244,12 +257,15 @@ cost_function = build_loss_objective(prob_ode,
 
 ### Optim interface
 
+The resulting cost function can be passed to `Optim.jl` as before.
+
 ```julia
 opt_pe1 = Optim.optimize(cost_function,lower2,upper2,initial_x2)
-opt_pe1.minimizer
 ```
 
 ### NLopt interface
+
+The same function can also be passed to `NLopt.jl`.
 
 ```julia
 using NLopt
@@ -261,6 +277,8 @@ opt.min_objective = cost_function
 ```
 
 ### BlackBoxOptim interface
+
+We can also use `BlackBoxOptim.jl`.
 
 ```julia
 using BlackBoxOptim
