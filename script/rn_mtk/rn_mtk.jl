@@ -10,7 +10,7 @@ using Plots
 
 @parameters t β c γ
 @variables S(t) I(t) R(t)
-@derivatives D'~t
+
 N=S+I+R # This is recognized as a derived variable
 rxs = [Reaction((β*c)/N, [S,I], [I], [1,1], [2])
        Reaction(γ, [I], [R])]

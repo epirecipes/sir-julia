@@ -26,7 +26,7 @@ using Plots
 ````julia
 @parameters t β c γ
 @variables S(t) I(t) R(t)
-@derivatives D'~t
+
 N=S+I+R # This is recognized as a derived variable
 rxs = [Reaction((β*c)/N, [S,I], [I], [1,1], [2])
        Reaction(γ, [I], [R])]
@@ -34,12 +34,15 @@ rxs = [Reaction((β*c)/N, [S,I], [I], [1,1], [2])
 
 
 ````
-2-element Array{Reaction{Variable,Int64},1}:
- Reaction{Variable,Int64}((β * c) / ((S(t) + I(t)) + R(t)), Operation[S(t),
- I(t)], Operation[I(t)], [1, 1], [2], Pair{Variable,Int64}[I => 1, S => -1]
-, false)
- Reaction{Variable,Int64}(γ, Operation[I(t)], Operation[R(t)], [1], [1], Pa
-ir{Variable,Int64}[R => 1, I => -1], false)
+2-element Array{ModelingToolkit.Reaction{ModelingToolkit.Variable,Int64},1}
+:
+ ModelingToolkit.Reaction{ModelingToolkit.Variable,Int64}((β * c) / ((S(t) 
++ I(t)) + R(t)), ModelingToolkit.Operation[S(t), I(t)], ModelingToolkit.Ope
+ration[I(t)], [1, 1], [2], Pair{ModelingToolkit.Variable,Int64}[I => 1, S =
+> -1], false)
+ ModelingToolkit.Reaction{ModelingToolkit.Variable,Int64}(γ, ModelingToolki
+t.Operation[I(t)], ModelingToolkit.Operation[R(t)], [1], [1], Pair{Modeling
+Toolkit.Variable,Int64}[R => 1, I => -1], false)
 ````
 
 
@@ -50,12 +53,15 @@ rs  = ReactionSystem(rxs, t, [S,I,R], [β,c,γ])
 
 
 ````
-ReactionSystem(Reaction[Reaction{Variable,Int64}((β * c) / ((S(t) + I(t)) +
- R(t)), Operation[S(t), I(t)], Operation[I(t)], [1, 1], [2], Pair{Variable,
-Int64}[I => 1, S => -1], false), Reaction{Variable,Int64}(γ, Operation[I(t)
-], Operation[R(t)], [1], [1], Pair{Variable,Int64}[R => 1, I => -1], false)
-], t, Variable[S, I, R], Variable[β, c, γ], Symbol("##ReactionSystem#852"),
- ReactionSystem[])
+ModelingToolkit.ReactionSystem(ModelingToolkit.Reaction[ModelingToolkit.Rea
+ction{ModelingToolkit.Variable,Int64}((β * c) / ((S(t) + I(t)) + R(t)), Mod
+elingToolkit.Operation[S(t), I(t)], ModelingToolkit.Operation[I(t)], [1, 1]
+, [2], Pair{ModelingToolkit.Variable,Int64}[I => 1, S => -1], false), Model
+ingToolkit.Reaction{ModelingToolkit.Variable,Int64}(γ, ModelingToolkit.Oper
+ation[I(t)], ModelingToolkit.Operation[R(t)], [1], [1], Pair{ModelingToolki
+t.Variable,Int64}[R => 1, I => -1], false)], t, ModelingToolkit.Variable[S,
+ I, R], ModelingToolkit.Variable[β, c, γ], Symbol("##ReactionSystem#358"), 
+ModelingToolkit.ReactionSystem[])
 ````
 
 
@@ -92,7 +98,7 @@ u0 = [S => 990.0,
 
 
 ````
-3-element Array{Pair{Operation,Float64},1}:
+3-element Array{Pair{ModelingToolkit.Operation,Float64},1}:
  S(t) => 990.0
  I(t) => 10.0
  R(t) => 0.0
@@ -114,7 +120,7 @@ p = [β=>0.05,
 
 
 ````
-3-element Array{Pair{Operation,Float64},1}:
+3-element Array{Pair{ModelingToolkit.Operation,Float64},1}:
  β => 0.05
  c => 10.0
  γ => 0.25
@@ -132,22 +138,22 @@ Random.seed!(1234);
 
 
 ````
-MersenneTwister(UInt32[0x000004d2], Random.DSFMT.DSFMT_state(Int32[-1393240
-018, 1073611148, 45497681, 1072875908, 436273599, 1073674613, -2043716458, 
-1073445557, -254908435, 1072827086  …  -599655111, 1073144102, 367655457, 1
-072985259, -1278750689, 1018350124, -597141475, 249849711, 382, 0]), [0.0, 
-0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.0, 0.0, 0.0, 0.0, 0.0, 0.
-0, 0.0, 0.0, 0.0, 0.0], UInt128[0x00000000000000000000000000000000, 0x00000
-000000000000000000000000000, 0x00000000000000000000000000000000, 0x00000000
-000000000000000000000000, 0x00000000000000000000000000000000, 0x00000000000
-000000000000000000000, 0x00000000000000000000000000000000, 0x00000000000000
-000000000000000000, 0x00000000000000000000000000000000, 0x00000000000000000
-000000000000000  …  0x00000000000000000000000000000000, 0x00000000000000000
-000000000000000, 0x00000000000000000000000000000000, 0x00000000000000000000
-000000000000, 0x00000000000000000000000000000000, 0x00000000000000000000000
-000000000, 0x00000000000000000000000000000000, 0x00000000000000000000000000
-000000, 0x00000000000000000000000000000000, 0x00000000000000000000000000000
-000], 1002, 0)
+Random.MersenneTwister(UInt32[0x000004d2], Random.DSFMT.DSFMT_state(Int32[-
+1393240018, 1073611148, 45497681, 1072875908, 436273599, 1073674613, -20437
+16458, 1073445557, -254908435, 1072827086  …  -599655111, 1073144102, 36765
+5457, 1072985259, -1278750689, 1018350124, -597141475, 249849711, 382, 0]),
+ [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.0, 0.0, 0.0, 0.0, 
+0.0, 0.0, 0.0, 0.0, 0.0, 0.0], UInt128[0x00000000000000000000000000000000, 
+0x00000000000000000000000000000000, 0x00000000000000000000000000000000, 0x0
+0000000000000000000000000000000, 0x00000000000000000000000000000000, 0x0000
+0000000000000000000000000000, 0x00000000000000000000000000000000, 0x0000000
+0000000000000000000000000, 0x00000000000000000000000000000000, 0x0000000000
+0000000000000000000000  …  0x00000000000000000000000000000000, 0x0000000000
+0000000000000000000000, 0x00000000000000000000000000000000, 0x0000000000000
+0000000000000000000, 0x00000000000000000000000000000000, 0x0000000000000000
+0000000000000000, 0x00000000000000000000000000000000, 0x0000000000000000000
+0000000000000, 0x00000000000000000000000000000000, 0x0000000000000000000000
+0000000000], 1002, 0)
 ````
 
 
