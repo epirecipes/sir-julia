@@ -41,12 +41,12 @@ eqs = [D(S) ~ -β*c*I/N*S,
 
 
 ````
-3-element Array{Equation,1}:
- Equation(derivative(S(t), t), (((-β * c) * I(t)) / ((S(t) + I(t)) + R(t)))
- * S(t))
- Equation(derivative(I(t), t), (((β * c) * I(t)) / ((S(t) + I(t)) + R(t))) 
-* S(t) - γ * I(t))
- Equation(derivative(R(t), t), γ * I(t))
+3-element Array{ModelingToolkit.Equation,1}:
+ ModelingToolkit.Equation(derivative(S(t), t), (((-β * c) * I(t)) / ((S(t) 
++ I(t)) + R(t))) * S(t))
+ ModelingToolkit.Equation(derivative(I(t), t), (((β * c) * I(t)) / ((S(t) +
+ I(t)) + R(t))) * S(t) - γ * I(t))
+ ModelingToolkit.Equation(derivative(R(t), t), γ * I(t))
 ````
 
 
@@ -57,14 +57,17 @@ sys = ODESystem(eqs)
 
 
 ````
-ODESystem(Equation[Equation(derivative(S(t), t), (((-β * c) * I(t)) / ((S(t
-) + I(t)) + R(t))) * S(t)), Equation(derivative(I(t), t), (((β * c) * I(t))
- / ((S(t) + I(t)) + R(t))) * S(t) - γ * I(t)), Equation(derivative(R(t), t)
-, γ * I(t))], t, Variable[S, I, R], Variable[β, γ, c], Base.RefValue{Array{
-Expression,1}}(Expression[]), Base.RefValue{Array{Expression,2}}(Array{Expr
-ession}(undef,0,0)), Base.RefValue{Array{Expression,2}}(Array{Expression}(u
-ndef,0,0)), Base.RefValue{Array{Expression,2}}(Array{Expression}(undef,0,0)
-), Symbol("##ODESystem#755"), ODESystem[])
+ModelingToolkit.ODESystem(ModelingToolkit.Equation[ModelingToolkit.Equation
+(derivative(S(t), t), (((-β * c) * I(t)) / ((S(t) + I(t)) + R(t))) * S(t)),
+ ModelingToolkit.Equation(derivative(I(t), t), (((β * c) * I(t)) / ((S(t) +
+ I(t)) + R(t))) * S(t) - γ * I(t)), ModelingToolkit.Equation(derivative(R(t
+), t), γ * I(t))], t, ModelingToolkit.Variable[S, I, R], ModelingToolkit.Va
+riable[c, γ, β], Base.RefValue{Array{ModelingToolkit.Expression,1}}(Modelin
+gToolkit.Expression[]), Base.RefValue{Array{ModelingToolkit.Expression,2}}(
+Array{ModelingToolkit.Expression}(undef,0,0)), Base.RefValue{Array{Modeling
+Toolkit.Expression,2}}(Array{ModelingToolkit.Expression}(undef,0,0)), Base.
+RefValue{Array{ModelingToolkit.Expression,2}}(Array{ModelingToolkit.Express
+ion}(undef,0,0)), Symbol("##ODESystem#647"), ModelingToolkit.ODESystem[])
 ````
 
 
@@ -103,7 +106,7 @@ u0 = [S => 990.0,
 
 
 ````
-3-element Array{Pair{Operation,Float64},1}:
+3-element Array{Pair{ModelingToolkit.Operation,Float64},1}:
  S(t) => 990.0
  I(t) => 10.0
  R(t) => 0.0
@@ -125,7 +128,7 @@ p = [β=>0.05,
 
 
 ````
-3-element Array{Pair{Operation,Float64},1}:
+3-element Array{Pair{ModelingToolkit.Operation,Float64},1}:
  β => 0.05
  c => 10.0
  γ => 0.25
@@ -245,13 +248,13 @@ We can now plot the results.
 
 ````
 BenchmarkTools.Trial: 
-  memory estimate:  30.92 KiB
-  allocs estimate:  322
+  memory estimate:  30.91 KiB
+  allocs estimate:  321
   --------------
-  minimum time:     34.028 μs (0.00% GC)
-  median time:      39.284 μs (0.00% GC)
-  mean time:        46.366 μs (11.16% GC)
-  maximum time:     26.202 ms (99.67% GC)
+  minimum time:     40.899 μs (0.00% GC)
+  median time:      48.858 μs (0.00% GC)
+  mean time:        57.476 μs (7.49% GC)
+  maximum time:     21.755 ms (99.52% GC)
   --------------
   samples:          10000
   evals/sample:     1
@@ -281,36 +284,43 @@ Environment:
 ```
 Status `~/.julia/environments/v1.4/Project.toml`
 [46ada45e-f475-11e8-01d0-f70cc89e6671] Agents 3.1.0
+[f5f396d3-230c-5e07-80e6-9fadf06146cc] ApproxBayes 0.3.2
 [c52e3926-4ff0-5f6e-af25-54175e0327b1] Atom 0.12.11
 [6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf] BenchmarkTools 0.5.0
 [a134a8b2-14d6-55f6-9291-3336d3ab0209] BlackBoxOptim 0.5.0
-[2445eb08-9709-466a-b3fc-47e12bd697a2] DataDrivenDiffEq 0.2.0
-[a93c6f00-e57d-5684-b7b6-d8193f3e46c0] DataFrames 0.21.0
-[ebbdde9d-f333-5424-9be2-dbf1e9acfb5e] DiffEqBayes 2.14.0
+[2445eb08-9709-466a-b3fc-47e12bd697a2] DataDrivenDiffEq 0.3.1
+[a93c6f00-e57d-5684-b7b6-d8193f3e46c0] DataFrames 0.21.1
+[ebbdde9d-f333-5424-9be2-dbf1e9acfb5e] DiffEqBayes 2.14.1
 [459566f4-90b8-5000-8ac3-15dfb0a30def] DiffEqCallbacks 2.13.2
+[aae7a2af-3d4f-5e19-a356-7da93b79d9d0] DiffEqFlux 1.10.3
 [c894b116-72e5-5b58-be3c-e6d8d4ac2b12] DiffEqJump 6.7.5
 [1130ab10-4a5a-5621-a13d-e4788d82bd4c] DiffEqParamEstim 1.14.1
+[41bf760c-e81c-5289-8e54-58b1f1f8abe2] DiffEqSensitivity 6.17.0
 [0c46a032-eb83-5123-abaf-570d42b7fbaa] DifferentialEquations 6.14.0
+[b4f34e82-e78d-54a5-968a-f98e89d6e8f7] Distances 0.8.2
 [31c24e10-a181-5473-b8eb-7969acd0382f] Distributions 0.23.2
-[634d3b9d-ee7a-5ddf-bec9-22491ea816e1] DrWatson 1.11.0
-[587475ba-b771-5e3f-ad9e-33799f191a9c] Flux 0.8.3
+[634d3b9d-ee7a-5ddf-bec9-22491ea816e1] DrWatson 1.13.0
+[587475ba-b771-5e3f-ad9e-33799f191a9c] Flux 0.10.5
 [28b8d3ca-fb5f-59d9-8090-bfdbd6d07a71] GR 0.49.1
 [523d8e89-b243-5607-941c-87d699ea6713] Gillespie 0.1.0
+[e850a1a4-d859-11e8-3d54-a195e6d045d3] GpABC 0.0.1
 [7073ff75-c697-5162-941a-fcdaad2a7d2a] IJulia 1.21.2
 [4076af6c-e467-56ae-b986-b466b2749572] JuMP 0.21.2
 [e5e0dc1b-0480-54bc-9374-aad01c23163d] Juno 0.8.2
 [093fc24a-ae57-5d10-9952-331d41423f4d] LightGraphs 1.3.3
 [1914dd2f-81c6-5fcd-8719-6d5c9610ff09] MacroTools 0.5.5
-[ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a] Makie 0.9.5
-[961ee093-0014-501f-94e3-6117800e7a78] ModelingToolkit 3.6.0
+[961ee093-0014-501f-94e3-6117800e7a78] ModelingToolkit 3.6.4
 [76087f3c-5699-56af-9a33-bf431cd00edd] NLopt 0.6.0
-[429524aa-4258-5aef-a3af-852621145aeb] Optim 0.21.0
-[1dea7af3-3e70-54e6-95c3-0bf5283fa5ed] OrdinaryDiffEq 5.38.1
-[91a5bcdd-55d7-5caf-9e0b-520d859cae80] Plots 1.3.1
+[429524aa-4258-5aef-a3af-852621145aeb] Optim 0.20.6
+[1dea7af3-3e70-54e6-95c3-0bf5283fa5ed] OrdinaryDiffEq 5.38.2
+[91a5bcdd-55d7-5caf-9e0b-520d859cae80] Plots 1.3.4
 [428bdadb-6287-5aa5-874b-9969638295fd] SimJulia 0.8.0
 [05bca326-078c-5bf0-a5bf-ce7c7982d7fd] SimpleDiffEq 1.1.0
+[276daf66-3868-5448-9aa4-cd146d93841b] SpecialFunctions 0.10.3
 [f3b207a7-027a-5e70-b257-86293d7955fd] StatsPlots 0.14.6
 [789caeaf-c7a9-5a7d-9973-96adeb23e2a0] StochasticDiffEq 6.23.0
-[fce5fe82-541a-59a6-adf8-730c64b5f9a0] Turing 0.12.0
-[44d3d7a6-8a23-5bf8-98c5-b353f8df5ec9] Weave 0.10.0
+[92b13dbe-c966-51a2-8445-caca9f8a7d42] TaylorIntegration 0.8.3
+[fce5fe82-541a-59a6-adf8-730c64b5f9a0] Turing 0.13.0
+[44d3d7a6-8a23-5bf8-98c5-b353f8df5ec9] Weave 0.10.2
+[e88e6eb3-aa80-5325-afca-941959d7151f] Zygote 0.4.20
 ```

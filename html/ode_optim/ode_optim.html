@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<HTML lang = "en">
+<HEAD>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  
+  
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+  </script>
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+
+  
+<style>
+pre.hljl {
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+    overflow-x: auto;
+    color: rgb(68,68,68); background-color: rgb(251,251,251); }
+pre.hljl > span.hljl-t { }
+pre.hljl > span.hljl-w { }
+pre.hljl > span.hljl-e { }
+pre.hljl > span.hljl-eB { }
+pre.hljl > span.hljl-o { }
+pre.hljl > span.hljl-k { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kc { color: rgb(59,151,46); font-style: italic; }
+pre.hljl > span.hljl-kd { color: rgb(214,102,97); font-style: italic; }
+pre.hljl > span.hljl-kn { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kp { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kr { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kt { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-n { }
+pre.hljl > span.hljl-na { }
+pre.hljl > span.hljl-nb { }
+pre.hljl > span.hljl-nbp { }
+pre.hljl > span.hljl-nc { }
+pre.hljl > span.hljl-ncB { }
+pre.hljl > span.hljl-nd { color: rgb(214,102,97); }
+pre.hljl > span.hljl-ne { }
+pre.hljl > span.hljl-neB { }
+pre.hljl > span.hljl-nf { color: rgb(66,102,213); }
+pre.hljl > span.hljl-nfm { color: rgb(66,102,213); }
+pre.hljl > span.hljl-np { }
+pre.hljl > span.hljl-nl { }
+pre.hljl > span.hljl-nn { }
+pre.hljl > span.hljl-no { }
+pre.hljl > span.hljl-nt { }
+pre.hljl > span.hljl-nv { }
+pre.hljl > span.hljl-nvc { }
+pre.hljl > span.hljl-nvg { }
+pre.hljl > span.hljl-nvi { }
+pre.hljl > span.hljl-nvm { }
+pre.hljl > span.hljl-l { }
+pre.hljl > span.hljl-ld { color: rgb(148,91,176); font-style: italic; }
+pre.hljl > span.hljl-s { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sa { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sb { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sc { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sd { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdC { color: rgb(201,61,57); }
+pre.hljl > span.hljl-se { color: rgb(59,151,46); }
+pre.hljl > span.hljl-sh { color: rgb(201,61,57); }
+pre.hljl > span.hljl-si { }
+pre.hljl > span.hljl-so { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sr { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ss { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ssB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-nB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nbB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nfB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nh { color: rgb(59,151,46); }
+pre.hljl > span.hljl-ni { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nil { color: rgb(59,151,46); }
+pre.hljl > span.hljl-noB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-oB { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-ow { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-p { }
+pre.hljl > span.hljl-c { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-ch { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cm { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cp { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cpB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cs { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-csB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-g { }
+pre.hljl > span.hljl-gd { }
+pre.hljl > span.hljl-ge { }
+pre.hljl > span.hljl-geB { }
+pre.hljl > span.hljl-gh { }
+pre.hljl > span.hljl-gi { }
+pre.hljl > span.hljl-go { }
+pre.hljl > span.hljl-gp { }
+pre.hljl > span.hljl-gs { }
+pre.hljl > span.hljl-gsB { }
+pre.hljl > span.hljl-gt { }
+</style>
+
+
+
+  <style type="text/css">
+  @font-face {
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 600;
+}
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+body {
+  margin: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 1em 40px;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+pre {
+  overflow: auto;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; /* 2 */
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
+}
+textarea {
+  overflow: auto;
+}
+optgroup {
+  font-weight: bold;
+}
+table {
+  font-family: monospace, monospace;
+  font-size : 0.8em;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+thead th {
+    border-bottom: 1px solid black;
+    background-color: white;
+}
+tr:nth-child(odd){
+  background-color: rgb(248,248,248);
+}
+
+
+/*
+* Skeleton V2.0.4
+* Copyright 2014, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 12/29/2014
+*/
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box; }
+.column,
+.columns {
+  width: 100%;
+  float: left;
+  box-sizing: border-box; }
+@media (min-width: 400px) {
+  .container {
+    width: 85%;
+    padding: 0; }
+}
+@media (min-width: 550px) {
+  .container {
+    width: 80%; }
+  .column,
+  .columns {
+    margin-left: 4%; }
+  .column:first-child,
+  .columns:first-child {
+    margin-left: 0; }
+
+  .one.column,
+  .one.columns                    { width: 4.66666666667%; }
+  .two.columns                    { width: 13.3333333333%; }
+  .three.columns                  { width: 22%;            }
+  .four.columns                   { width: 30.6666666667%; }
+  .five.columns                   { width: 39.3333333333%; }
+  .six.columns                    { width: 48%;            }
+  .seven.columns                  { width: 56.6666666667%; }
+  .eight.columns                  { width: 65.3333333333%; }
+  .nine.columns                   { width: 74.0%;          }
+  .ten.columns                    { width: 82.6666666667%; }
+  .eleven.columns                 { width: 91.3333333333%; }
+  .twelve.columns                 { width: 100%; margin-left: 0; }
+
+  .one-third.column               { width: 30.6666666667%; }
+  .two-thirds.column              { width: 65.3333333333%; }
+
+  .one-half.column                { width: 48%; }
+
+  /* Offsets */
+  .offset-by-one.column,
+  .offset-by-one.columns          { margin-left: 8.66666666667%; }
+  .offset-by-two.column,
+  .offset-by-two.columns          { margin-left: 17.3333333333%; }
+  .offset-by-three.column,
+  .offset-by-three.columns        { margin-left: 26%;            }
+  .offset-by-four.column,
+  .offset-by-four.columns         { margin-left: 34.6666666667%; }
+  .offset-by-five.column,
+  .offset-by-five.columns         { margin-left: 43.3333333333%; }
+  .offset-by-six.column,
+  .offset-by-six.columns          { margin-left: 52%;            }
+  .offset-by-seven.column,
+  .offset-by-seven.columns        { margin-left: 60.6666666667%; }
+  .offset-by-eight.column,
+  .offset-by-eight.columns        { margin-left: 69.3333333333%; }
+  .offset-by-nine.column,
+  .offset-by-nine.columns         { margin-left: 78.0%;          }
+  .offset-by-ten.column,
+  .offset-by-ten.columns          { margin-left: 86.6666666667%; }
+  .offset-by-eleven.column,
+  .offset-by-eleven.columns       { margin-left: 95.3333333333%; }
+
+  .offset-by-one-third.column,
+  .offset-by-one-third.columns    { margin-left: 34.6666666667%; }
+  .offset-by-two-thirds.column,
+  .offset-by-two-thirds.columns   { margin-left: 69.3333333333%; }
+
+  .offset-by-one-half.column,
+  .offset-by-one-half.columns     { margin-left: 52%; }
+
+}
+html {
+  font-size: 62.5%; }
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #222; }
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-weight: 300; }
+h1 { font-size: 3.6rem; line-height: 1.2;  letter-spacing: -.1rem;}
+h2 { font-size: 3.4rem; line-height: 1.25; letter-spacing: -.1rem; }
+h3 { font-size: 3.2rem; line-height: 1.3;  letter-spacing: -.1rem; }
+h4 { font-size: 2.8rem; line-height: 1.35; letter-spacing: -.08rem; }
+h5 { font-size: 2.4rem; line-height: 1.5;  letter-spacing: -.05rem; }
+h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
+
+p {
+  margin-top: 0; }
+a {
+  color: #1EAEDB; }
+a:hover {
+  color: #0FA0CE; }
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-block;
+  height: 38px;
+  padding: 0 30px;
+  color: #555;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  box-sizing: border-box; }
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:focus,
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus {
+  color: #333;
+  border-color: #888;
+  outline: 0; }
+.button.button-primary,
+button.button-primary,
+input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary {
+  color: #FFF;
+  background-color: #33C3F0;
+  border-color: #33C3F0; }
+.button.button-primary:hover,
+button.button-primary:hover,
+input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus,
+input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus {
+  color: #FFF;
+  background-color: #1EAEDB;
+  border-color: #1EAEDB; }
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+  height: 38px;
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box; }
+/* Removes awkward default styles on some inputs for iOS */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; }
+textarea {
+  min-height: 65px;
+  padding-top: 6px;
+  padding-bottom: 6px; }
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid #33C3F0;
+  outline: 0; }
+label,
+legend {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600; }
+fieldset {
+  padding: 0;
+  border-width: 0; }
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline; }
+label > .label-body {
+  display: inline-block;
+  margin-left: .5rem;
+  font-weight: normal; }
+ul {
+  list-style: circle; }
+ol {
+  list-style: decimal; }
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin: 1.5rem 0 1.5rem 3rem;
+  font-size: 90%; }
+li > p {margin : 0;}
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #E1E1E1; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+  padding-right: 0; }
+button,
+.button {
+  margin-bottom: 1rem; }
+input,
+textarea,
+select,
+fieldset {
+  margin-bottom: 1.5rem; }
+pre,
+blockquote,
+dl,
+figure,
+table,
+p,
+ul,
+ol,
+form {
+  margin-bottom: 1.0rem; }
+.u-full-width {
+  width: 100%;
+  box-sizing: border-box; }
+.u-max-full-width {
+  max-width: 100%;
+  box-sizing: border-box; }
+.u-pull-right {
+  float: right; }
+.u-pull-left {
+  float: left; }
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
+  border-width: 0;
+  border-top: 1px solid #E1E1E1; }
+.container:after,
+.row:after,
+.u-cf {
+  content: "";
+  display: table;
+  clear: both; }
+
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre.hljl {
+  margin: 0 0 10px;
+  display: block;
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding : 5px;
+}
+
+pre.output {
+  background: #ffffff;
+}
+
+pre.code {
+  background: #ffffff;
+}
+
+pre.julia-error {
+  color : red
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 13px;
+}
+
+
+@media (min-width: 400px) {}
+@media (min-width: 550px) {}
+@media (min-width: 750px) {}
+@media (min-width: 1000px) {}
+@media (min-width: 1200px) {}
+
+h1.title {margin-top : 20px}
+img {max-width : 100%}
+div.title {text-align: center;}
+
+  </style>
+</HEAD>
+
+<BODY>
+  <div class ="container">
+    <div class = "row">
+      <div class = "col-md-12 twelve columns">
+        <div class="title">
+          
+          
+          
+        </div>
+
+        <h1>Ordinary differential equation model with inference of point estimates using optimization</h1>
+<p>Simon Frost &#40;@sdwfrost&#41;, 2020-04-27</p>
+<h2>Introduction</h2>
+<p>The classical ODE version of the SIR model is:</p>
+<ul>
+<li><p>Deterministic</p>
+</li>
+<li><p>Continuous in time</p>
+</li>
+<li><p>Continuous in state</p>
+</li>
+</ul>
+<p>In this notebook, we try to infer the parameter values from a simulated dataset.</p>
+<h2>Libraries</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>DifferentialEquations</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>SimpleDiffEq</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>DiffEqSensitivity</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Random</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Distributions</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>DiffEqParamEstim</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Plots</span>
+</pre>
+
+
+
+<h2>Transitions</h2>
+<p>The following function provides the derivatives of the model, which it changes in-place. State variables and parameters are unpacked from <code>u</code> and <code>p</code>; this incurs a slight performance hit, but makes the equations much easier to read.</p>
+<p>A variable is included for the cumulative number of infections, <span class="math">$C$</span>.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>sir_ode!</span><span class='hljl-p'>(</span><span class='hljl-n'>du</span><span class='hljl-p'>,</span><span class='hljl-n'>u</span><span class='hljl-p'>,</span><span class='hljl-n'>p</span><span class='hljl-p'>,</span><span class='hljl-n'>t</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-p'>(</span><span class='hljl-n'>S</span><span class='hljl-p'>,</span><span class='hljl-n'>I</span><span class='hljl-p'>,</span><span class='hljl-n'>R</span><span class='hljl-p'>,</span><span class='hljl-n'>C</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>u</span><span class='hljl-t'>
+    </span><span class='hljl-p'>(</span><span class='hljl-n'>β</span><span class='hljl-p'>,</span><span class='hljl-n'>c</span><span class='hljl-p'>,</span><span class='hljl-n'>γ</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>p</span><span class='hljl-t'>
+    </span><span class='hljl-n'>N</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>S</span><span class='hljl-oB'>+</span><span class='hljl-n'>I</span><span class='hljl-oB'>+</span><span class='hljl-n'>R</span><span class='hljl-t'>
+    </span><span class='hljl-n'>infection</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>β</span><span class='hljl-oB'>*</span><span class='hljl-n'>c</span><span class='hljl-oB'>*</span><span class='hljl-n'>I</span><span class='hljl-oB'>/</span><span class='hljl-n'>N</span><span class='hljl-oB'>*</span><span class='hljl-n'>S</span><span class='hljl-t'>
+    </span><span class='hljl-n'>recovery</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>γ</span><span class='hljl-oB'>*</span><span class='hljl-n'>I</span><span class='hljl-t'>
+    </span><span class='hljl-nd'>@inbounds</span><span class='hljl-t'> </span><span class='hljl-k'>begin</span><span class='hljl-t'>
+        </span><span class='hljl-n'>du</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-n'>infection</span><span class='hljl-t'>
+        </span><span class='hljl-n'>du</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>infection</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-t'> </span><span class='hljl-n'>recovery</span><span class='hljl-t'>
+        </span><span class='hljl-n'>du</span><span class='hljl-p'>[</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>recovery</span><span class='hljl-t'>
+        </span><span class='hljl-n'>du</span><span class='hljl-p'>[</span><span class='hljl-ni'>4</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>infection</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-n'>nothing</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+sir_ode&#33; &#40;generic function with 1 method&#41;
+</pre>
+
+
+<h2>Time domain</h2>
+<p>We set the timespan for simulations, <code>tspan</code>, initial conditions, <code>u0</code>, and parameter values, <code>p</code> &#40;which are unpacked above as <code>&#91;β,γ&#93;</code>&#41;.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>δt</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-t'>
+</span><span class='hljl-n'>tmax</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>40.0</span><span class='hljl-t'>
+</span><span class='hljl-n'>tspan</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-n'>tmax</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>obstimes</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-oB'>:</span><span class='hljl-nfB'>1.0</span><span class='hljl-oB'>:</span><span class='hljl-n'>tmax</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+1.0:1.0:40.0
+</pre>
+
+
+<h2>Initial conditions</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>u0</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>990.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>10.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>];</span><span class='hljl-t'> </span><span class='hljl-cs'># S,I.R,Y</span>
+</pre>
+
+
+<pre class="output">
+4-element Array&#123;Float64,1&#125;:
+ 990.0
+  10.0
+   0.0
+   0.0
+</pre>
+
+
+<h2>Parameter values</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>p</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>0.05</span><span class='hljl-p'>,</span><span class='hljl-nfB'>10.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.25</span><span class='hljl-p'>];</span><span class='hljl-t'> </span><span class='hljl-cs'># β,c,γ</span>
+</pre>
+
+
+<pre class="output">
+3-element Array&#123;Float64,1&#125;:
+  0.05
+ 10.0
+  0.25
+</pre>
+
+
+<h2>Running the model</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>prob_ode</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>ODEProblem</span><span class='hljl-p'>(</span><span class='hljl-n'>sir_ode!</span><span class='hljl-p'>,</span><span class='hljl-n'>u0</span><span class='hljl-p'>,</span><span class='hljl-n'>tspan</span><span class='hljl-p'>,</span><span class='hljl-n'>p</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>sol_ode</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>solve</span><span class='hljl-p'>(</span><span class='hljl-n'>prob_ode</span><span class='hljl-p'>,</span><span class='hljl-nf'>Tsit5</span><span class='hljl-p'>(),</span><span class='hljl-n'>saveat</span><span class='hljl-oB'>=</span><span class='hljl-n'>δt</span><span class='hljl-p'>);</span>
+</pre>
+
+
+<pre class="output">
+retcode: Success
+Interpolation: 1st order linear
+t: 41-element Array&#123;Float64,1&#125;:
+  0.0
+  1.0
+  2.0
+  3.0
+  4.0
+  5.0
+  6.0
+  7.0
+  8.0
+  9.0
+  ⋮
+ 32.0
+ 33.0
+ 34.0
+ 35.0
+ 36.0
+ 37.0
+ 38.0
+ 39.0
+ 40.0
+u: 41-element Array&#123;Array&#123;Float64,1&#125;,1&#125;:
+ &#91;990.0, 10.0, 0.0, 0.0&#93;
+ &#91;984.4093729820466, 12.759075298665039, 2.83155171928832, 5.59062701795335
+75&#93;
+ &#91;977.3332026510055, 16.22814554943427, 6.438651799560168, 12.6667973489944
+34&#93;
+ &#91;968.4242204222029, 20.558426973853646, 11.017352603943419, 21.57577957779
+7064&#93;
+ &#91;957.2822747333526, 25.91440777703591, 16.80331748961151, 32.7177252666474
+1&#93;
+ &#91;943.4628419127473, 32.463172502357864, 24.073985584894846, 46.53715808725
+271&#93;
+ &#91;926.497065600148, 40.35593403853616, 33.14700036131587, 63.50293439985202
+&#93;
+ &#91;905.9269551962524, 49.699931631668576, 44.37311317207904, 84.073044803747
+64&#93;
+ &#91;881.3585392131616, 60.52139921718387, 58.12006156965444, 108.641460786838
+32&#93;
+ &#91;852.5274163604042, 72.72290972680412, 74.74967391279168, 137.472583639595
+8&#93;
+ ⋮
+ &#91;233.6919415512116, 44.46580488532527, 721.8422535634633, 756.308058448788
+4&#93;
+ &#91;228.88046764765463, 38.871629484210395, 732.247902868135, 761.11953235234
+55&#93;
+ &#91;224.76186839108456, 33.90671598976695, 741.3314156191486, 765.23813160891
+54&#93;
+ &#91;221.23300305457357, 29.522228842544973, 749.2447681028816, 768.7669969454
+265&#93;
+ &#91;218.20665229931438, 25.662350534147386, 756.1309971665382, 771.7933477006
+857&#93;
+ &#91;215.6107449890835, 22.274515459755385, 762.1147395511612, 774.38925501091
+65&#93;
+ &#91;213.3843905024685, 19.310740281779456, 767.3048692157521, 776.61560949753
+15&#93;
+ &#91;211.47427574879592, 16.72457203571691, 771.8011522154873, 778.52572425120
+41&#93;
+ &#91;209.83434778204648, 14.47208748405588, 775.6935647338977, 780.16565221795
+35&#93;
+</pre>
+
+
+<h2>Generating data</h2>
+<p>The cumulative counts are extracted.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>out</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Array</span><span class='hljl-p'>(</span><span class='hljl-n'>sol_ode</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>C</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>out</span><span class='hljl-p'>[</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-oB'>:</span><span class='hljl-p'>];</span>
+</pre>
+
+
+<pre class="output">
+41-element Array&#123;Float64,1&#125;:
+   0.0
+   5.5906270179533575
+  12.666797348994434
+  21.575779577797064
+  32.71772526664741
+  46.53715808725271
+  63.50293439985202
+  84.07304480374764
+ 108.64146078683832
+ 137.4725836395958
+   ⋮
+ 756.3080584487884
+ 761.1195323523455
+ 765.2381316089154
+ 768.7669969454265
+ 771.7933477006857
+ 774.3892550109165
+ 776.6156094975315
+ 778.5257242512041
+ 780.1656522179535
+</pre>
+
+
+<p>The new cases per day are calculated from the cumulative counts.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>.-</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-p'>(</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>)];</span>
+</pre>
+
+
+<pre class="output">
+40-element Array&#123;Float64,1&#125;:
+  5.5906270179533575
+  7.076170331041077
+  8.90898222880263
+ 11.141945688850349
+ 13.8194328206053
+ 16.96577631259931
+ 20.57011040389561
+ 24.568415983090688
+ 28.831122852757474
+ 33.14329091787582
+  ⋮
+  5.623429741450877
+  4.811473903557044
+  4.118599256569951
+  3.528865336511103
+  3.026350755259159
+  2.595907310230814
+  2.226354486615037
+  1.9101147536725875
+  1.639927966749383
+</pre>
+
+
+<p>Although the ODE system is deterministic, we can add measurement error to the counts of new cases. Here, a Poisson distribution is used, although a negative binomial could also be used &#40;which would introduce an additional parameter for the variance&#41;.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>Random</span><span class='hljl-oB'>.</span><span class='hljl-nf'>seed!</span><span class='hljl-p'>(</span><span class='hljl-ni'>1234</span><span class='hljl-p'>);</span>
+</pre>
+
+
+<pre class="output">
+Random.MersenneTwister&#40;UInt32&#91;0x000004d2&#93;, Random.DSFMT.DSFMT_state&#40;Int32&#91;-
+1393240018, 1073611148, 45497681, 1072875908, 436273599, 1073674613, -20437
+16458, 1073445557, -254908435, 1072827086  …  -599655111, 1073144102, 36765
+5457, 1072985259, -1278750689, 1018350124, -597141475, 249849711, 382, 0&#93;&#41;,
+ &#91;0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.0, 0.0, 0.0, 0.0, 
+0.0, 0.0, 0.0, 0.0, 0.0, 0.0&#93;, UInt128&#91;0x00000000000000000000000000000000, 
+0x00000000000000000000000000000000, 0x00000000000000000000000000000000, 0x0
+0000000000000000000000000000000, 0x00000000000000000000000000000000, 0x0000
+0000000000000000000000000000, 0x00000000000000000000000000000000, 0x0000000
+0000000000000000000000000, 0x00000000000000000000000000000000, 0x0000000000
+0000000000000000000000  …  0x00000000000000000000000000000000, 0x0000000000
+0000000000000000000000, 0x00000000000000000000000000000000, 0x0000000000000
+0000000000000000000, 0x00000000000000000000000000000000, 0x0000000000000000
+0000000000000000, 0x00000000000000000000000000000000, 0x0000000000000000000
+0000000000000, 0x00000000000000000000000000000000, 0x0000000000000000000000
+0000000000&#93;, 1002, 0&#41;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>Y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>rand</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>Poisson</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>X</span><span class='hljl-p'>));</span>
+</pre>
+
+
+<pre class="output">
+40-element Array&#123;Int64,1&#125;:
+  6
+  9
+  9
+ 11
+ 17
+ 21
+ 17
+ 22
+ 25
+ 34
+  ⋮
+  5
+  3
+  0
+  1
+  3
+  3
+  1
+  2
+  3
+</pre>
+
+
+<h2>Using Optim.jl directly</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Optim</span>
+</pre>
+
+
+
+<h3>Single parameter optimization</h3>
+<p>This function calculates the sum of squares for a single parameter fit &#40;β&#41;. Note how the original <code>ODEProblem</code> is remade using the <code>remake</code> function. Like all the loss functions listed here, <code>Inf</code> is returned if the number of daily cases is less than or equal to zero.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>ss1</span><span class='hljl-p'>(</span><span class='hljl-n'>β</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>prob</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>remake</span><span class='hljl-p'>(</span><span class='hljl-n'>prob_ode</span><span class='hljl-p'>,</span><span class='hljl-n'>u0</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-nfB'>990.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>10.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>],</span><span class='hljl-n'>p</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-n'>β</span><span class='hljl-p'>,</span><span class='hljl-nfB'>10.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.25</span><span class='hljl-p'>])</span><span class='hljl-t'>
+    </span><span class='hljl-n'>sol</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>solve</span><span class='hljl-p'>(</span><span class='hljl-n'>prob</span><span class='hljl-p'>,</span><span class='hljl-nf'>Tsit5</span><span class='hljl-p'>(),</span><span class='hljl-n'>saveat</span><span class='hljl-oB'>=</span><span class='hljl-n'>δt</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>out</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Array</span><span class='hljl-p'>(</span><span class='hljl-n'>sol</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>C</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>out</span><span class='hljl-p'>[</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-oB'>:</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>.-</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-p'>(</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>)]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>nonpos</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>.&lt;=</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>nonpos</span><span class='hljl-t'> </span><span class='hljl-oB'>&gt;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>
+        </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>Inf</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-k'>return</span><span class='hljl-p'>(</span><span class='hljl-nf'>sum</span><span class='hljl-p'>((</span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>.-</span><span class='hljl-t'> </span><span class='hljl-n'>Y</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>.^</span><span class='hljl-ni'>2</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+ss1 &#40;generic function with 1 method&#41;
+</pre>
+
+
+<p>Optimisation routines typically <em>minimise</em> functions, so for maximum likelihood estimates, we have to define the <em>negative</em> log-likelihood - here, for a single parameter, β.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>nll1</span><span class='hljl-p'>(</span><span class='hljl-n'>β</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>prob</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>remake</span><span class='hljl-p'>(</span><span class='hljl-n'>prob_ode</span><span class='hljl-p'>,</span><span class='hljl-n'>u0</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-nfB'>990.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>10.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>],</span><span class='hljl-n'>p</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-n'>β</span><span class='hljl-p'>,</span><span class='hljl-nfB'>10.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.25</span><span class='hljl-p'>])</span><span class='hljl-t'>
+    </span><span class='hljl-n'>sol</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>solve</span><span class='hljl-p'>(</span><span class='hljl-n'>prob</span><span class='hljl-p'>,</span><span class='hljl-nf'>Tsit5</span><span class='hljl-p'>(),</span><span class='hljl-n'>saveat</span><span class='hljl-oB'>=</span><span class='hljl-n'>δt</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>out</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Array</span><span class='hljl-p'>(</span><span class='hljl-n'>sol</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>C</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>out</span><span class='hljl-p'>[</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-oB'>:</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>.-</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-p'>(</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>)]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>nonpos</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>.&lt;=</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>nonpos</span><span class='hljl-t'> </span><span class='hljl-oB'>&gt;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>
+        </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>Inf</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-oB'>-</span><span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>logpdf</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>Poisson</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>X</span><span class='hljl-p'>),</span><span class='hljl-n'>Y</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+nll1 &#40;generic function with 1 method&#41;
+</pre>
+
+
+<p>In this model, β is positive and &#40;through the meaning of the parameter&#41; bounded between 0 and 1. For point estimates, we could use constrained optimisation, or transform β to an unconstrained scale. Here is the first approach, defining the bounds and initial values for optimization.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>lower1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.0</span><span class='hljl-t'>
+</span><span class='hljl-n'>upper1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-t'>
+</span><span class='hljl-n'>initial_x1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.1</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+0.1
+</pre>
+
+
+<p>Model fit using sum of squares. The output isn&#39;t suppressed, as the output of the outcome of the optimisation, such as whether it has converged, is important.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>opt1_ss</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>Optim</span><span class='hljl-oB'>.</span><span class='hljl-nf'>optimize</span><span class='hljl-p'>(</span><span class='hljl-n'>ss1</span><span class='hljl-p'>,</span><span class='hljl-n'>lower1</span><span class='hljl-p'>,</span><span class='hljl-n'>upper1</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Results of Optimization Algorithm
+ * Algorithm: Brent&#39;s Method
+ * Search Interval: &#91;0.000000, 1.000000&#93;
+ * Minimizer: 4.909134e-02
+ * Minimum: 1.016203e&#43;03
+ * Iterations: 22
+ * Convergence: max&#40;|x - x_upper|, |x - x_lower|&#41; &lt;&#61; 2*&#40;1.5e-08*|x|&#43;2.2e-16
+&#41;: true
+ * Objective Function Calls: 23
+</pre>
+
+
+<p>Model fit using &#40;negative&#41; log likelihood.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>opt1_nll</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>Optim</span><span class='hljl-oB'>.</span><span class='hljl-nf'>optimize</span><span class='hljl-p'>(</span><span class='hljl-n'>nll1</span><span class='hljl-p'>,</span><span class='hljl-n'>lower1</span><span class='hljl-p'>,</span><span class='hljl-n'>upper1</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Results of Optimization Algorithm
+ * Algorithm: Brent&#39;s Method
+ * Search Interval: &#91;0.000000, 1.000000&#93;
+ * Minimizer: 4.969331e-02
+ * Minimum: 1.117286e&#43;02
+ * Iterations: 24
+ * Convergence: max&#40;|x - x_upper|, |x - x_lower|&#41; &lt;&#61; 2*&#40;1.5e-08*|x|&#43;2.2e-16
+&#41;: true
+ * Objective Function Calls: 25
+</pre>
+
+
+<h3>Multiparameter optimization</h3>
+<p>Multiple parameters are handled in the cost function using an array argument. Firstly, sum of squares.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>ss2</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-p'>(</span><span class='hljl-n'>i0</span><span class='hljl-p'>,</span><span class='hljl-n'>β</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'>
+    </span><span class='hljl-n'>I</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>i0</span><span class='hljl-oB'>*</span><span class='hljl-nfB'>1000.0</span><span class='hljl-t'>
+    </span><span class='hljl-n'>prob</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>remake</span><span class='hljl-p'>(</span><span class='hljl-n'>prob_ode</span><span class='hljl-p'>,</span><span class='hljl-n'>u0</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-nfB'>1000.0</span><span class='hljl-oB'>-</span><span class='hljl-n'>I</span><span class='hljl-p'>,</span><span class='hljl-n'>I</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>],</span><span class='hljl-n'>p</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-n'>β</span><span class='hljl-p'>,</span><span class='hljl-nfB'>10.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.25</span><span class='hljl-p'>])</span><span class='hljl-t'>
+    </span><span class='hljl-n'>sol</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>solve</span><span class='hljl-p'>(</span><span class='hljl-n'>prob</span><span class='hljl-p'>,</span><span class='hljl-nf'>Tsit5</span><span class='hljl-p'>(),</span><span class='hljl-n'>saveat</span><span class='hljl-oB'>=</span><span class='hljl-n'>δt</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>out</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Array</span><span class='hljl-p'>(</span><span class='hljl-n'>sol</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>C</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>out</span><span class='hljl-p'>[</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-oB'>:</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>.-</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-p'>(</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>)]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>nonpos</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>.&lt;=</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>nonpos</span><span class='hljl-t'> </span><span class='hljl-oB'>&gt;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>
+        </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>Inf</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-k'>return</span><span class='hljl-p'>(</span><span class='hljl-nf'>sum</span><span class='hljl-p'>((</span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>.-</span><span class='hljl-t'> </span><span class='hljl-n'>Y</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>.^</span><span class='hljl-ni'>2</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+ss2 &#40;generic function with 1 method&#41;
+</pre>
+
+
+<p>Secondly, negative log-likelihood.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>nll2</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-p'>(</span><span class='hljl-n'>i0</span><span class='hljl-p'>,</span><span class='hljl-n'>β</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'>
+    </span><span class='hljl-n'>I</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>i0</span><span class='hljl-oB'>*</span><span class='hljl-nfB'>1000.0</span><span class='hljl-t'>
+    </span><span class='hljl-n'>prob</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>remake</span><span class='hljl-p'>(</span><span class='hljl-n'>prob_ode</span><span class='hljl-p'>,</span><span class='hljl-n'>u0</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-nfB'>1000.0</span><span class='hljl-oB'>-</span><span class='hljl-n'>I</span><span class='hljl-p'>,</span><span class='hljl-n'>I</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>],</span><span class='hljl-n'>p</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-n'>β</span><span class='hljl-p'>,</span><span class='hljl-nfB'>10.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.25</span><span class='hljl-p'>])</span><span class='hljl-t'>
+    </span><span class='hljl-n'>sol</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>solve</span><span class='hljl-p'>(</span><span class='hljl-n'>prob</span><span class='hljl-p'>,</span><span class='hljl-nf'>Tsit5</span><span class='hljl-p'>(),</span><span class='hljl-n'>saveat</span><span class='hljl-oB'>=</span><span class='hljl-n'>δt</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>out</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Array</span><span class='hljl-p'>(</span><span class='hljl-n'>sol</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>C</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>out</span><span class='hljl-p'>[</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-oB'>:</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>.-</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-p'>(</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>)]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>nonpos</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>.&lt;=</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>nonpos</span><span class='hljl-t'> </span><span class='hljl-oB'>&gt;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>
+        </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>Inf</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-oB'>-</span><span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>logpdf</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>Poisson</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>X</span><span class='hljl-p'>),</span><span class='hljl-n'>Y</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+nll2 &#40;generic function with 1 method&#41;
+</pre>
+
+
+<p>Two-parameter lower and upper bounds and initial conditions.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>lower2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-n'>upper2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-n'>initial_x2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>0.01</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.1</span><span class='hljl-p'>];</span>
+</pre>
+
+
+<pre class="output">
+2-element Array&#123;Float64,1&#125;:
+ 0.01
+ 0.1
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>opt2_ss</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>Optim</span><span class='hljl-oB'>.</span><span class='hljl-nf'>optimize</span><span class='hljl-p'>(</span><span class='hljl-n'>ss2</span><span class='hljl-p'>,</span><span class='hljl-n'>lower2</span><span class='hljl-p'>,</span><span class='hljl-n'>upper2</span><span class='hljl-p'>,</span><span class='hljl-n'>initial_x2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+* Status: success
+
+ * Candidate solution
+    Minimizer: &#91;9.63e-03, 4.93e-02&#93;
+    Minimum:   1.013835e&#43;03
+
+ * Found with
+    Algorithm:     Fminbox with L-BFGS
+    Initial Point: &#91;1.00e-02, 1.00e-01&#93;
+
+ * Convergence measures
+    |x - x&#39;|               &#61; 0.00e&#43;00 ≤ 0.0e&#43;00
+    |x - x&#39;|/|x&#39;|          &#61; 0.00e&#43;00 ≤ 0.0e&#43;00
+    |f&#40;x&#41; - f&#40;x&#39;&#41;|         &#61; 0.00e&#43;00 ≤ 0.0e&#43;00
+    |f&#40;x&#41; - f&#40;x&#39;&#41;|/|f&#40;x&#39;&#41;| &#61; 0.00e&#43;00 ≤ 0.0e&#43;00
+    |g&#40;x&#41;|                 &#61; 1.49e&#43;00 ≰ 1.0e-08
+
+ * Work counters
+    Seconds run:   1  &#40;vs limit Inf&#41;
+    Iterations:    3
+    f&#40;x&#41; calls:    139
+    ∇f&#40;x&#41; calls:   139
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>opt2_nll</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>Optim</span><span class='hljl-oB'>.</span><span class='hljl-nf'>optimize</span><span class='hljl-p'>(</span><span class='hljl-n'>nll2</span><span class='hljl-p'>,</span><span class='hljl-n'>lower2</span><span class='hljl-p'>,</span><span class='hljl-n'>upper2</span><span class='hljl-p'>,</span><span class='hljl-n'>initial_x2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+* Status: success
+
+ * Candidate solution
+    Minimizer: &#91;1.00e-02, 4.97e-02&#93;
+    Minimum:   1.117286e&#43;02
+
+ * Found with
+    Algorithm:     Fminbox with L-BFGS
+    Initial Point: &#91;1.00e-02, 1.00e-01&#93;
+
+ * Convergence measures
+    |x - x&#39;|               &#61; 0.00e&#43;00 ≤ 0.0e&#43;00
+    |x - x&#39;|/|x&#39;|          &#61; 0.00e&#43;00 ≤ 0.0e&#43;00
+    |f&#40;x&#41; - f&#40;x&#39;&#41;|         &#61; 0.00e&#43;00 ≤ 0.0e&#43;00
+    |f&#40;x&#41; - f&#40;x&#39;&#41;|/|f&#40;x&#39;&#41;| &#61; 0.00e&#43;00 ≤ 0.0e&#43;00
+    |g&#40;x&#41;|                 &#61; 5.76e-02 ≰ 1.0e-08
+
+ * Work counters
+    Seconds run:   0  &#40;vs limit Inf&#41;
+    Iterations:    3
+    f&#40;x&#41; calls:    165
+    ∇f&#40;x&#41; calls:   165
+</pre>
+
+
+<h2>Using DiffEqParamEstim</h2>
+<p>The advantage of using a framework such as DiffEqParamEstim is that a number of different frameworks can be employed easily. Firstly, the loss function is defined.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>loss_function</span><span class='hljl-p'>(</span><span class='hljl-n'>sol</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>out</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Array</span><span class='hljl-p'>(</span><span class='hljl-n'>sol</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>C</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>out</span><span class='hljl-p'>[</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-oB'>:</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>.-</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-p'>(</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>)]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>nonpos</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>.&lt;=</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>nonpos</span><span class='hljl-t'> </span><span class='hljl-oB'>&gt;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>
+        </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>Inf</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-oB'>-</span><span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>logpdf</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>Poisson</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>X</span><span class='hljl-p'>),</span><span class='hljl-n'>Y</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+loss_function &#40;generic function with 1 method&#41;
+</pre>
+
+
+<p>Secondly, a function that generates the <code>Problem</code> to be solved.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>prob_generator</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-n'>prob</span><span class='hljl-p'>,</span><span class='hljl-n'>q</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>-&gt;</span><span class='hljl-t'> </span><span class='hljl-nf'>remake</span><span class='hljl-p'>(</span><span class='hljl-n'>prob</span><span class='hljl-p'>,</span><span class='hljl-t'>
+    </span><span class='hljl-n'>u0</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-nfB'>1000.0</span><span class='hljl-oB'>-</span><span class='hljl-p'>(</span><span class='hljl-n'>q</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-oB'>*</span><span class='hljl-ni'>1000</span><span class='hljl-p'>),</span><span class='hljl-n'>q</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-oB'>*</span><span class='hljl-ni'>1000</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>],</span><span class='hljl-t'>
+    </span><span class='hljl-n'>p</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-n'>q</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>],</span><span class='hljl-nfB'>10.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.25</span><span class='hljl-p'>]);</span>
+</pre>
+
+
+<pre class="output">
+#1 &#40;generic function with 1 method&#41;
+</pre>
+
+
+<p>The loss function and the problem generator then get combined to build the objective function.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>cost_function</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>build_loss_objective</span><span class='hljl-p'>(</span><span class='hljl-n'>prob_ode</span><span class='hljl-p'>,</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>Tsit5</span><span class='hljl-p'>(),</span><span class='hljl-t'>
+    </span><span class='hljl-n'>loss_function</span><span class='hljl-p'>,</span><span class='hljl-t'>
+    </span><span class='hljl-n'>saveat</span><span class='hljl-oB'>=</span><span class='hljl-n'>δt</span><span class='hljl-p'>,</span><span class='hljl-t'>
+    </span><span class='hljl-n'>prob_generator</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>prob_generator</span><span class='hljl-p'>,</span><span class='hljl-t'>
+    </span><span class='hljl-n'>maxiters</span><span class='hljl-oB'>=</span><span class='hljl-ni'>100</span><span class='hljl-p'>,</span><span class='hljl-t'>
+    </span><span class='hljl-n'>verbose</span><span class='hljl-oB'>=</span><span class='hljl-kc'>false</span><span class='hljl-p'>);</span>
+</pre>
+
+
+<pre class="output">
+&#40;::DiffEqParamEstim.DiffEqObjective&#123;DiffEqParamEstim.var&quot;#43#48&quot;&#123;Nothing,Bo
+ol,Int64,Main.##WeaveSandBox#671.var&quot;#1#2&quot;,Base.Iterators.Pairs&#123;Symbol,Real
+,Tuple&#123;Symbol,Symbol,Symbol&#125;,NamedTuple&#123;&#40;:saveat, :maxiters, :verbose&#41;,Tupl
+e&#123;Float64,Int64,Bool&#125;&#125;&#125;,DiffEqBase.ODEProblem&#123;Array&#123;Float64,1&#125;,Tuple&#123;Float6
+4,Float64&#125;,true,Array&#123;Float64,1&#125;,DiffEqBase.ODEFunction&#123;true,typeof&#40;Main.##
+WeaveSandBox#671.sir_ode&#33;&#41;,LinearAlgebra.UniformScaling&#123;Bool&#125;,Nothing,Nothi
+ng,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,
+Nothing&#125;,Base.Iterators.Pairs&#123;Union&#123;&#125;,Union&#123;&#125;,Tuple&#123;&#125;,NamedTuple&#123;&#40;&#41;,Tuple&#123;&#125;
+&#125;&#125;,DiffEqBase.StandardODEProblem&#125;,OrdinaryDiffEq.Tsit5,typeof&#40;Main.##WeaveS
+andBox#671.loss_function&#41;,Nothing&#125;,DiffEqParamEstim.var&quot;#47#53&quot;&#123;DiffEqParam
+Estim.var&quot;#43#48&quot;&#123;Nothing,Bool,Int64,Main.##WeaveSandBox#671.var&quot;#1#2&quot;,Base
+.Iterators.Pairs&#123;Symbol,Real,Tuple&#123;Symbol,Symbol,Symbol&#125;,NamedTuple&#123;&#40;:savea
+t, :maxiters, :verbose&#41;,Tuple&#123;Float64,Int64,Bool&#125;&#125;&#125;,DiffEqBase.ODEProblem&#123;A
+rray&#123;Float64,1&#125;,Tuple&#123;Float64,Float64&#125;,true,Array&#123;Float64,1&#125;,DiffEqBase.ODE
+Function&#123;true,typeof&#40;Main.##WeaveSandBox#671.sir_ode&#33;&#41;,LinearAlgebra.Unifor
+mScaling&#123;Bool&#125;,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Noth
+ing,Nothing,Nothing,Nothing,Nothing&#125;,Base.Iterators.Pairs&#123;Union&#123;&#125;,Union&#123;&#125;,T
+uple&#123;&#125;,NamedTuple&#123;&#40;&#41;,Tuple&#123;&#125;&#125;&#125;,DiffEqBase.StandardODEProblem&#125;,OrdinaryDiffE
+q.Tsit5,typeof&#40;Main.##WeaveSandBox#671.loss_function&#41;,Nothing&#125;&#125;&#125;&#41; &#40;generic 
+function with 2 methods&#41;
+</pre>
+
+
+<h3>Optim interface</h3>
+<p>The resulting cost function can be passed to <code>Optim.jl</code> as before.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>opt_pe1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>Optim</span><span class='hljl-oB'>.</span><span class='hljl-nf'>optimize</span><span class='hljl-p'>(</span><span class='hljl-n'>cost_function</span><span class='hljl-p'>,</span><span class='hljl-n'>lower2</span><span class='hljl-p'>,</span><span class='hljl-n'>upper2</span><span class='hljl-p'>,</span><span class='hljl-n'>initial_x2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+* Status: success
+
+ * Candidate solution
+    Minimizer: &#91;1.00e-02, 4.97e-02&#93;
+    Minimum:   1.117286e&#43;02
+
+ * Found with
+    Algorithm:     Fminbox with L-BFGS
+    Initial Point: &#91;1.00e-02, 1.00e-01&#93;
+
+ * Convergence measures
+    |x - x&#39;|               &#61; 0.00e&#43;00 ≤ 0.0e&#43;00
+    |x - x&#39;|/|x&#39;|          &#61; 0.00e&#43;00 ≤ 0.0e&#43;00
+    |f&#40;x&#41; - f&#40;x&#39;&#41;|         &#61; 0.00e&#43;00 ≤ 0.0e&#43;00
+    |f&#40;x&#41; - f&#40;x&#39;&#41;|/|f&#40;x&#39;&#41;| &#61; 0.00e&#43;00 ≤ 0.0e&#43;00
+    |g&#40;x&#41;|                 &#61; 5.76e-02 ≰ 1.0e-08
+
+ * Work counters
+    Seconds run:   0  &#40;vs limit Inf&#41;
+    Iterations:    3
+    f&#40;x&#41; calls:    165
+    ∇f&#40;x&#41; calls:   165
+</pre>
+
+
+<h3>NLopt interface</h3>
+<p>The same function can also be passed to <code>NLopt.jl</code>. For some reason, this reaches the maximum number of evaluations.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>NLopt</span><span class='hljl-t'>
+</span><span class='hljl-n'>opt</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Opt</span><span class='hljl-p'>(</span><span class='hljl-sc'>:LD_MMA</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>opt</span><span class='hljl-oB'>.</span><span class='hljl-n'>lower_bounds</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>lower2</span><span class='hljl-t'>
+</span><span class='hljl-n'>opt</span><span class='hljl-oB'>.</span><span class='hljl-n'>upper_bounds</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>upper2</span><span class='hljl-t'>
+</span><span class='hljl-n'>opt</span><span class='hljl-oB'>.</span><span class='hljl-n'>min_objective</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>cost_function</span><span class='hljl-t'>
+</span><span class='hljl-n'>opt</span><span class='hljl-oB'>.</span><span class='hljl-n'>maxeval</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>10000</span><span class='hljl-t'>
+</span><span class='hljl-p'>(</span><span class='hljl-n'>minf</span><span class='hljl-p'>,</span><span class='hljl-n'>minx</span><span class='hljl-p'>,</span><span class='hljl-n'>ret</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>NLopt</span><span class='hljl-oB'>.</span><span class='hljl-nf'>optimize</span><span class='hljl-p'>(</span><span class='hljl-n'>opt</span><span class='hljl-p'>,</span><span class='hljl-n'>initial_x2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+&#40;111.72855334375784, &#91;0.010000860197548981, 0.04969282386672637&#93;, :MAXEVAL_
+REACHED&#41;
+</pre>
+
+
+<h3>BlackBoxOptim interface</h3>
+<p>We can also use <code>BlackBoxOptim.jl</code>.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>BlackBoxOptim</span><span class='hljl-t'>
+</span><span class='hljl-n'>bound1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Tuple</span><span class='hljl-p'>{</span><span class='hljl-n'>Float64</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>Float64</span><span class='hljl-p'>}[(</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>),(</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>)]</span><span class='hljl-t'>
+</span><span class='hljl-n'>result</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>bboptimize</span><span class='hljl-p'>(</span><span class='hljl-n'>cost_function</span><span class='hljl-p'>;</span><span class='hljl-n'>SearchRange</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>bound1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>MaxSteps</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>1e4</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Starting optimization with optimizer BlackBoxOptim.DiffEvoOpt&#123;BlackBoxOptim
+.FitPopulation&#123;Float64&#125;,BlackBoxOptim.RadiusLimitedSelector,BlackBoxOptim.A
+daptiveDiffEvoRandBin&#123;3&#125;,BlackBoxOptim.RandomBound&#123;BlackBoxOptim.Continuous
+RectSearchSpace&#125;&#125;
+0.00 secs, 0 evals, 0 steps
+0.50 secs, 8360 evals, 8270 steps, improv/step: 0.165 &#40;last &#61; 0.1647&#41;, fitn
+ess&#61;111.728553108
+
+Optimization stopped after 10001 steps and 0.59 seconds
+Termination reason: Max number of steps &#40;10000&#41; reached
+Steps per second &#61; 16989.17
+Function evals per second &#61; 17119.98
+Improvements/step &#61; 0.13950
+Total function evaluations &#61; 10078
+
+
+Best candidate found: &#91;0.0100005, 0.049693&#93;
+
+Fitness: 111.728553108
+
+BlackBoxOptim.OptimizationResults&#40;&quot;adaptive_de_rand_1_bin_radiuslimited&quot;, &quot;
+Max number of steps &#40;10000&#41; reached&quot;, 10001, 1.590591954410471e9, 0.5886690
+616607666, BlackBoxOptim.DictChain&#123;Symbol,Any&#125;&#91;BlackBoxOptim.DictChain&#123;Symb
+ol,Any&#125;&#91;Dict&#123;Symbol,Any&#125;&#40;:RngSeed &#61;&gt; 446022,:SearchRange &#61;&gt; &#91;&#40;0.0, 1.0&#41;, &#40;0
+.0, 1.0&#41;&#93;,:MaxSteps &#61;&gt; 10000&#41;,Dict&#123;Symbol,Any&#125;&#40;&#41;&#93;,Dict&#123;Symbol,Any&#125;&#40;:Fitness
+Scheme &#61;&gt; BlackBoxOptim.ScalarFitnessScheme&#123;true&#125;&#40;&#41;,:NumDimensions &#61;&gt; :NotS
+pecified,:PopulationSize &#61;&gt; 50,:MaxTime &#61;&gt; 0.0,:SearchRange &#61;&gt; &#40;-1.0, 1.0&#41;,
+:Method &#61;&gt; :adaptive_de_rand_1_bin_radiuslimited,:MaxNumStepsWithoutFuncEva
+ls &#61;&gt; 100,:RngSeed &#61;&gt; 1234,:MaxFuncEvals &#61;&gt; 0,:SaveTrace &#61;&gt; false…&#41;&#93;, 10078
+, BlackBoxOptim.ScalarFitnessScheme&#123;true&#125;&#40;&#41;, BlackBoxOptim.TopListArchiveOu
+tput&#123;Float64,Array&#123;Float64,1&#125;&#125;&#40;111.72855310838251, &#91;0.01000046836278904, 0.
+049692985596648996&#93;&#41;, BlackBoxOptim.PopulationOptimizerOutput&#123;BlackBoxOptim
+.FitPopulation&#123;Float64&#125;&#125;&#40;BlackBoxOptim.FitPopulation&#123;Float64&#125;&#40;&#91;0.0100004410
+03697182 0.010000196839751072 … 0.010000316998278278 0.010000255271509311; 
+0.04969310950094767 0.049693077283398515 … 0.049693210077759314 0.049693060
+84709772&#93;, NaN, &#91;111.7285532227244, 111.72855315334847, 111.72855319568794,
+ 111.72855321074974, 111.72855324392246, 111.72855321051965, 111.7285531983
+5722, 111.72855324392246, 111.72855327721915, 111.72855310838251  …  111.72
+855318385034, 111.72855318505471, 111.72855322038515, 111.72855312105112, 1
+11.7285531784525, 111.72855316781599, 111.72855325364509, 111.7285531944743
+9, 111.72855324979908, 111.72855320326772&#93;, 0, BlackBoxOptim.Candidate&#123;Floa
+t64&#125;&#91;BlackBoxOptim.Candidate&#123;Float64&#125;&#40;&#91;0.010000694535302126, 0.049692945084
+1662&#93;, 18, 111.72855315905642, BlackBoxOptim.AdaptiveDiffEvoRandBin&#123;3&#125;&#40;Blac
+kBoxOptim.AdaptiveDiffEvoParameters&#40;BlackBoxOptim.BimodalCauchy&#40;Distributio
+ns.Cauchy&#123;Float64&#125;&#40;μ&#61;0.65, σ&#61;0.1&#41;, Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;1.0, σ&#61;0
+.1&#41;, 0.5, false, true&#41;, BlackBoxOptim.BimodalCauchy&#40;Distributions.Cauchy&#123;Fl
+oat64&#125;&#40;μ&#61;0.1, σ&#61;0.1&#41;, Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;0.95, σ&#61;0.1&#41;, 0.5, fa
+lse, true&#41;, &#91;0.5986560490312182, 0.8801497880474216, 1.0, 0.287848041655583
+4, 0.9552552490374797, 1.0, 1.0, 0.8549312033008517, 0.23003692778296714, 1
+.0  …  0.7284955649698605, 0.7073267424836166, 0.9416356618465631, 1.0, 0.7
+680563512395949, 1.0, 0.6726221965612929, 0.8533619770082745, 0.65313672135
+92068, 0.5826669890378492&#93;, &#91;0.5529302294793459, 0.055586527848320175, 0.72
+05786666309878, 0.7906824278551479, 0.7937381275976991, 0.6573477673499002,
+ 0.06965252304851306, 1.0, 1.0, 0.22843084603538916  …  0.9260678525364435,
+ 0.18802543518817297, 0.08171423015182257, 0.12190189158528267, 0.645125601
+6364262, 0.9417241944379853, 0.005300130416607957, 0.16214417417590216, 0.0
+21737038767065342, 0.3092563744286215&#93;&#41;&#41;, 0&#41;, BlackBoxOptim.Candidate&#123;Float
+64&#125;&#40;&#91;0.010000276199212788, 0.04969312984053147&#93;, 18, 111.72855317892403, Bl
+ackBoxOptim.AdaptiveDiffEvoRandBin&#123;3&#125;&#40;BlackBoxOptim.AdaptiveDiffEvoParamete
+rs&#40;BlackBoxOptim.BimodalCauchy&#40;Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;0.65, σ&#61;0.1&#41;
+, Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;1.0, σ&#61;0.1&#41;, 0.5, false, true&#41;, BlackBoxO
+ptim.BimodalCauchy&#40;Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;0.1, σ&#61;0.1&#41;, Distributio
+ns.Cauchy&#123;Float64&#125;&#40;μ&#61;0.95, σ&#61;0.1&#41;, 0.5, false, true&#41;, &#91;0.5986560490312182, 
+0.8801497880474216, 1.0, 0.2878480416555834, 0.9552552490374797, 1.0, 1.0, 
+0.8549312033008517, 0.23003692778296714, 1.0  …  0.7284955649698605, 0.7073
+267424836166, 0.9416356618465631, 1.0, 0.7680563512395949, 1.0, 0.672622196
+5612929, 0.8533619770082745, 0.6531367213592068, 0.5826669890378492&#93;, &#91;0.55
+29302294793459, 0.055586527848320175, 0.7205786666309878, 0.790682427855147
+9, 0.7937381275976991, 0.6573477673499002, 0.06965252304851306, 1.0, 1.0, 0
+.22843084603538916  …  0.9260678525364435, 0.18802543518817297, 0.081714230
+15182257, 0.12190189158528267, 0.6451256016364262, 0.9417241944379853, 0.00
+5300130416607957, 0.16214417417590216, 0.021737038767065342, 0.309256374428
+6215&#93;&#41;&#41;, 0&#41;&#93;&#41;&#41;&#41;
+</pre>
+
+
+
+<div class="markdown"><h2>Appendix</h2>
+</div>
+<div class="markdown"><h3>Computer Information</h3>
+</div>
+<div class="markdown"><pre><code>Julia Version 1.4.1
+Commit 381693d3df* &#40;2020-04-14 17:20 UTC&#41;
+Platform Info:
+  OS: Linux &#40;x86_64-pc-linux-gnu&#41;
+  CPU: Intel&#40;R&#41; Core&#40;TM&#41; i7-1065G7 CPU @ 1.30GHz
+  WORD_SIZE: 64
+  LIBM: libopenlibm
+  LLVM: libLLVM-8.0.1 &#40;ORCJIT, icelake-client&#41;
+Environment:
+  JULIA_NUM_THREADS &#61; 4
+</code></pre>
+</div>
+<div class="markdown"><h3>Package Information</h3>
+</div>
+<div class="markdown"><pre><code>Status &#96;~/.julia/environments/v1.4/Project.toml&#96;
+&#91;46ada45e-f475-11e8-01d0-f70cc89e6671&#93; Agents 3.1.0
+&#91;f5f396d3-230c-5e07-80e6-9fadf06146cc&#93; ApproxBayes 0.3.2
+&#91;c52e3926-4ff0-5f6e-af25-54175e0327b1&#93; Atom 0.12.11
+&#91;6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf&#93; BenchmarkTools 0.5.0
+&#91;a134a8b2-14d6-55f6-9291-3336d3ab0209&#93; BlackBoxOptim 0.5.0
+&#91;2445eb08-9709-466a-b3fc-47e12bd697a2&#93; DataDrivenDiffEq 0.3.1
+&#91;a93c6f00-e57d-5684-b7b6-d8193f3e46c0&#93; DataFrames 0.21.1
+&#91;ebbdde9d-f333-5424-9be2-dbf1e9acfb5e&#93; DiffEqBayes 2.14.1
+&#91;459566f4-90b8-5000-8ac3-15dfb0a30def&#93; DiffEqCallbacks 2.13.2
+&#91;aae7a2af-3d4f-5e19-a356-7da93b79d9d0&#93; DiffEqFlux 1.10.3
+&#91;c894b116-72e5-5b58-be3c-e6d8d4ac2b12&#93; DiffEqJump 6.7.5
+&#91;1130ab10-4a5a-5621-a13d-e4788d82bd4c&#93; DiffEqParamEstim 1.14.1
+&#91;41bf760c-e81c-5289-8e54-58b1f1f8abe2&#93; DiffEqSensitivity 6.17.0
+&#91;0c46a032-eb83-5123-abaf-570d42b7fbaa&#93; DifferentialEquations 6.14.0
+&#91;b4f34e82-e78d-54a5-968a-f98e89d6e8f7&#93; Distances 0.8.2
+&#91;31c24e10-a181-5473-b8eb-7969acd0382f&#93; Distributions 0.23.2
+&#91;634d3b9d-ee7a-5ddf-bec9-22491ea816e1&#93; DrWatson 1.13.0
+&#91;587475ba-b771-5e3f-ad9e-33799f191a9c&#93; Flux 0.10.5
+&#91;28b8d3ca-fb5f-59d9-8090-bfdbd6d07a71&#93; GR 0.49.1
+&#91;523d8e89-b243-5607-941c-87d699ea6713&#93; Gillespie 0.1.0
+&#91;e850a1a4-d859-11e8-3d54-a195e6d045d3&#93; GpABC 0.0.1
+&#91;7073ff75-c697-5162-941a-fcdaad2a7d2a&#93; IJulia 1.21.2
+&#91;4076af6c-e467-56ae-b986-b466b2749572&#93; JuMP 0.21.2
+&#91;e5e0dc1b-0480-54bc-9374-aad01c23163d&#93; Juno 0.8.2
+&#91;093fc24a-ae57-5d10-9952-331d41423f4d&#93; LightGraphs 1.3.3
+&#91;1914dd2f-81c6-5fcd-8719-6d5c9610ff09&#93; MacroTools 0.5.5
+&#91;961ee093-0014-501f-94e3-6117800e7a78&#93; ModelingToolkit 3.6.4
+&#91;76087f3c-5699-56af-9a33-bf431cd00edd&#93; NLopt 0.6.0
+&#91;429524aa-4258-5aef-a3af-852621145aeb&#93; Optim 0.20.6
+&#91;1dea7af3-3e70-54e6-95c3-0bf5283fa5ed&#93; OrdinaryDiffEq 5.38.2
+&#91;91a5bcdd-55d7-5caf-9e0b-520d859cae80&#93; Plots 1.3.4
+&#91;428bdadb-6287-5aa5-874b-9969638295fd&#93; SimJulia 0.8.0
+&#91;05bca326-078c-5bf0-a5bf-ce7c7982d7fd&#93; SimpleDiffEq 1.1.0
+&#91;276daf66-3868-5448-9aa4-cd146d93841b&#93; SpecialFunctions 0.10.3
+&#91;f3b207a7-027a-5e70-b257-86293d7955fd&#93; StatsPlots 0.14.6
+&#91;789caeaf-c7a9-5a7d-9973-96adeb23e2a0&#93; StochasticDiffEq 6.23.0
+&#91;92b13dbe-c966-51a2-8445-caca9f8a7d42&#93; TaylorIntegration 0.8.3
+&#91;fce5fe82-541a-59a6-adf8-730c64b5f9a0&#93; Turing 0.13.0
+&#91;44d3d7a6-8a23-5bf8-98c5-b353f8df5ec9&#93; Weave 0.10.2
+&#91;e88e6eb3-aa80-5325-afca-941959d7151f&#93; Zygote 0.4.20</code></pre>
+</div>
+
+
+        <HR/>
+        <div class="footer">
+          <p>
+            Published from <a href="ode_optim.jmd">ode_optim.jmd</a>
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.2 on 2020-05-27.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BODY>
+
+</HTML>

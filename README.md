@@ -35,11 +35,20 @@ The above process can be represented in different kinds of ways:
 - [Agent-based model using base Julia](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector/abm_vector.md) as well [as using DifferentialEquations](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector/abm_vector_diffeq.md)
 - [Agent-based model using Agents.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm/abm.md)
 
+## Generating simulated data
+
+We usually do not observe the trajectory of susceptible, infected, and recovered individuals. Rather, we often obtain data in terms of new cases aggregated over a particular timescale (e.g. a day or a week).
+
+- [Simulated data using ODEs](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_simdata/ode_simdata.md)
+
 ## Inference
 
 In addition to the above examples of simulation, there are also examples of inference of the parameters of the model using counts of new cases. Although these are toy examples, they provide the building blocks for more complex situations.
 
-- [Point estimates of parameters of the ODE system using Optim](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_inference/ode_inference.md)
+- [Point estimates of parameters of the ODE system using Optim.jl and DiffEqParamEstim.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_optim/ode_optim.md)
+- [Bayesian estimates of parameters of the ODE system using Approximate Bayesian Computation](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_abc/ode_abc.md)
+- [Bayesian estimates of parameters of the ODE system using Turing.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_turing/ode_turing.md)
+
 
 ## Comments on implementations
 
