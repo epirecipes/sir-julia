@@ -81,10 +81,8 @@ u0: [990.0, 10.0, 0.0, 0.0]
 
 
 ````julia
-sol_ode = concrete_solve(prob_ode,
+sol_ode = solve(prob_ode,
             Tsit5(),
-            u0,
-            p,
             saveat = 1.0);
 ````
 
@@ -256,10 +254,8 @@ This model estimates the initial proportion of the population that is infected, 
           u0,
           tspan,
           p)
-  sol = concrete_solve(prob,
+  sol = solve(prob,
               Tsit5(),
-              u0,
-              p,
               saveat = 1.0)
   sol_C = Array(sol)[4,:] # Cumulative cases
   sol_X = sol_C[2:end] - sol_C[1:(end-1)]
@@ -429,8 +425,6 @@ function predict(y,chain)
             p)
     sol = concrete_solve(prob,
                 Tsit5(),
-                u0,
-                p,
                 saveat = 1.0)
     out = Array(sol)
     sol_X = [0.0; out[4,2:end] - out[4,1:(end-1)]]
