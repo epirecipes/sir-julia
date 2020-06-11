@@ -34,7 +34,7 @@ function sir_noise!(du,u,p,t)
     (S,I,R) = u
     (β,c,γ) = p
     N = S+I+R
-    ifrac = β*I/N*S
+    ifrac = β*c*I/N*S
     rfrac = γ*I
     du[1,1] = -sqrt(ifrac)
     du[2,1] = sqrt(ifrac)

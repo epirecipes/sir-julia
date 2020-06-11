@@ -34,10 +34,8 @@ p = [0.05,10.0,0.25]; # β,c,γ
 prob_ode = ODEProblem(sir_ode!,u0,tspan,p)
 
 
-sol_ode = concrete_solve(prob_ode,
+sol_ode = solve(prob_ode,
             Tsit5(),
-            u0,
-            p,
             saveat = 1.0);
 
 
@@ -66,10 +64,8 @@ plot!(obstimes,X,legend=false)
           u0,
           tspan,
           p)
-  sol = concrete_solve(prob,
+  sol = solve(prob,
               Tsit5(),
-              u0,
-              p,
               saveat = 1.0)
   sol_C = Array(sol)[4,:] # Cumulative cases
   sol_X = sol_C[2:end] - sol_C[1:(end-1)]

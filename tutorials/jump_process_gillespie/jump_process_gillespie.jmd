@@ -9,7 +9,7 @@ This implementation of a jump process uses [`Gillespie.jl`](https://github.com/s
 
 We will need to install the (unregistered) package, `Gillespie.jl`
 
-```{julia;echo=false}
+```{julia;echo=true}
 using Pkg
 Pkg.add(PackageSpec(url="https://github.com/sdwfrost/Gillespie.jl", rev="master"))
 ```

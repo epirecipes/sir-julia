@@ -25,6 +25,7 @@ The above process can be represented in different kinds of ways:
 - [Ordinary differential equation using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mtk/ode_mtk.md)
 - [Stochastic differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde/sde.md)
 - [Stochastic differential equation using StochasticDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_stochasticdiffeq/sde_stochasticdiffeq.md)
+- [Linear noise approximation (LNA) to the stochastic differential equation](https://github.com/epirecipes/sir-julia/blob/master/markdown/lna/lna.md)
 - [Function map](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map/function_map.md)
 - [Stochastic Markov model](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov/markov.md)
 - [Jump process (Gillespie) using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process/jump_process.md)
@@ -32,7 +33,7 @@ The above process can be represented in different kinds of ways:
 - [Reaction network conversion to ODEs, SDEs and jump process using ModelingToolkit](https://github.com/epirecipes/sir-julia/blob/master/markdown/rn_mtk/rn_mtk.md)
 - [Jump process (Gillespie) using Gillespie.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_gillespie/jump_process_gillespie.md)
 - [Discrete event simulation using SimJulia](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
-- [Agent-based model using base Julia](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector/abm_vector.md) as well [as using DifferentialEquations](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector/abm_vector_diffeq.md)
+- [Agent-based model using base Julia](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector/abm_vector.md) as well [as using DifferentialEquations](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector_diffeq/abm_vector_diffeq.md)
 - [Agent-based model using Agents.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm/abm.md)
 
 ## Generating simulated data
@@ -62,9 +63,8 @@ Thanks to [`Weave.jl`](https://github.com/JunoLab/Weave.jl), Julia Markdown file
 
 - [Jupyter notebooks](https://github.com/epirecipes/sir-julia/tree/master/notebook)
 - [GitHub Markdown](https://github.com/epirecipes/sir-julia/tree/master/markdown)
-- [PDF](https://github.com/epirecipes/sir-julia/tree/master/notebook)
-- [HTML](https://github.com/epirecipes/sir-julia/tree/master/notebook)
-- [Julia script](https://github.com/epirecipes/sir-julia/tree/master/notebook)
+- [HTML](https://github.com/epirecipes/sir-julia/tree/master/html)
+- [Julia script](https://github.com/epirecipes/sir-julia/tree/master/script)
 
 ## Running notebooks
 

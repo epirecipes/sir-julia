@@ -1180,7 +1180,7 @@ nll2 &#40;generic function with 1 method&#41;
     |g&#40;x&#41;|                 &#61; 1.49e&#43;00 ≰ 1.0e-08
 
  * Work counters
-    Seconds run:   1  &#40;vs limit Inf&#41;
+    Seconds run:   0  &#40;vs limit Inf&#41;
     Iterations:    3
     f&#40;x&#41; calls:    139
     ∇f&#40;x&#41; calls:   139
@@ -1273,25 +1273,25 @@ loss_function &#40;generic function with 1 method&#41;
 
 <pre class="output">
 &#40;::DiffEqParamEstim.DiffEqObjective&#123;DiffEqParamEstim.var&quot;#43#48&quot;&#123;Nothing,Bo
-ol,Int64,Main.##WeaveSandBox#671.var&quot;#1#2&quot;,Base.Iterators.Pairs&#123;Symbol,Real
-,Tuple&#123;Symbol,Symbol,Symbol&#125;,NamedTuple&#123;&#40;:saveat, :maxiters, :verbose&#41;,Tupl
-e&#123;Float64,Int64,Bool&#125;&#125;&#125;,DiffEqBase.ODEProblem&#123;Array&#123;Float64,1&#125;,Tuple&#123;Float6
-4,Float64&#125;,true,Array&#123;Float64,1&#125;,DiffEqBase.ODEFunction&#123;true,typeof&#40;Main.##
-WeaveSandBox#671.sir_ode&#33;&#41;,LinearAlgebra.UniformScaling&#123;Bool&#125;,Nothing,Nothi
-ng,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,
-Nothing&#125;,Base.Iterators.Pairs&#123;Union&#123;&#125;,Union&#123;&#125;,Tuple&#123;&#125;,NamedTuple&#123;&#40;&#41;,Tuple&#123;&#125;
-&#125;&#125;,DiffEqBase.StandardODEProblem&#125;,OrdinaryDiffEq.Tsit5,typeof&#40;Main.##WeaveS
-andBox#671.loss_function&#41;,Nothing&#125;,DiffEqParamEstim.var&quot;#47#53&quot;&#123;DiffEqParam
-Estim.var&quot;#43#48&quot;&#123;Nothing,Bool,Int64,Main.##WeaveSandBox#671.var&quot;#1#2&quot;,Base
-.Iterators.Pairs&#123;Symbol,Real,Tuple&#123;Symbol,Symbol,Symbol&#125;,NamedTuple&#123;&#40;:savea
-t, :maxiters, :verbose&#41;,Tuple&#123;Float64,Int64,Bool&#125;&#125;&#125;,DiffEqBase.ODEProblem&#123;A
-rray&#123;Float64,1&#125;,Tuple&#123;Float64,Float64&#125;,true,Array&#123;Float64,1&#125;,DiffEqBase.ODE
-Function&#123;true,typeof&#40;Main.##WeaveSandBox#671.sir_ode&#33;&#41;,LinearAlgebra.Unifor
-mScaling&#123;Bool&#125;,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Noth
-ing,Nothing,Nothing,Nothing,Nothing&#125;,Base.Iterators.Pairs&#123;Union&#123;&#125;,Union&#123;&#125;,T
-uple&#123;&#125;,NamedTuple&#123;&#40;&#41;,Tuple&#123;&#125;&#125;&#125;,DiffEqBase.StandardODEProblem&#125;,OrdinaryDiffE
-q.Tsit5,typeof&#40;Main.##WeaveSandBox#671.loss_function&#41;,Nothing&#125;&#125;&#125;&#41; &#40;generic 
-function with 2 methods&#41;
+ol,Int64,Main.##WeaveSandBox#1626.var&quot;#1#2&quot;,Base.Iterators.Pairs&#123;Symbol,Rea
+l,Tuple&#123;Symbol,Symbol,Symbol&#125;,NamedTuple&#123;&#40;:saveat, :maxiters, :verbose&#41;,Tup
+le&#123;Float64,Int64,Bool&#125;&#125;&#125;,DiffEqBase.ODEProblem&#123;Array&#123;Float64,1&#125;,Tuple&#123;Float
+64,Float64&#125;,true,Array&#123;Float64,1&#125;,DiffEqBase.ODEFunction&#123;true,typeof&#40;Main.#
+#WeaveSandBox#1626.sir_ode&#33;&#41;,LinearAlgebra.UniformScaling&#123;Bool&#125;,Nothing,Not
+hing,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Nothin
+g,Nothing&#125;,Base.Iterators.Pairs&#123;Union&#123;&#125;,Union&#123;&#125;,Tuple&#123;&#125;,NamedTuple&#123;&#40;&#41;,Tuple
+&#123;&#125;&#125;&#125;,DiffEqBase.StandardODEProblem&#125;,OrdinaryDiffEq.Tsit5,typeof&#40;Main.##Weav
+eSandBox#1626.loss_function&#41;,Nothing&#125;,DiffEqParamEstim.var&quot;#47#53&quot;&#123;DiffEqPa
+ramEstim.var&quot;#43#48&quot;&#123;Nothing,Bool,Int64,Main.##WeaveSandBox#1626.var&quot;#1#2&quot;,
+Base.Iterators.Pairs&#123;Symbol,Real,Tuple&#123;Symbol,Symbol,Symbol&#125;,NamedTuple&#123;&#40;:s
+aveat, :maxiters, :verbose&#41;,Tuple&#123;Float64,Int64,Bool&#125;&#125;&#125;,DiffEqBase.ODEProbl
+em&#123;Array&#123;Float64,1&#125;,Tuple&#123;Float64,Float64&#125;,true,Array&#123;Float64,1&#125;,DiffEqBase
+.ODEFunction&#123;true,typeof&#40;Main.##WeaveSandBox#1626.sir_ode&#33;&#41;,LinearAlgebra.U
+niformScaling&#123;Bool&#125;,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing,Nothing
+,Nothing,Nothing,Nothing,Nothing,Nothing&#125;,Base.Iterators.Pairs&#123;Union&#123;&#125;,Unio
+n&#123;&#125;,Tuple&#123;&#125;,NamedTuple&#123;&#40;&#41;,Tuple&#123;&#125;&#125;&#125;,DiffEqBase.StandardODEProblem&#125;,Ordinary
+DiffEq.Tsit5,typeof&#40;Main.##WeaveSandBox#1626.loss_function&#41;,Nothing&#125;&#125;&#125;&#41; &#40;ge
+neric function with 2 methods&#41;
 </pre>
 
 
@@ -1368,13 +1368,11 @@ Starting optimization with optimizer BlackBoxOptim.DiffEvoOpt&#123;BlackBoxOptim
 daptiveDiffEvoRandBin&#123;3&#125;,BlackBoxOptim.RandomBound&#123;BlackBoxOptim.Continuous
 RectSearchSpace&#125;&#125;
 0.00 secs, 0 evals, 0 steps
-0.50 secs, 8360 evals, 8270 steps, improv/step: 0.165 &#40;last &#61; 0.1647&#41;, fitn
-ess&#61;111.728553108
 
-Optimization stopped after 10001 steps and 0.59 seconds
+Optimization stopped after 10001 steps and 0.36 seconds
 Termination reason: Max number of steps &#40;10000&#41; reached
-Steps per second &#61; 16989.17
-Function evals per second &#61; 17119.98
+Steps per second &#61; 27907.93
+Function evals per second &#61; 28122.80
 Improvements/step &#61; 0.13950
 Total function evaluations &#61; 10078
 
@@ -1384,58 +1382,58 @@ Best candidate found: &#91;0.0100005, 0.049693&#93;
 Fitness: 111.728553108
 
 BlackBoxOptim.OptimizationResults&#40;&quot;adaptive_de_rand_1_bin_radiuslimited&quot;, &quot;
-Max number of steps &#40;10000&#41; reached&quot;, 10001, 1.590591954410471e9, 0.5886690
-616607666, BlackBoxOptim.DictChain&#123;Symbol,Any&#125;&#91;BlackBoxOptim.DictChain&#123;Symb
-ol,Any&#125;&#91;Dict&#123;Symbol,Any&#125;&#40;:RngSeed &#61;&gt; 446022,:SearchRange &#61;&gt; &#91;&#40;0.0, 1.0&#41;, &#40;0
-.0, 1.0&#41;&#93;,:MaxSteps &#61;&gt; 10000&#41;,Dict&#123;Symbol,Any&#125;&#40;&#41;&#93;,Dict&#123;Symbol,Any&#125;&#40;:Fitness
-Scheme &#61;&gt; BlackBoxOptim.ScalarFitnessScheme&#123;true&#125;&#40;&#41;,:NumDimensions &#61;&gt; :NotS
-pecified,:PopulationSize &#61;&gt; 50,:MaxTime &#61;&gt; 0.0,:SearchRange &#61;&gt; &#40;-1.0, 1.0&#41;,
-:Method &#61;&gt; :adaptive_de_rand_1_bin_radiuslimited,:MaxNumStepsWithoutFuncEva
-ls &#61;&gt; 100,:RngSeed &#61;&gt; 1234,:MaxFuncEvals &#61;&gt; 0,:SaveTrace &#61;&gt; false…&#41;&#93;, 10078
-, BlackBoxOptim.ScalarFitnessScheme&#123;true&#125;&#40;&#41;, BlackBoxOptim.TopListArchiveOu
-tput&#123;Float64,Array&#123;Float64,1&#125;&#125;&#40;111.72855310838251, &#91;0.01000046836278904, 0.
-049692985596648996&#93;&#41;, BlackBoxOptim.PopulationOptimizerOutput&#123;BlackBoxOptim
-.FitPopulation&#123;Float64&#125;&#125;&#40;BlackBoxOptim.FitPopulation&#123;Float64&#125;&#40;&#91;0.0100004410
-03697182 0.010000196839751072 … 0.010000316998278278 0.010000255271509311; 
-0.04969310950094767 0.049693077283398515 … 0.049693210077759314 0.049693060
-84709772&#93;, NaN, &#91;111.7285532227244, 111.72855315334847, 111.72855319568794,
- 111.72855321074974, 111.72855324392246, 111.72855321051965, 111.7285531983
-5722, 111.72855324392246, 111.72855327721915, 111.72855310838251  …  111.72
-855318385034, 111.72855318505471, 111.72855322038515, 111.72855312105112, 1
-11.7285531784525, 111.72855316781599, 111.72855325364509, 111.7285531944743
-9, 111.72855324979908, 111.72855320326772&#93;, 0, BlackBoxOptim.Candidate&#123;Floa
-t64&#125;&#91;BlackBoxOptim.Candidate&#123;Float64&#125;&#40;&#91;0.010000694535302126, 0.049692945084
-1662&#93;, 18, 111.72855315905642, BlackBoxOptim.AdaptiveDiffEvoRandBin&#123;3&#125;&#40;Blac
-kBoxOptim.AdaptiveDiffEvoParameters&#40;BlackBoxOptim.BimodalCauchy&#40;Distributio
-ns.Cauchy&#123;Float64&#125;&#40;μ&#61;0.65, σ&#61;0.1&#41;, Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;1.0, σ&#61;0
-.1&#41;, 0.5, false, true&#41;, BlackBoxOptim.BimodalCauchy&#40;Distributions.Cauchy&#123;Fl
-oat64&#125;&#40;μ&#61;0.1, σ&#61;0.1&#41;, Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;0.95, σ&#61;0.1&#41;, 0.5, fa
-lse, true&#41;, &#91;0.5986560490312182, 0.8801497880474216, 1.0, 0.287848041655583
-4, 0.9552552490374797, 1.0, 1.0, 0.8549312033008517, 0.23003692778296714, 1
-.0  …  0.7284955649698605, 0.7073267424836166, 0.9416356618465631, 1.0, 0.7
-680563512395949, 1.0, 0.6726221965612929, 0.8533619770082745, 0.65313672135
-92068, 0.5826669890378492&#93;, &#91;0.5529302294793459, 0.055586527848320175, 0.72
-05786666309878, 0.7906824278551479, 0.7937381275976991, 0.6573477673499002,
- 0.06965252304851306, 1.0, 1.0, 0.22843084603538916  …  0.9260678525364435,
- 0.18802543518817297, 0.08171423015182257, 0.12190189158528267, 0.645125601
-6364262, 0.9417241944379853, 0.005300130416607957, 0.16214417417590216, 0.0
-21737038767065342, 0.3092563744286215&#93;&#41;&#41;, 0&#41;, BlackBoxOptim.Candidate&#123;Float
-64&#125;&#40;&#91;0.010000276199212788, 0.04969312984053147&#93;, 18, 111.72855317892403, Bl
-ackBoxOptim.AdaptiveDiffEvoRandBin&#123;3&#125;&#40;BlackBoxOptim.AdaptiveDiffEvoParamete
-rs&#40;BlackBoxOptim.BimodalCauchy&#40;Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;0.65, σ&#61;0.1&#41;
-, Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;1.0, σ&#61;0.1&#41;, 0.5, false, true&#41;, BlackBoxO
-ptim.BimodalCauchy&#40;Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;0.1, σ&#61;0.1&#41;, Distributio
-ns.Cauchy&#123;Float64&#125;&#40;μ&#61;0.95, σ&#61;0.1&#41;, 0.5, false, true&#41;, &#91;0.5986560490312182, 
-0.8801497880474216, 1.0, 0.2878480416555834, 0.9552552490374797, 1.0, 1.0, 
-0.8549312033008517, 0.23003692778296714, 1.0  …  0.7284955649698605, 0.7073
-267424836166, 0.9416356618465631, 1.0, 0.7680563512395949, 1.0, 0.672622196
-5612929, 0.8533619770082745, 0.6531367213592068, 0.5826669890378492&#93;, &#91;0.55
-29302294793459, 0.055586527848320175, 0.7205786666309878, 0.790682427855147
-9, 0.7937381275976991, 0.6573477673499002, 0.06965252304851306, 1.0, 1.0, 0
-.22843084603538916  …  0.9260678525364435, 0.18802543518817297, 0.081714230
-15182257, 0.12190189158528267, 0.6451256016364262, 0.9417241944379853, 0.00
-5300130416607957, 0.16214417417590216, 0.021737038767065342, 0.309256374428
-6215&#93;&#41;&#41;, 0&#41;&#93;&#41;&#41;&#41;
+Max number of steps &#40;10000&#41; reached&quot;, 10001, 1.591915593025168e9, 0.3583569
+5266723633, BlackBoxOptim.DictChain&#123;Symbol,Any&#125;&#91;BlackBoxOptim.DictChain&#123;Sym
+bol,Any&#125;&#91;Dict&#123;Symbol,Any&#125;&#40;:RngSeed &#61;&gt; 446022,:SearchRange &#61;&gt; &#91;&#40;0.0, 1.0&#41;, &#40;
+0.0, 1.0&#41;&#93;,:MaxSteps &#61;&gt; 10000&#41;,Dict&#123;Symbol,Any&#125;&#40;&#41;&#93;,Dict&#123;Symbol,Any&#125;&#40;:Fitnes
+sScheme &#61;&gt; BlackBoxOptim.ScalarFitnessScheme&#123;true&#125;&#40;&#41;,:NumDimensions &#61;&gt; :Not
+Specified,:PopulationSize &#61;&gt; 50,:MaxTime &#61;&gt; 0.0,:SearchRange &#61;&gt; &#40;-1.0, 1.0&#41;
+,:Method &#61;&gt; :adaptive_de_rand_1_bin_radiuslimited,:MaxNumStepsWithoutFuncEv
+als &#61;&gt; 100,:RngSeed &#61;&gt; 1234,:MaxFuncEvals &#61;&gt; 0,:SaveTrace &#61;&gt; false…&#41;&#93;, 1007
+8, BlackBoxOptim.ScalarFitnessScheme&#123;true&#125;&#40;&#41;, BlackBoxOptim.TopListArchiveO
+utput&#123;Float64,Array&#123;Float64,1&#125;&#125;&#40;111.72855310838251, &#91;0.01000046836278904, 0
+.049692985596648996&#93;&#41;, BlackBoxOptim.PopulationOptimizerOutput&#123;BlackBoxOpti
+m.FitPopulation&#123;Float64&#125;&#125;&#40;BlackBoxOptim.FitPopulation&#123;Float64&#125;&#40;&#91;0.010000441
+003697182 0.010000196839751072 … 0.010000316998278278 0.010000255271509311;
+ 0.04969310950094767 0.049693077283398515 … 0.049693210077759314 0.04969306
+084709772&#93;, NaN, &#91;111.7285532227244, 111.72855315334847, 111.72855319568794
+, 111.72855321074974, 111.72855324392246, 111.72855321051965, 111.728553198
+35722, 111.72855324392246, 111.72855327721915, 111.72855310838251  …  111.7
+2855318385034, 111.72855318505471, 111.72855322038515, 111.72855312105112, 
+111.7285531784525, 111.72855316781599, 111.72855325364509, 111.728553194474
+39, 111.72855324979908, 111.72855320326772&#93;, 0, BlackBoxOptim.Candidate&#123;Flo
+at64&#125;&#91;BlackBoxOptim.Candidate&#123;Float64&#125;&#40;&#91;0.010000694535302126, 0.04969294508
+41662&#93;, 18, 111.72855315905642, BlackBoxOptim.AdaptiveDiffEvoRandBin&#123;3&#125;&#40;Bla
+ckBoxOptim.AdaptiveDiffEvoParameters&#40;BlackBoxOptim.BimodalCauchy&#40;Distributi
+ons.Cauchy&#123;Float64&#125;&#40;μ&#61;0.65, σ&#61;0.1&#41;, Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;1.0, σ&#61;
+0.1&#41;, 0.5, false, true&#41;, BlackBoxOptim.BimodalCauchy&#40;Distributions.Cauchy&#123;F
+loat64&#125;&#40;μ&#61;0.1, σ&#61;0.1&#41;, Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;0.95, σ&#61;0.1&#41;, 0.5, f
+alse, true&#41;, &#91;0.5986560490312182, 0.8801497880474216, 1.0, 0.28784804165558
+34, 0.9552552490374797, 1.0, 1.0, 0.8549312033008517, 0.23003692778296714, 
+1.0  …  0.7284955649698605, 0.7073267424836166, 0.9416356618465631, 1.0, 0.
+7680563512395949, 1.0, 0.6726221965612929, 0.8533619770082745, 0.6531367213
+592068, 0.5826669890378492&#93;, &#91;0.5529302294793459, 0.055586527848320175, 0.7
+205786666309878, 0.7906824278551479, 0.7937381275976991, 0.6573477673499002
+, 0.06965252304851306, 1.0, 1.0, 0.22843084603538916  …  0.9260678525364435
+, 0.18802543518817297, 0.08171423015182257, 0.12190189158528267, 0.64512560
+16364262, 0.9417241944379853, 0.005300130416607957, 0.16214417417590216, 0.
+021737038767065342, 0.3092563744286215&#93;&#41;&#41;, 0&#41;, BlackBoxOptim.Candidate&#123;Floa
+t64&#125;&#40;&#91;0.010000276199212788, 0.04969312984053147&#93;, 18, 111.72855317892403, B
+lackBoxOptim.AdaptiveDiffEvoRandBin&#123;3&#125;&#40;BlackBoxOptim.AdaptiveDiffEvoParamet
+ers&#40;BlackBoxOptim.BimodalCauchy&#40;Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;0.65, σ&#61;0.1
+&#41;, Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;1.0, σ&#61;0.1&#41;, 0.5, false, true&#41;, BlackBox
+Optim.BimodalCauchy&#40;Distributions.Cauchy&#123;Float64&#125;&#40;μ&#61;0.1, σ&#61;0.1&#41;, Distributi
+ons.Cauchy&#123;Float64&#125;&#40;μ&#61;0.95, σ&#61;0.1&#41;, 0.5, false, true&#41;, &#91;0.5986560490312182,
+ 0.8801497880474216, 1.0, 0.2878480416555834, 0.9552552490374797, 1.0, 1.0,
+ 0.8549312033008517, 0.23003692778296714, 1.0  …  0.7284955649698605, 0.707
+3267424836166, 0.9416356618465631, 1.0, 0.7680563512395949, 1.0, 0.67262219
+65612929, 0.8533619770082745, 0.6531367213592068, 0.5826669890378492&#93;, &#91;0.5
+529302294793459, 0.055586527848320175, 0.7205786666309878, 0.79068242785514
+79, 0.7937381275976991, 0.6573477673499002, 0.06965252304851306, 1.0, 1.0, 
+0.22843084603538916  …  0.9260678525364435, 0.18802543518817297, 0.08171423
+015182257, 0.12190189158528267, 0.6451256016364262, 0.9417241944379853, 0.0
+05300130416607957, 0.16214417417590216, 0.021737038767065342, 0.30925637442
+86215&#93;&#41;&#41;, 0&#41;&#93;&#41;&#41;&#41;
 </pre>
 
 
@@ -1461,42 +1459,67 @@ Environment:
 <div class="markdown"><pre><code>Status &#96;~/.julia/environments/v1.4/Project.toml&#96;
 &#91;46ada45e-f475-11e8-01d0-f70cc89e6671&#93; Agents 3.1.0
 &#91;f5f396d3-230c-5e07-80e6-9fadf06146cc&#93; ApproxBayes 0.3.2
-&#91;c52e3926-4ff0-5f6e-af25-54175e0327b1&#93; Atom 0.12.11
+&#91;c52e3926-4ff0-5f6e-af25-54175e0327b1&#93; Atom 0.12.14
+&#91;fbb218c0-5317-5bc6-957e-2ee96dd4b1f0&#93; BSON 0.2.6
 &#91;6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf&#93; BenchmarkTools 0.5.0
 &#91;a134a8b2-14d6-55f6-9291-3336d3ab0209&#93; BlackBoxOptim 0.5.0
+&#91;2d3116d5-4b8f-5680-861c-71f149790274&#93; Bridge 0.11.3
+&#91;1aa9af3a-2424-508f-bb7e-0626de155470&#93; BridgeDiffEq 0.1.0
+&#91;46d747a0-b9e1-11e9-14b5-615c73e45078&#93; BridgeSDEInference 0.3.2
+&#91;336ed68f-0bac-5ca0-87d4-7b16caf5d00b&#93; CSV 0.6.2
+&#91;49dc2e85-a5d0-5ad3-a950-438e2897f1b9&#93; Calculus 0.5.1
 &#91;2445eb08-9709-466a-b3fc-47e12bd697a2&#93; DataDrivenDiffEq 0.3.1
-&#91;a93c6f00-e57d-5684-b7b6-d8193f3e46c0&#93; DataFrames 0.21.1
-&#91;ebbdde9d-f333-5424-9be2-dbf1e9acfb5e&#93; DiffEqBayes 2.14.1
+&#91;a93c6f00-e57d-5684-b7b6-d8193f3e46c0&#93; DataFrames 0.21.2
+&#91;bcd4f6db-9728-5f36-b5f7-82caef46ccdb&#93; DelayDiffEq 5.24.1
+&#91;2b5f629d-d688-5b77-993f-72d75c75574e&#93; DiffEqBase 6.36.4
+&#91;ebbdde9d-f333-5424-9be2-dbf1e9acfb5e&#93; DiffEqBayes 2.15.0
+&#91;eb300fae-53e8-50a0-950c-e21f52c2b7e0&#93; DiffEqBiological 4.3.0
 &#91;459566f4-90b8-5000-8ac3-15dfb0a30def&#93; DiffEqCallbacks 2.13.2
-&#91;aae7a2af-3d4f-5e19-a356-7da93b79d9d0&#93; DiffEqFlux 1.10.3
-&#91;c894b116-72e5-5b58-be3c-e6d8d4ac2b12&#93; DiffEqJump 6.7.5
+&#91;aae7a2af-3d4f-5e19-a356-7da93b79d9d0&#93; DiffEqFlux 1.12.0
+&#91;c894b116-72e5-5b58-be3c-e6d8d4ac2b12&#93; DiffEqJump 6.8.2
 &#91;1130ab10-4a5a-5621-a13d-e4788d82bd4c&#93; DiffEqParamEstim 1.14.1
-&#91;41bf760c-e81c-5289-8e54-58b1f1f8abe2&#93; DiffEqSensitivity 6.17.0
+&#91;41bf760c-e81c-5289-8e54-58b1f1f8abe2&#93; DiffEqSensitivity 6.19.1
 &#91;0c46a032-eb83-5123-abaf-570d42b7fbaa&#93; DifferentialEquations 6.14.0
 &#91;b4f34e82-e78d-54a5-968a-f98e89d6e8f7&#93; Distances 0.8.2
-&#91;31c24e10-a181-5473-b8eb-7969acd0382f&#93; Distributions 0.23.2
-&#91;634d3b9d-ee7a-5ddf-bec9-22491ea816e1&#93; DrWatson 1.13.0
+&#91;31c24e10-a181-5473-b8eb-7969acd0382f&#93; Distributions 0.23.4
+&#91;634d3b9d-ee7a-5ddf-bec9-22491ea816e1&#93; DrWatson 1.13.1
 &#91;587475ba-b771-5e3f-ad9e-33799f191a9c&#93; Flux 0.10.5
+&#91;f6369f11-7733-5829-9624-2563aa707210&#93; ForwardDiff 0.10.10
+&#91;38e38edf-8417-5370-95a0-9cbb8c7f171a&#93; GLM 1.3.9
 &#91;28b8d3ca-fb5f-59d9-8090-bfdbd6d07a71&#93; GR 0.49.1
+&#91;891a1506-143c-57d2-908e-e1f8e92e6de9&#93; GaussianProcesses 0.12.0
 &#91;523d8e89-b243-5607-941c-87d699ea6713&#93; Gillespie 0.1.0
 &#91;e850a1a4-d859-11e8-3d54-a195e6d045d3&#93; GpABC 0.0.1
 &#91;7073ff75-c697-5162-941a-fcdaad2a7d2a&#93; IJulia 1.21.2
+&#91;a98d9a8b-a2ab-59e6-89dd-64a1c18fca59&#93; Interpolations 0.12.10
 &#91;4076af6c-e467-56ae-b986-b466b2749572&#93; JuMP 0.21.2
 &#91;e5e0dc1b-0480-54bc-9374-aad01c23163d&#93; Juno 0.8.2
 &#91;093fc24a-ae57-5d10-9952-331d41423f4d&#93; LightGraphs 1.3.3
+&#91;c7f686f2-ff18-58e9-bc7b-31028e88f75d&#93; MCMCChains 3.0.12
 &#91;1914dd2f-81c6-5fcd-8719-6d5c9610ff09&#93; MacroTools 0.5.5
-&#91;961ee093-0014-501f-94e3-6117800e7a78&#93; ModelingToolkit 3.6.4
+&#91;5424a776-8be3-5c5b-a13f-3551f69ba0e6&#93; Mamba 0.12.4
+&#91;ff71e718-51f3-5ec2-a782-8ffcbfa3c316&#93; MixedModels 3.0.0-DEV
+&#91;961ee093-0014-501f-94e3-6117800e7a78&#93; ModelingToolkit 3.8.0
 &#91;76087f3c-5699-56af-9a33-bf431cd00edd&#93; NLopt 0.6.0
 &#91;429524aa-4258-5aef-a3af-852621145aeb&#93; Optim 0.20.6
-&#91;1dea7af3-3e70-54e6-95c3-0bf5283fa5ed&#93; OrdinaryDiffEq 5.38.2
-&#91;91a5bcdd-55d7-5caf-9e0b-520d859cae80&#93; Plots 1.3.4
+&#91;1dea7af3-3e70-54e6-95c3-0bf5283fa5ed&#93; OrdinaryDiffEq 5.39.1
+&#91;91a5bcdd-55d7-5caf-9e0b-520d859cae80&#93; Plots 1.3.7
+&#91;c3e4b0f8-55cb-11ea-2926-15256bba5781&#93; Pluto 0.9.4
+&#91;1a8c2f83-1ff3-5112-b086-8aa67b057ba1&#93; Query 0.12.3-DEV
+&#91;6f49c342-dc21-5d91-9882-a32aef131414&#93; RCall 0.13.7
+&#91;c5292f4c-5179-55e1-98c5-05642aab7184&#93; ResumableFunctions 0.5.1
+&#91;37e2e3b7-166d-5795-8a7a-e32c996b4267&#93; ReverseDiff 1.2.0
 &#91;428bdadb-6287-5aa5-874b-9969638295fd&#93; SimJulia 0.8.0
 &#91;05bca326-078c-5bf0-a5bf-ce7c7982d7fd&#93; SimpleDiffEq 1.1.0
 &#91;276daf66-3868-5448-9aa4-cd146d93841b&#93; SpecialFunctions 0.10.3
+&#91;2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91&#93; StatsBase 0.33.0
 &#91;f3b207a7-027a-5e70-b257-86293d7955fd&#93; StatsPlots 0.14.6
-&#91;789caeaf-c7a9-5a7d-9973-96adeb23e2a0&#93; StochasticDiffEq 6.23.0
+&#91;8188c328-b5d6-583d-959b-9690869a5511&#93; Stheno 0.6.4
+&#91;789caeaf-c7a9-5a7d-9973-96adeb23e2a0&#93; StochasticDiffEq 6.23.1
 &#91;92b13dbe-c966-51a2-8445-caca9f8a7d42&#93; TaylorIntegration 0.8.3
+&#91;9f7883ad-71c0-57eb-9f7f-b5c9e6d3789c&#93; Tracker 0.2.6
 &#91;fce5fe82-541a-59a6-adf8-730c64b5f9a0&#93; Turing 0.13.0
+&#91;1986cc42-f94f-5a68-af5c-568840ba703d&#93; Unitful 1.2.1
 &#91;44d3d7a6-8a23-5bf8-98c5-b353f8df5ec9&#93; Weave 0.10.2
 &#91;e88e6eb3-aa80-5325-afca-941959d7151f&#93; Zygote 0.4.20</code></pre>
 </div>
@@ -1506,7 +1529,7 @@ Environment:
         <div class="footer">
           <p>
             Published from <a href="ode_optim.jmd">ode_optim.jmd</a>
-            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.2 on 2020-05-27.
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.2 on 2020-06-11.
           </p>
         </div>
       </div>
