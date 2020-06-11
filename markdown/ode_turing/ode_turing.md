@@ -270,8 +270,8 @@ end;
 
 
 ````
-DynamicPPL.ModelGen{Main.##WeaveSandBox#1812.var"###generator#1829",(:y,),(
-),Tuple{}}(Main.##WeaveSandBox#1812.##generator#1829, NamedTuple())
+DynamicPPL.ModelGen{Main.##WeaveSandBox#1884.var"###generator#1901",(:y,),(
+),Tuple{}}(Main.##WeaveSandBox#1884.##generator#1901, NamedTuple())
 ````
 
 
@@ -425,7 +425,7 @@ function predict(y,chain)
             u0,
             tspan,
             p)
-    sol = concrete_solve(prob,
+    sol = solve(prob,
                 Tsit5(),
                 saveat = 1.0)
     out = Array(sol)
