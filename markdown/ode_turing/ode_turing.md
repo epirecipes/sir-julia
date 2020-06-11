@@ -427,8 +427,6 @@ function predict(y,chain)
             p)
     sol = concrete_solve(prob,
                 Tsit5(),
-                u0,
-                p,
                 saveat = 1.0)
     out = Array(sol)
     sol_X = [0.0; out[4,2:end] - out[4,1:(end-1)]]
