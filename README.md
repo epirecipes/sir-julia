@@ -26,6 +26,7 @@ The above process can be represented in different kinds of ways:
 - [Stochastic differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde/sde.md)
 - [Stochastic differential equation using StochasticDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_stochasticdiffeq/sde_stochasticdiffeq.md)
 - [Linear noise approximation (LNA) to the stochastic differential equation](https://github.com/epirecipes/sir-julia/blob/master/markdown/lna/lna.md)
+- [Multivariate birth process reparameterisation of the stochastic differential equation](https://github.com/epirecipes/sir-julia/blob/master/markdown/mbp/mbp.md)
 - [Function map](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map/function_map.md)
 - [Stochastic Markov model](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov/markov.md)
 - [Jump process (Gillespie) using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process/jump_process.md)

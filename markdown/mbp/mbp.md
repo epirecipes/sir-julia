@@ -1,15 +1,15 @@
-# Stochastic differential equation model using StochasticDiffEq.jl
-Simon Frost (@sdwfrost), 2020-04-27
+# Multivariate birth process reparameterisation of the SDE model
+Simon Frost (@sdwfrost), 2020-06-12
 
 ## Introduction
 
-A stochastic differential equation version of the SIR model is:
+[Fintzi et al.](https://arxiv.org/abs/2001.05099) reparameterise a stochastic epidemiological model in two ways:
+- they consider the dynamics of time-integrated rates (infection and recovery in the SIR model); and
+- they use a log-transformed scale, to model stochastic perturbations due to stochasticity on a multiplicative scale.
 
-- Stochastic
-- Continuous in time
-- Continuous in state
+There are lots of advantages to this parameterisation, not the least that the states in this model more closely match the kind of data that are usually collected.
 
-This implementation uses `StochasticDiffEq.jl`, which has a variety of SDE solvers.
+In the following, the dynamics of the cumulative numbers of infections, `C` and the number of recoveries, `R`, are explicitly modeled as `Ctilde=log(C+1)` and `Rtilde=log(R+1)`, with the dynamics of `S` and `I` determined using the initial conditions and the time-integrated rates. Although the code can be made more generic, for this tutorial, the code is kept to be specific for the SIR model for readability.
 
 ## Libraries
 
@@ -30,17 +30,17 @@ using BenchmarkTools
 
 ## Transitions
 
-We begin by specifying the ODE kernel.
-
 ````julia
-function sir_ode!(du,u,p,t)
-    (S,I,R) = u
-    (β,c,γ) = p
-    N = S+I+R
+function sir_mbp!(du,u,p,t)
+    (Ctilde,Rtilde) = u
+    (β,c,γ,S₀,I₀,N) = p
+    C = exp(Ctilde)-1.0
+    R = exp(Rtilde)-1.0
+    S = S₀-C
+    I = I₀+C-R
     @inbounds begin
-        du[1] = -β*c*I/N*S
-        du[2] = β*c*I/N*S - γ*I
-        du[3] = γ*I
+        du[1] = (exp(-Ctilde)-0.5*exp(-2.0*Ctilde))*(β*c*I/N*S)
+        du[2] = (exp(-Rtilde)-0.5*exp(-2.0*Rtilde))*(γ*I)
     end
     nothing
 end;
@@ -48,28 +48,28 @@ end;
 
 
 ````
-sir_ode! (generic function with 1 method)
+sir_mbp! (generic function with 1 method)
 ````
 
 
 
+
+
+The pattern of noise for this parameterisation is a diagonal matrix.
+
 ````julia
 # Define a sparse matrix by making a dense matrix and setting some values as not zero
-A = zeros(3,2)
+A = zeros(2,2)
 A[1,1] = 1
-A[2,1] = 1
 A[2,2] = 1
-A[3,2] = 1
 A = SparseArrays.sparse(A);
 ````
 
 
 ````
-3×2 SparseMatrixCSC{Float64,Int64} with 4 stored entries:
+2×2 SparseMatrixCSC{Float64,Int64} with 2 stored entries:
   [1, 1]  =  1.0
-  [2, 1]  =  1.0
   [2, 2]  =  1.0
-  [3, 2]  =  1.0
 ````
 
 
@@ -77,15 +77,14 @@ A = SparseArrays.sparse(A);
 ````julia
 # Make `g` write the sparse matrix values
 function sir_noise!(du,u,p,t)
-    (S,I,R) = u
-    (β,c,γ) = p
-    N = S+I+R
-    ifrac = β*c*I/N*S
-    rfrac = γ*I
-    du[1,1] = -sqrt(ifrac)
-    du[2,1] = sqrt(ifrac)
-    du[2,2] = -sqrt(rfrac)
-    du[3,2] = sqrt(rfrac)
+    (Ctilde,Rtilde) = u
+    (β,c,γ,S₀,I₀,N) = p
+    C = exp(Ctilde)-1.0
+    R = exp(Rtilde)-1.0
+    S = S₀-C
+    I = I₀+C-R
+    du[1,1] = exp(-Ctilde)*sqrt(β*c*I/N*S)
+    du[2,2] = exp(-Rtilde)*sqrt(γ*I)
 end;
 ````
 
@@ -98,55 +97,9 @@ sir_noise! (generic function with 1 method)
 
 
 
-## Callbacks
-
-It is possible for the stochastic jumps to result in negative numbers of infected individuals, which will throw an error. A `ContinuousCallback` is added that resets infected individuals, `I`, to zero if `I` becomes negative.
-
-````julia
-function condition(u,t,integrator) # Event when event_f(u,t) == 0
-  u[2]
-end
-````
-
-
-````
-condition (generic function with 1 method)
-````
-
-
-
-````julia
-function affect!(integrator)
-  integrator.u[2] = 0.0
-end
-````
-
-
-````
-affect! (generic function with 1 method)
-````
-
-
-
-````julia
-cb = ContinuousCallback(condition,affect!)
-````
-
-
-````
-ContinuousCallback{typeof(Main.##WeaveSandBox#335.condition),typeof(Main.##
-WeaveSandBox#335.affect!),typeof(Main.##WeaveSandBox#335.affect!),typeof(Di
-ffEqBase.INITIALIZE_DEFAULT),Float64,Int64,Nothing,Int64}(Main.##WeaveSandB
-ox#335.condition, Main.##WeaveSandBox#335.affect!, Main.##WeaveSandBox#335.
-affect!, DiffEqBase.INITIALIZE_DEFAULT, nothing, true, 10, Bool[1, 1], 1, 2
-.220446049250313e-15, 0)
-````
-
-
-
-
-
 ## Time domain
+
+We set the timespan for simulations, `tspan`, initial conditions, `u0`, and parameter values, `p`, which contains both the rates of the model and the initial conditions of `S` and `I`.
 
 ````julia
 δt = 0.1
@@ -167,15 +120,14 @@ t = 0.0:δt:tmax;
 ## Initial conditions
 
 ````julia
-u0 = [990.0,10.0,0.0]; # S,I,R
+u0 = [0.0,0.0]; # C,R
 ````
 
 
 ````
-3-element Array{Float64,1}:
- 990.0
-  10.0
-   0.0
+2-element Array{Float64,1}:
+ 0.0
+ 0.0
 ````
 
 
@@ -185,15 +137,18 @@ u0 = [990.0,10.0,0.0]; # S,I,R
 ## Parameter values
 
 ````julia
-p = [0.05,10.0,0.25]; # β,c,γ
+p = [0.05,10.0,0.25,990.0,10.0,1000.0]; # β,c,γ,S₀,I₀,N
 ````
 
 
 ````
-3-element Array{Float64,1}:
-  0.05
- 10.0
-  0.25
+6-element Array{Float64,1}:
+    0.05
+   10.0
+    0.25
+  990.0
+   10.0
+ 1000.0
 ````
 
 
@@ -230,71 +185,130 @@ MersenneTwister(UInt32[0x000004d2], Random.DSFMT.DSFMT_state(Int32[-1393240
 
 
 
+## Defining a callback
+
+It is possible for the number of infected individuals to become negative. Here, a simple approach is taken where the integration is stopped if the number of infected individuals becomes negative. This is implemented using a `ContinuousCallback` from the `DiffEqCallbacks` library.
+
+````julia
+function condition(u,t,integrator,p) # Event when event_f(u,t) == 0
+    (Ctilde,Rtilde) = u
+    (β,c,γ,S₀,I₀,N) = p
+    C = exp(Ctilde)-1.0
+    R = exp(Rtilde)-1.0
+    S = S₀-C
+    I = I₀+C-R
+    I
+end
+````
+
+
+````
+condition (generic function with 1 method)
+````
+
+
+
+````julia
+function affect!(integrator)
+    terminate!(integrator)
+end
+````
+
+
+````
+affect! (generic function with 1 method)
+````
+
+
+
+````julia
+cb = ContinuousCallback(
+        (u,t,integrator)->condition(u,t,integrator,p),
+        affect!)
+````
+
+
+````
+ContinuousCallback{Main.##WeaveSandBox#359.var"#1#2",typeof(Main.##WeaveSan
+dBox#359.affect!),typeof(Main.##WeaveSandBox#359.affect!),typeof(DiffEqBase
+.INITIALIZE_DEFAULT),Float64,Int64,Nothing,Int64}(Main.##WeaveSandBox#359.v
+ar"#1#2"(), Main.##WeaveSandBox#359.affect!, Main.##WeaveSandBox#359.affect
+!, DiffEqBase.INITIALIZE_DEFAULT, nothing, true, 10, Bool[1, 1], 1, 2.22044
+6049250313e-15, 0)
+````
+
+
+
+
+
 ## Running the model
 
 ````julia
-prob_sde = SDEProblem(sir_ode!,sir_noise!,u0,tspan,p,noise_rate_prototype=A)
+prob_mbp = SDEProblem(sir_mbp!,sir_noise!,u0,tspan,p,noise_rate_prototype=A)
 ````
 
 
 ````
 SDEProblem with uType Array{Float64,1} and tType Float64. In-place: true
 timespan: (0.0, 40.0)
-u0: [990.0, 10.0, 0.0]
+u0: [0.0, 0.0]
 ````
 
 
 
 ````julia
-sol_sde = solve(prob_sde,SRA1(),callback=cb);
+sol_mbp = solve(prob_mbp,
+            SRA1(),
+            callback=cb,
+            saveat=δt);
 ````
 
 
 ````
 retcode: Success
 Interpolation: 1st order linear
-t: 2149-element Array{Float64,1}:
+t: 401-element Array{Float64,1}:
   0.0
-  0.0013173816394377667
-  0.0015832502329220168
-  0.0018823524005917983
-  0.0022188423392203024
-  0.00259739352017737
-  0.0030232635987540706
-  0.0035023674371528588
-  0.004041359255351496
-  0.004647725050824962
+  0.1
+  0.2
+  0.3
+  0.4
+  0.5
+  0.6
+  0.7
+  0.8
+  0.9
   ⋮
- 39.75861682576219
- 39.78938299614193
- 39.820347646989816
- 39.85132598050279
- 39.88237092964655
- 39.91346004365637
- 39.94459176254648
- 39.9758265922429
+ 39.2
+ 39.3
+ 39.4
+ 39.5
+ 39.6
+ 39.7
+ 39.8
+ 39.9
  40.0
-u: 2149-element Array{Array{Float64,1},1}:
- [990.0, 10.0, 0.0]
- [989.9388154917243, 10.093608466500578, -0.03242395822488166]
- [989.9117637020629, 10.127124049798836, -0.0388877518616879]
- [989.9702289871851, 10.01591252735328, 0.01385848546154616]
- [989.9196763119908, 10.026581888394398, 0.05374179961474135]
- [990.0080099744557, 9.99108634442424, 0.0009036811200635042]
- [989.9933371361653, 9.992785862371884, 0.013877001462914597]
- [989.9941689489946, 10.007354037531973, -0.0015229865265009978]
- [989.990104806678, 9.976582806611368, 0.03331238671074766]
- [989.9123017398083, 10.089373399671626, -0.001675139479749295]
+u: 401-element Array{Array{Float64,1},1}:
+ [0.0, 0.0]
+ [0.5560118752722868, 0.6592648794324435]
+ [0.7516138822923213, 0.808165538492502]
+ [0.9030334565128892, 0.8772018244479675]
+ [1.5116125854694589, 0.8940295688810131]
+ [1.5647181276786124, 1.0120717011063445]
+ [1.815121190190538, 0.9554316727565839]
+ [2.0141708060080865, 0.766427402706431]
+ [2.1540530364116917, 1.0134981070768228]
+ [2.2552489256888832, 1.2858319183820615]
  ⋮
- [200.83938902272536, 13.85972504636779, 785.3008859309066]
- [201.09810111346442, 13.489022548430043, 785.4128763381052]
- [201.24286540866115, 13.013447073819082, 785.7436875175194]
- [200.8227492542839, 12.749030524575529, 786.4282202211402]
- [200.73608963957406, 11.96004684554227, 787.3038635148833]
- [201.05335641968514, 11.76059803750268, 787.1860455428118]
- [200.77476455904133, 12.20698723105907, 787.0182482098993]
- [200.73785805624618, 12.506563791549002, 786.7555781522045]
- [200.72347301594502, 12.320822429036031, 786.9557045550187]
+ [6.692254748632999, 6.681425765334046]
+ [6.6923474492825825, 6.682514787788397]
+ [6.692440149932166, 6.683603810242747]
+ [6.692532850581748, 6.684692832697098]
+ [6.692625551231331, 6.685781855151449]
+ [6.69271787932966, 6.686857498510853]
+ [6.692780719392034, 6.6868741648078975]
+ [6.692843559454406, 6.686890831104941]
+ [6.6929063995167795, 6.686907497401985]
 ````
 
 
@@ -306,13 +320,37 @@ u: 2149-element Array{Array{Float64,1},1}:
 We can convert the output to a dataframe for convenience.
 
 ````julia
-df_sde = DataFrame(sol_sde(t)')
-df_sde[!,:t] = t;
+df_mbp = DataFrame(sol_mbp(sol_mbp.t)')
+df_mbp[!,:C] = exp.(df_mbp[!,:x1]) .- 1.0
+df_mbp[!,:R] = exp.(df_mbp[!,:x2]) .- 1.0
+df_mbp[!,:S] = p[4] .- df_mbp[!,:C]
+df_mbp[!,:I] = p[5] .+ df_mbp[!,:C] .- df_mbp[!,:R]
+df_mbp[!,:t] = sol_mbp.t
 ````
 
 
 ````
-0.0:0.1:40.0
+401-element Array{Float64,1}:
+  0.0
+  0.1
+  0.2
+  0.3
+  0.4
+  0.5
+  0.6
+  0.7
+  0.8
+  0.9
+  ⋮
+ 39.2
+ 39.3
+ 39.4
+ 39.5
+ 39.6
+ 39.7
+ 39.8
+ 39.9
+ 40.0
 ````
 
 
@@ -324,36 +362,36 @@ df_sde[!,:t] = t;
 We can now plot the results.
 
 ````julia
-@df df_sde plot(:t,
-    [:x1 :x2 :x3],
+@df df_mbp plot(:t,
+    [:S :I :R],
     label=["S" "I" "R"],
     xlabel="Time",
     ylabel="Number")
 ````
 
 
-![](figures/sde_stochasticdiffeq_15_1.png)
+![](figures/mbp_15_1.png)
 
 
 
 ## Benchmarking
 
 ````julia
-@benchmark solve(prob_sde,SRA1(),callback=cb)
+@benchmark solve(prob_mbp,SRA1(),callback=cb)
 ````
 
 
 ````
 BenchmarkTools.Trial: 
-  memory estimate:  3.71 MiB
-  allocs estimate:  56563
+  memory estimate:  946.47 KiB
+  allocs estimate:  20762
   --------------
-  minimum time:     5.986 ms (0.00% GC)
-  median time:      9.107 ms (0.00% GC)
-  mean time:        10.348 ms (8.78% GC)
-  maximum time:     37.541 ms (68.15% GC)
+  minimum time:     1.601 ms (0.00% GC)
+  median time:      7.764 ms (0.00% GC)
+  mean time:        8.437 ms (5.77% GC)
+  maximum time:     40.278 ms (70.06% GC)
   --------------
-  samples:          483
+  samples:          592
   evals/sample:     1
 ````
 

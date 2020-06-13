@@ -16,10 +16,12 @@ This implementation uses `StochasticDiffEq.jl`, which has a variety of SDE solve
 ```julia
 using DifferentialEquations
 using StochasticDiffEq
+using DiffEqCallbacks
 using Random
 using SparseArrays
 using DataFrames
 using StatsPlots
+using BenchmarkTools
 ```
 
 ## Transitions
@@ -65,9 +67,27 @@ function sir_noise!(du,u,p,t)
 end;
 ```
 
-## Time domain
+## Callbacks
 
-Note that even though I'm using fixed time steps, `DifferentialEquations.jl` complains if I pass integer timespans, so I set the timespan to be `Float64`.
+It is possible for the stochastic jumps to result in negative numbers of infected individuals, which will throw an error. A `ContinuousCallback` is added that resets infected individuals, `I`, to zero if `I` becomes negative.
+
+```julia
+function condition(u,t,integrator) # Event when event_f(u,t) == 0
+  u[2]
+end
+```
+
+```julia
+function affect!(integrator)
+  integrator.u[2] = 0.0
+end
+```
+
+```julia
+cb = ContinuousCallback(condition,affect!)
+```
+
+## Time domain
 
 ```julia
 δt = 0.1
@@ -101,7 +121,7 @@ prob_sde = SDEProblem(sir_ode!,sir_noise!,u0,tspan,p,noise_rate_prototype=A)
 ```
 
 ```julia
-sol_sde = solve(prob_sde,SRA1());
+sol_sde = solve(prob_sde,SRA1(),callback=cb);
 ```
 
 ## Post-processing
@@ -123,6 +143,12 @@ We can now plot the results.
     label=["S" "I" "R"],
     xlabel="Time",
     ylabel="Number")
+```
+
+## Benchmarking
+
+```julia
+@benchmark solve(prob_sde,SRA1(),callback=cb)
 ```
 
 ```{julia;echo=false;skip="notebook"}
