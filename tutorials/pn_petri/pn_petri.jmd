@@ -1,0 +1,92 @@
+# Petri net model using Petri.jl
+Micah Halter (@mehalter), 2020-07-14
+
+## Introduction
+
+This implementation considers the SIR model as a Petri net, using [`Petri.jl`](https://github.com/mehalter/Petri.jl), which is then used to generate ODE, SDE, and jump process models.
+
+## Libraries
+
+```julia
+using Petri
+using LabelledArrays
+using OrdinaryDiffEq
+using StochasticDiffEq
+using DiffEqJump
+using Random
+using Plots
+```
+
+## Transitions
+
+The Petri model is specified using a vector of the model states (as symbols), and a labelled vector of the transition rates; in this case, `inf` (infection) and `rec` (recovery). Each transition is a tuple of labeled vectors with inputs and outputs.
+
+```julia
+sir = Petri.Model([:S,:I,:R],LVector(
+                                inf=(LVector(S=1,I=1), LVector(I=2)),
+                                rec=(LVector(I=1),     LVector(R=1))))
+```
+
+Using Graphviz, a graph showing the states and transitions can also be generated from the Petri net.
+
+```julia
+Graph(sir)
+```
+
+## Time domain
+
+```julia
+tmax = 40.0
+tspan = (0.0,tmax);
+```
+
+## Initial conditions
+
+```julia
+u0 = LVector(S=990.0, I=10.0, R=0.0)
+```
+
+## Parameter values
+
+```julia
+p = LVector(inf=0.5/sum(u0), rec=0.25);
+```
+
+## Random number seed
+
+We set a random number seed for reproducibility.
+
+```julia
+Random.seed!(1234);
+```
+
+## Generating and running models
+
+### As ODEs
+
+```julia
+prob_ode = ODEProblem(sir,u0,tspan,p)
+sol_ode = solve(prob_ode, Tsit5());
+plot(sol_ode)
+```
+
+### As SDEs
+
+```julia
+prob_sde,cb = SDEProblem(sir,u0,tspan,p)
+sol_sde = solve(prob_sde,SRA1(),callback=cb);
+plot(sol_sde)
+```
+
+### As jump process
+
+```julia
+prob_jump = JumpProblem(sir, u0, tspan, p)
+sol_jump = solve(prob_jump,SSAStepper());
+plot(sol_jump)
+```
+
+```{julia; echo=false; skip="notebook"}
+include(joinpath(@__DIR__,"tutorials","appendix.jl"))
+appendix()
+```
