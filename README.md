@@ -130,5 +130,7 @@ Examples use the following libraries:
 - [`SimJulia`](https://github.com/BenLauwens/SimJulia.jl) for discrete event simulations
 - [`Agents.jl`](https://github.com/JuliaDynamics/Agents.jl) for agent-based models
 - [`Gillespie.jl`](https://github.com/sdwfrost/Gillespie.jl) for the Doob-Gillespie process
+- [`Petri.jl`](https://github.com/mehalter/Petri.jl) for the Petri net models
+- [`AlgebraicPetri.jl`](https://github.com/AlgebraicJulia/AlgebraicPetri.jl) for a category theory based modeling framework for creating Petri net models
 
 Parts of the code were taken from @ChrisRackauckas [`DiffEqTutorials`](https://github.com/SciML/DiffEqTutorials.jl), which comes highly recommended.
