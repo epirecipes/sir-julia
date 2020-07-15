@@ -32,6 +32,7 @@ The above process can be represented in different kinds of ways:
 - [Jump process (Gillespie) using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process/jump_process.md)
 - [Jump process (Gillespie) using reaction networks from DiffEqBiological.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_diffeqbio/jump_process_diffeqbio.md)
 - [Reaction network conversion to ODEs, SDEs and jump process using ModelingToolkit](https://github.com/epirecipes/sir-julia/blob/master/markdown/rn_mtk/rn_mtk.md)
+- [Petri net model to ODEs, SDEs, and jump process using Petri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_petri/pn_petri.md)
 - [Petri net model to ODEs, SDEs, and jump process using AlgebraicPetri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_algebraicpetri/pn_algebraicpetri.md)
 - [Jump process (Gillespie) using Gillespie.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_gillespie/jump_process_gillespie.md)
 - [Discrete event simulation using SimJulia](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
@@ -129,5 +130,7 @@ Examples use the following libraries:
 - [`SimJulia`](https://github.com/BenLauwens/SimJulia.jl) for discrete event simulations
 - [`Agents.jl`](https://github.com/JuliaDynamics/Agents.jl) for agent-based models
 - [`Gillespie.jl`](https://github.com/sdwfrost/Gillespie.jl) for the Doob-Gillespie process
+- [`Petri.jl`](https://github.com/mehalter/Petri.jl) for the Petri net models
+- [`AlgebraicPetri.jl`](https://github.com/AlgebraicJulia/AlgebraicPetri.jl) for a category theory based modeling framework for creating Petri net models
 
 Parts of the code were taken from @ChrisRackauckas [`DiffEqTutorials`](https://github.com/SciML/DiffEqTutorials.jl), which comes highly recommended.
