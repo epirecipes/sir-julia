@@ -52,6 +52,7 @@ In addition to the above examples of simulation, there are also examples of infe
 - [Point estimates of parameters of the ODE system using Optim.jl and DiffEqParamEstim.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_optim/ode_optim.md)
 - [Bayesian estimates of parameters of the ODE system using Approximate Bayesian Computation](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_abc/ode_abc.md)
 - [Bayesian estimates of parameters of the ODE system using Turing.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_turing/ode_turing.md)
+- [Bayesian estimates of parameters of the ODE system using NestedSamplers.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_nestedsampling/ode_nestedsampling.md)
 
 
 ## Comments on implementations
@@ -132,5 +133,8 @@ Examples use the following libraries:
 - [`Gillespie.jl`](https://github.com/sdwfrost/Gillespie.jl) for the Doob-Gillespie process
 - [`Petri.jl`](https://github.com/mehalter/Petri.jl) for the Petri net models
 - [`AlgebraicPetri.jl`](https://github.com/AlgebraicJulia/AlgebraicPetri.jl) for a category theory based modeling framework for creating Petri net models
+- ['Turing.jl'](https://turing.ml) for inference using probabilistic programs
+- ['NestedSamplers.jl'](https://github.com/TuringLang/NestedSamplers.jl) for nested sampling
+- ['GpABC'](https://github.com/tanhevg/GpABC.jl) for inference using Approximate Bayesian Computation
 
 Parts of the code were taken from @ChrisRackauckas [`DiffEqTutorials`](https://github.com/SciML/DiffEqTutorials.jl), which comes highly recommended.

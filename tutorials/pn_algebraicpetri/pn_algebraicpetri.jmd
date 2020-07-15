@@ -160,8 +160,8 @@ plot(sol_ode)
 ### As SDEs
 
 ```julia
-prob_sde,cb = SDEProblem(sir_model,u0,tspan,p)
-sol_sde = solve(prob_sde,SRA1(),callback=cb);
+prob_sde = SDEProblem(sir_model,u0,tspan,p)
+sol_sde = solve(prob_sde,LambaEM());
 plot(sol_sde)
 ```
 

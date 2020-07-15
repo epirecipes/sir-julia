@@ -44,7 +44,7 @@ plot(osol)
 
 sdesys = convert(SDESystem, rs)
 sprob = SDEProblem(sdesys, u0, tspan, p)
-ssol = solve(sprob, SRA1())
+ssol = solve(sprob, LambaEM())
 plot(ssol)
 
 

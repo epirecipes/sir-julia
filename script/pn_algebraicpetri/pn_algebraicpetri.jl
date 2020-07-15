@@ -70,8 +70,8 @@ sol_ode = solve(prob_ode, Tsit5());
 plot(sol_ode)
 
 
-prob_sde,cb = SDEProblem(sir_model,u0,tspan,p)
-sol_sde = solve(prob_sde,SRA1(),callback=cb);
+prob_sde = SDEProblem(sir_model,u0,tspan,p)
+sol_sde = solve(prob_sde,LambaEM());
 plot(sol_sde)
 
 

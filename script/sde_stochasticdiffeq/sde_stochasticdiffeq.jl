@@ -76,7 +76,7 @@ Random.seed!(1234);
 prob_sde = SDEProblem(sir_ode!,sir_noise!,u0,tspan,p,noise_rate_prototype=A)
 
 
-sol_sde = solve(prob_sde,SRA1(),callback=cb);
+sol_sde = solve(prob_sde,LambaEM(),callback=cb);
 
 
 df_sde = DataFrame(sol_sde(t)')
@@ -90,7 +90,7 @@ df_sde[!,:t] = t;
     ylabel="Number")
 
 
-@benchmark solve(prob_sde,SRA1(),callback=cb)
+@benchmark solve(prob_sde,LambaEM(),callback=cb)
 
 
 include(joinpath(@__DIR__,"tutorials","appendix.jl"))

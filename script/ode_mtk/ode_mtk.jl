@@ -3,7 +3,6 @@ using DifferentialEquations
 using ModelingToolkit
 using OrdinaryDiffEq
 using DataFrames
-using DataFrames
 using StatsPlots
 using BenchmarkTools
 
