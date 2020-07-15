@@ -34,8 +34,8 @@ sol_ode = solve(prob_ode, Tsit5());
 plot(sol_ode)
 
 
-prob_sde = SDEProblem(sir,u0,tspan,p)
-sol_sde = solve(prob_sde,LambaEM());
+prob_sde,cb = SDEProblem(sir,u0,tspan,p)
+sol_sde = solve(prob_sde,LambaEM(),callback=cb);
 plot(sol_sde)
 
 
