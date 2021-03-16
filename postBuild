@@ -1,0 +1,3 @@
+#!/bin/bash
+
+julia post_build.jl
