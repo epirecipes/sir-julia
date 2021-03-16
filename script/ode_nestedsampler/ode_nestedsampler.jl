@@ -74,26 +74,22 @@ end;
 priors = [
     Uniform(0, 0.1),
     Uniform(0, 0.1)
-]
+];
 
 
 model = NestedModel(ll, priors);
 
 
-spl = Nested(2, 10000, bounds=Bounds.MultiEllipsoid)
+spl = Nested(2, 10000, bounds=Bounds.MultiEllipsoid);
 
 
 chain = sample(model, spl;
                param_names=["i0", "β"],
-               chain_type=Chains)
+               chain_type=Chains);
 
 
 describe(chain)
 
 
 plot(chain)
-
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 

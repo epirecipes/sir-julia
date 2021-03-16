@@ -83,7 +83,7 @@ function simdata(x)
     C = out[4,:]
     X = C[2:end] .- C[1:(end-1)]
     transpose(X)
-end
+end;
 ```
 
 The priors are given as an array of `Distributions`. For this example, I'm using informative priors, which greatly speeds things up.
@@ -113,7 +113,7 @@ sim_rej_result = SimulatedABCRejection(
     n_particles; # particles required
     max_iter=convert(Int, 1e7),
     distance_function = Distances.euclidean,
-    write_progress=false)
+    write_progress=false);
 ```
 
 ```julia
@@ -134,7 +134,7 @@ emu_rej_result = EmulatedABCRejection(Yt,
     n_design_points;
     max_iter=convert(Int, 1e7),
     distance_function = Distances.euclidean,
-    write_progress=false)
+    write_progress=false);
 ```
 
 ```julia
@@ -157,7 +157,7 @@ sim_smc_result = SimulatedABCSMC(Yt,
     n_particles;
     max_iter=convert(Int, 1e7),
     distance_function = Distances.euclidean,
-    write_progress=false)
+    write_progress=false);
 ```
 
 ```julia
@@ -180,7 +180,7 @@ emu_smc_result = EmulatedABCSMC(Yt,
     batch_size=1000,
     write_progress=false,
     emulator_retraining = PreviousPopulationThresholdRetraining(n_design_points, 100, 10),
-    emulated_particle_selection = MeanVarEmulatedParticleSelection())
+    emulated_particle_selection = MeanVarEmulatedParticleSelection());
 ```
 
 ```julia
@@ -196,7 +196,7 @@ The `ApproxBayes` library requires that the simulated data are in a different fo
 function simdist(x, constants, y)
   s = transpose(simdata(x))
   Distances.euclidean(s, y), 1
-end
+end;
 ```
 
 ### Rejection
@@ -216,7 +216,7 @@ ab_rej = runabc(ab_rej_setup,
             Y,
             verbose = true,
             progress = true,
-            parallel = true)
+            parallel = true);
 ```
 
 ```julia
@@ -235,7 +235,7 @@ ab_smc_setup = ABCSMC(simdist, #simulation function
   α = 0.3,
   convergence = 0.05,
   kernel = uniformkernel
-  )
+  );
 ```
 
 ```julia
@@ -243,14 +243,10 @@ ab_smc = runabc(ab_smc_setup,
             Y,
             verbose = true,
             progress = true,
-            parallel = true)
+            parallel = true);
 ```
 
 ```julia
 plot(ab_smc)
 ```
 
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

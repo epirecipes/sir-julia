@@ -92,7 +92,7 @@ tspan = (0.0,tf);
 β = 0.05
 c = 10.0
 γ = rate_to_proportion(0.25,δt)
-p = [β,c,γ,δt]
+p = [β,c,γ,δt];
 ```
 
 ## Initial conditions
@@ -131,11 +131,11 @@ recovered(u) = count(i == Recovered for i in u);
 saved_values = SavedValues(Float64, Tuple{Int64,Int64,Int64})
 cb = SavingCallback((u,t,integrator)->(susceptible(u),infected(u),recovered(u)),
     saved_values,
-    saveat=0:δt:tf)
+    saveat=0:δt:tf);
 ```
 
 ```julia
-prob_abm = DiscreteProblem(sir_abm!,u0,tspan,p)
+prob_abm = DiscreteProblem(sir_abm!,u0,tspan,p);
 ```
 
 ```julia
@@ -178,7 +178,3 @@ df_abm[!,:t] = saved_values.t;
     save_on=false)
 ```
 
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

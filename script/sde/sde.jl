@@ -63,7 +63,3 @@ df_sde[!,:t] = t;
 
 @benchmark solve(prob_sde,solver=FunctionMap)
 
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-

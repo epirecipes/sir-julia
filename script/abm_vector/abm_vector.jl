@@ -4,7 +4,7 @@ using StatsBase
 using Random
 using DataFrames
 using StatsPlots
-using BenchmarkTools
+using BenchmarkTools;
 
 
 function rate_to_proportion(r::Float64,t::Float64)
@@ -97,7 +97,7 @@ t = 0:δt:tf;
 β = 0.05
 c = 10.0
 γ = rate_to_proportion(0.25,δt)
-p = [β,c,γ,δt]
+p = [β,c,γ,δt];
 
 
 N = 1000
@@ -110,7 +110,7 @@ for i in 1:N
         s = Susceptible
     end
     u0[i] = s
-end
+end;
 
 
 Random.seed!(1234);
@@ -141,7 +141,7 @@ function sim(u0,nsteps,dt)
         push!(Ra,recovered(u))
     end
     DataFrame(t=ta,S=Sa,I=Ia,R=Ra)
-end
+end;
 
 
 function sim!(u0,nsteps,dt)
@@ -166,7 +166,7 @@ function sim!(u0,nsteps,dt)
         push!(Ra,recovered(u))
     end
     DataFrame(t=ta,S=Sa,I=Ia,R=Ra)
-end
+end;
 
 
 df_abm = sim(u0,nsteps,δt);
@@ -195,8 +195,4 @@ df_abm! = sim!(u0,nsteps,δt);
 
 
 @benchmark sim!(u0,nsteps,δt)
-
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 

@@ -57,7 +57,7 @@ function simdata(x)
     C = out[4,:]
     X = C[2:end] .- C[1:(end-1)]
     transpose(X)
-end
+end;
 
 
 priors = [Uniform(0.0,0.1),Uniform(0.0,0.1)];
@@ -76,7 +76,7 @@ sim_rej_result = SimulatedABCRejection(
     n_particles; # particles required
     max_iter=convert(Int, 1e7),
     distance_function = Distances.euclidean,
-    write_progress=false)
+    write_progress=false);
 
 
 plot(sim_rej_result)
@@ -91,7 +91,7 @@ emu_rej_result = EmulatedABCRejection(Yt,
     n_design_points;
     max_iter=convert(Int, 1e7),
     distance_function = Distances.euclidean,
-    write_progress=false)
+    write_progress=false);
 
 
 plot(emu_rej_result)
@@ -107,7 +107,7 @@ sim_smc_result = SimulatedABCSMC(Yt,
     n_particles;
     max_iter=convert(Int, 1e7),
     distance_function = Distances.euclidean,
-    write_progress=false)
+    write_progress=false);
 
 
 population_colors=["#FF2F4E", "#D0001F", "#A20018", "#990017"]
@@ -124,7 +124,7 @@ emu_smc_result = EmulatedABCSMC(Yt,
     batch_size=1000,
     write_progress=false,
     emulator_retraining = PreviousPopulationThresholdRetraining(n_design_points, 100, 10),
-    emulated_particle_selection = MeanVarEmulatedParticleSelection())
+    emulated_particle_selection = MeanVarEmulatedParticleSelection());
 
 
 plot(emu_smc_result, population_colors=population_colors)
@@ -133,7 +133,7 @@ plot(emu_smc_result, population_colors=population_colors)
 function simdist(x, constants, y)
   s = transpose(simdata(x))
   Distances.euclidean(s, y), 1
-end
+end;
 
 
 ab_rej_setup = ABCRejection(simdist, #simulation function
@@ -149,7 +149,7 @@ ab_rej = runabc(ab_rej_setup,
             Y,
             verbose = true,
             progress = true,
-            parallel = true)
+            parallel = true);
 
 
 plot(ab_rej)
@@ -164,19 +164,15 @@ ab_smc_setup = ABCSMC(simdist, #simulation function
   α = 0.3,
   convergence = 0.05,
   kernel = uniformkernel
-  )
+  );
 
 
 ab_smc = runabc(ab_smc_setup,
             Y,
             verbose = true,
             progress = true,
-            parallel = true)
+            parallel = true);
 
 
 plot(ab_smc)
-
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 

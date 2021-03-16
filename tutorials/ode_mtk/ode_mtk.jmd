@@ -35,7 +35,7 @@ eqs = [D(S) ~ -β*c*I/N*S,
 ```
 
 ```julia
-sys = ODESystem(eqs)
+sys = ODESystem(eqs);
 ```
 
 ## Time domain
@@ -72,7 +72,7 @@ p = [β=>0.05,
 ## Running the model
 
 ```julia
-prob_ode = ODEProblem(sys,u0,tspan,p;jac=true)
+prob_ode = ODEProblem(sys,u0,tspan,p;jac=true);
 ```
 
 ```julia
@@ -105,7 +105,3 @@ We can now plot the results.
 @benchmark solve(prob_ode)
 ```
 
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

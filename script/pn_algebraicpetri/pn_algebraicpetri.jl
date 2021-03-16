@@ -2,7 +2,7 @@
 using AlgebraicPetri.Epidemiology
 using Petri
 using Catlab.Theories
-using Catlab.CategoricalAlgebra.ShapeDiagrams
+using Catlab.CategoricalAlgebra.FreeDiagrams
 using Catlab.Graphics
 using OrdinaryDiffEq
 using StochasticDiffEq
@@ -78,8 +78,4 @@ plot(sol_sde)
 prob_jump = JumpProblem(sir_model, u0, tspan, p)
 sol_jump = solve(prob_jump,SSAStepper());
 plot(sol_jump)
-
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 

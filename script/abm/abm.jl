@@ -108,7 +108,3 @@ abm_model = init_model(β,c,γ,N,I0)
 abm_data, _ = run!(abm_model, agent_step!, nsteps; adata = to_collect)
 end
 
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-

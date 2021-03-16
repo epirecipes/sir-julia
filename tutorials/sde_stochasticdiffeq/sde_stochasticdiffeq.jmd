@@ -74,17 +74,17 @@ It is possible for the stochastic jumps to result in negative numbers of infecte
 ```julia
 function condition(u,t,integrator) # Event when event_f(u,t) == 0
   u[2]
-end
+end;
 ```
 
 ```julia
 function affect!(integrator)
   integrator.u[2] = 0.0
-end
+end;
 ```
 
 ```julia
-cb = ContinuousCallback(condition,affect!)
+cb = ContinuousCallback(condition,affect!);
 ```
 
 ## Time domain
@@ -117,10 +117,10 @@ Random.seed!(1234);
 ## Running the model
 
 ```julia
-prob_sde = SDEProblem(sir_ode!,sir_noise!,u0,tspan,p,noise_rate_prototype=A)
+prob_sde = SDEProblem(sir_ode!,sir_noise!,u0,tspan,p,noise_rate_prototype=A);
 ```
 
-The noise process used here is fairly generaln (non-diagnonal and dependent on the states of the system), so the `LambaEM` solver is used.
+The noise process used here is fairly general (non-diagonal and dependent on the states of the system), so the `LambaEM` solver is used.
 
 ```julia
 sol_sde = solve(prob_sde,LambaEM(),callback=cb);
@@ -152,8 +152,5 @@ We can now plot the results.
 ```julia
 @benchmark solve(prob_sde,LambaEM(),callback=cb)
 ```
-
-```{julia;echo=false;skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
+dix()
 ```

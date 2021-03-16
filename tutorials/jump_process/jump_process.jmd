@@ -91,11 +91,11 @@ Running this model involves:
 - Running the model, specifying `SSAStepper()`
 
 ```julia
-prob = DiscreteProblem(u0,tspan,p)
+prob = DiscreteProblem(u0,tspan,p);
 ```
 
 ```julia
-prob_jump = JumpProblem(prob,Direct(),infection_jump,recovery_jump)
+prob_jump = JumpProblem(prob,Direct(),infection_jump,recovery_jump);
 ```
 
 ```julia
@@ -135,7 +135,3 @@ We can now plot the results.
 @benchmark solve(prob_jump,FunctionMap())
 ```
 
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

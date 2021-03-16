@@ -128,7 +128,7 @@ The priors are defined using an array of `Distributions`. For computational expe
 priors = [
     Uniform(0, 0.1),
     Uniform(0, 0.1)
-]
+];
 ```
 
 A `NestedModel` is created from the log likelihood and the priors.
@@ -140,7 +140,7 @@ model = NestedModel(ll, priors);
 A `Nested` sampler is defined, with 2 parameters and 10000 active points using multi-ellipsoid bounds.
 
 ```julia
-spl = Nested(2, 10000, bounds=Bounds.MultiEllipsoid)
+spl = Nested(2, 10000, bounds=Bounds.MultiEllipsoid);
 ```
 
 Now we can run the sampler.
@@ -148,7 +148,7 @@ Now we can run the sampler.
 ```julia
 chain = sample(model, spl;
                param_names=["i0", "β"],
-               chain_type=Chains)
+               chain_type=Chains);
 ```
 
 ```julia
@@ -161,7 +161,3 @@ The plots show nicely how the sampler converges over iterations.
 plot(chain)
 ```
 
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

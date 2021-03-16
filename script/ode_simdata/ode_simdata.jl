@@ -45,7 +45,7 @@ X = C[2:end] .- C[1:(end-1)];
 Random.seed!(1234);
 
 
-Y = rand.(Poisson.(X))
+Y = rand.(Poisson.(X));
 
 
 bar(obstimes,Y)
@@ -59,19 +59,19 @@ plot(obstimes,Cdiff[2:end])
 
 
 affect!(integrator) = integrator.u[4] = 0.0
-cb_zero = PresetTimeCallback(obstimes,affect!)
+cb_zero = PresetTimeCallback(obstimes,affect!);
 
 
 sol_ode_cb = solve(prob_ode,Tsit5(),saveat=δt,callback=cb_zero);
 
 
-X_cb = sol_ode_cb(obstimes)[4,:]
+X_cb = sol_ode_cb(obstimes)[4,:];
 
 
-Random.seed!(1234)
+Random.seed!(1234);
 
 
-Y_cb = rand.(Poisson.(X_cb))
+Y_cb = rand.(Poisson.(X_cb));
 
 
 X_diff_cb = X_cb .- X
@@ -102,7 +102,7 @@ end;
 
 function sir_history(p, t; idxs = 5)
     zero(t)
-end
+end;
 
 
 prob_dde = DDEProblem(DDEFunction(sir_dde!),
@@ -110,17 +110,17 @@ prob_dde = DDEProblem(DDEFunction(sir_dde!),
         sir_history,
         tspan,
         p;
-        constant_lags = [1.0])
+        constant_lags = [1.0]);
 
 
 sol_dde = solve(prob_dde,MethodOfSteps(Tsit5()));
 
 
-X_dde = sol_dde(obstimes)[4,:]
+X_dde = sol_dde(obstimes)[4,:];
 
 
-Random.seed!(1234);
-Y_dde = rand.(Poisson.(X_dde))
+Random.seed!(1234)
+Y_dde = rand.(Poisson.(X_dde));
 
 
 X_diff_dde = X_dde .- X
@@ -129,8 +129,4 @@ plot(X_diff_dde)
 
 Y_diff_dde = Y_dde .- Y
 plot(obstimes, Y_diff_dde)
-
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 

@@ -40,8 +40,7 @@ function weave_file(folder,file,build_list=(:script,:html,:github,:notebook); kw
     dir = joinpath(repo_directory,"notebook",folder)
     isdir(dir) || mkdir(dir)
     args[:doctype] = "notebook"
-    weave(tmp,doctype = "notebook",out_path=dir,args=args; kwargs...)
-    #Weave.convert_doc(tmp,joinpath(dir,file[1:end-4]*".ipynb"))
+    Weave.convert_doc(tmp,joinpath(dir,file[1:end-4]*".ipynb"))
   end
 end
 
@@ -54,11 +53,13 @@ end
 
 function weave_folder(folder)
   for file in readdir(joinpath(repo_directory,"tutorials",folder))
-    println("Building $(joinpath(folder,file)))")
-    try
-      weave_file(folder,file)
-    catch
-    end
+    if file[findlast(isequal('.'),file):end]==".jmd"
+    	println("Building $(joinpath(folder,file)))")
+    	try
+      	weave_file(folder,file)
+    	catch
+    	end
+  	end
   end
 end
 

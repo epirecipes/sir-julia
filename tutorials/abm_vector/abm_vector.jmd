@@ -19,7 +19,7 @@ using StatsBase
 using Random
 using DataFrames
 using StatsPlots
-using BenchmarkTools
+using BenchmarkTools;
 ```
 
 ## Utility functions
@@ -132,7 +132,7 @@ t = 0:δt:tf;
 β = 0.05
 c = 10.0
 γ = rate_to_proportion(0.25,δt)
-p = [β,c,γ,δt]
+p = [β,c,γ,δt];
 ```
 
 ## Initial conditions
@@ -148,7 +148,7 @@ for i in 1:N
         s = Susceptible
     end
     u0[i] = s
-end
+end;
 ```
 
 ## Random number seed
@@ -190,7 +190,7 @@ function sim(u0,nsteps,dt)
         push!(Ra,recovered(u))
     end
     DataFrame(t=ta,S=Sa,I=Ia,R=Ra)
-end
+end;
 ```
 
 Now, the in-place version.
@@ -218,7 +218,7 @@ function sim!(u0,nsteps,dt)
         push!(Ra,recovered(u))
     end
     DataFrame(t=ta,S=Sa,I=Ia,R=Ra)
-end
+end;
 ```
 
 ```julia
@@ -261,8 +261,3 @@ df_abm! = sim!(u0,nsteps,δt);
 @benchmark sim!(u0,nsteps,δt)
 ```
 
-
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

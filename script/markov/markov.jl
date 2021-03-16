@@ -65,7 +65,3 @@ df_markov[!,:t] = t;
 
 @benchmark solve(prob_markov,solver=FunctionMap)
 
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-

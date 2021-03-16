@@ -17,6 +17,8 @@ GitHub Markdown doesn't parse equations, so here's a description of the underlyi
 - Susceptible individuals make contacts with others at rate c (=10.0), with the probability of a contact with an infectious person being I/N.  With probability β (=0.05), an infected person will infect a susceptible given a contact.
 - Infected individuals recover at a per-capita rate γ (=0.25).
 
+There are two types of parameterization commonly used in this project; the 'standard' version, that considers the number of individuals in the S, I, and R groups, and an alternative version, in which the dynamics of transmission (βSI/N) and recovery (γI) are modelled directly, with S, I, and R being calculated based on these dynamics and the initial conditions for S, I and R.
+
 ## Simulation with different types of model
 
 The above process can be represented in different kinds of ways:
@@ -25,12 +27,14 @@ The above process can be represented in different kinds of ways:
 - [Ordinary differential equation using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mtk/ode_mtk.md)
 - [Stochastic differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde/sde.md)
 - [Stochastic differential equation using StochasticDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_stochasticdiffeq/sde_stochasticdiffeq.md)
+- [Stochastic differential equation using Bridge.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_bridge/sde_bridge.md)
 - [Linear noise approximation (LNA) to the stochastic differential equation](https://github.com/epirecipes/sir-julia/blob/master/markdown/lna/lna.md)
 - [Multivariate birth process reparameterisation of the stochastic differential equation](https://github.com/epirecipes/sir-julia/blob/master/markdown/mbp/mbp.md)
 - [Function map](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map/function_map.md)
 - [Stochastic Markov model](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov/markov.md)
+- [Stochastic Markov model using Soss.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_soss/markov_soss.md)
 - [Jump process (Gillespie) using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process/jump_process.md)
-- [Jump process (Gillespie) using reaction networks from DiffEqBiological.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_diffeqbio/jump_process_diffeqbio.md)
+- [Jump process (Gillespie) using reaction networks from Catalyst.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_catalyst/jump_process_catalyst.md)
 - [Reaction network conversion to ODEs, SDEs and jump process using ModelingToolkit](https://github.com/epirecipes/sir-julia/blob/master/markdown/rn_mtk/rn_mtk.md)
 - [Petri net model to ODEs, SDEs, and jump process using Petri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_petri/pn_petri.md)
 - [Petri net model to ODEs, SDEs, and jump process using AlgebraicPetri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_algebraicpetri/pn_algebraicpetri.md)
@@ -44,6 +48,11 @@ The above process can be represented in different kinds of ways:
 We usually do not observe the trajectory of susceptible, infected, and recovered individuals. Rather, we often obtain data in terms of new cases aggregated over a particular timescale (e.g. a day or a week).
 
 - [Simulated data using ODEs](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_simdata/ode_simdata.md)
+
+## Use of callbacks
+
+- [Changing parameter values at fixed times e.g. lockdown in an SIR model](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_lockdown/ode_lockdown.md)
+- [Preventing negative populations in stochastic differential equations](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_stochasticdiffeq/sde_stochasticdiffeq.md)
 
 ## Inference
 
@@ -87,6 +96,8 @@ IJulia.notebook(;dir="notebook")
 
 ## Adding new examples
 
+Plans for new examples are typically posted on the [Issues page](https://github.com/epirecipes/sir-julia/issues).
+
 To add an example, make a new subdirectory in the `tutorials` directory, and add a Julia Markdown (`.jmd`) document to it. Set the beginning to something like the following:
 
 ```md
@@ -109,23 +120,19 @@ Suggested sections:
 - Plotting
 - Benchmarking
 
-In addition, an appendix that displays the machine on which the code is run, and the package details,{} can be added using the following code:
-
-```julia
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```
 
 Change to the root directory of the repository and run the following from within Julia.
 
 ```julia
 include("build.jl")
-weave_all()
+weave_all() # or e.g. weave_folder("abm") for an individual tutorial
 ```
+
+If additional packages are added, then these need to be added to `build_project_toml.jl`, which when run, will regenerate `Project.toml`.
 
 ## Acknowledgements
 
-Examples use the following libraries:
+Examples use the following libraries (see the `Project.toml` file for a full list of dependencies):
 
 - The [`DifferentialEquations.jl`](https://github.com/SciML/DifferentialEquations.jl) ecosystem for many of the examples
 - [`SimJulia`](https://github.com/BenLauwens/SimJulia.jl) for discrete event simulations
@@ -136,5 +143,8 @@ Examples use the following libraries:
 - [`Turing.jl`](https://turing.ml) for inference using probabilistic programs
 - [`NestedSamplers.jl`](https://github.com/TuringLang/NestedSamplers.jl) for nested sampling
 - [`GpABC`](https://github.com/tanhevg/GpABC.jl) for inference using Approximate Bayesian Computation
+- [`Soss.jl`](https://github.com/cscherrer/Soss.jl) for Markov models
+- [`MomentClosure.jl`](https://github.com/augustinas1/MomentClosure.jl/) for moment closure
+- [`Bridge.jl`](https://github.com/mschauer/Bridge.jl) for stochastic differential equations
 
 Parts of the code were taken from @ChrisRackauckas [`DiffEqTutorials`](https://github.com/SciML/DiffEqTutorials.jl), which comes highly recommended.

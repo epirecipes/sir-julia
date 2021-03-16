@@ -48,7 +48,7 @@ p = [0.05,10.0,0.25]; # β,c,γ
 ```
 
 ```julia
-prob_ode = ODEProblem(sir_ode!,u0,tspan,p)
+prob_ode = ODEProblem(sir_ode!,u0,tspan,p);
 ```
 
 ```julia
@@ -63,14 +63,14 @@ The data are assumed to be of daily new cases, which we can obtain from the cumu
 
 ```julia
 C = Array(sol_ode)[4,:] # Cumulative cases
-X = C[2:end] - C[1:(end-1)]
+X = C[2:end] - C[1:(end-1)];
 ```
 
 We generate some random Poisson noise for the measurement error to generate the observations, `Y`.
 
 ```julia
 Random.seed!(1234)
-Y = rand.(Poisson.(X))
+Y = rand.(Poisson.(X));
 ```
 
 ```julia
@@ -158,8 +158,8 @@ function predict(y,chain)
     m = length(chain)
     # Choose random
     idx = sample(1:m)
-    i₀ = chain[:i₀].value[idx]
-    β = chain[:β].value[idx]
+    i₀ = chain[:i₀][idx]
+    β = chain[:β][idx]
     I = i₀*1000.0
     u0=[1000.0-I,I,0.0,0.0]
     p=[β,10.0,0.25]
@@ -190,10 +190,4 @@ end
 ```julia
 scatter(obstimes,Y,legend=false)
 plot!(obstimes,Xp,legend=false)
-```
-
-
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 ```

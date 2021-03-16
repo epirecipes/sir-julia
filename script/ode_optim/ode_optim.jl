@@ -180,7 +180,3 @@ using BlackBoxOptim
 bound1 = Tuple{Float64, Float64}[(0.0,1.0),(0.0, 1.0)]
 result = bboptimize(cost_function;SearchRange = bound1, MaxSteps = 1e4)
 
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-

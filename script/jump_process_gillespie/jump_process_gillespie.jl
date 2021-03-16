@@ -49,7 +49,3 @@ df_jump = ssa_data(sol_jump);
 
 @benchmark ssa(u0,sir_rates,sir_transitions,p,tmax)
 
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-

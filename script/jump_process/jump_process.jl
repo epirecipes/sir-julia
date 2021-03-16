@@ -49,10 +49,10 @@ p = [0.05,10.0,0.25]; # β,c,γ
 Random.seed!(1234);
 
 
-prob = DiscreteProblem(u0,tspan,p)
+prob = DiscreteProblem(u0,tspan,p);
 
 
-prob_jump = JumpProblem(prob,Direct(),infection_jump,recovery_jump)
+prob_jump = JumpProblem(prob,Direct(),infection_jump,recovery_jump);
 
 
 sol_jump = solve(prob_jump,SSAStepper());
@@ -73,8 +73,4 @@ df_jump[!,:t] = out_jump.t;
 
 
 @benchmark solve(prob_jump,FunctionMap())
-
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 

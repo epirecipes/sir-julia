@@ -2,7 +2,6 @@
 using DifferentialEquations
 using SimpleDiffEq
 using DataFrames
-using DataFrames
 using StatsPlots
 using BenchmarkTools
 
@@ -32,7 +31,7 @@ u0 = [990.0,10.0,0.0]; # S,I.R
 p = [0.05,10.0,0.25]; # β,c,γ
 
 
-prob_ode = ODEProblem(sir_ode!,u0,tspan,p)
+prob_ode = ODEProblem(sir_ode!,u0,tspan,p);
 
 
 sol_ode = solve(prob_ode);
@@ -50,8 +49,4 @@ df_ode[!,:t] = t;
 
 
 @benchmark solve(prob_ode)
-
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 

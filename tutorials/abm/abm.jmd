@@ -171,7 +171,3 @@ abm_data, _ = run!(abm_model, agent_step!, nsteps; adata = to_collect)
 end
 ```
 
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

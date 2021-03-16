@@ -1,9 +1,9 @@
-# Ordinary differential equation model with time varying beta (lookdown)
+# Ordinary differential equation model with time varying β (lockdown)
 Florian Oswald (@floswald), 2021-01-20
 
 ## Introduction
 
-This is the classical ODE version of the SIR model with a temporary lockdown policy in place.
+This is the classical ODE version of the SIR model with a temporary lockdown policy in place, using a `PresetTimeCallback`.
 
 - Deterministic
 - Continuous in time
@@ -59,20 +59,20 @@ p = [0.05,10.0,0.25]; # β,c,γ
 
 ## Programming a Lockdown
 
-Suppose we impose a lockdown which will reduce the transmission rate $\beta$ to a lower value. For example's sake
-suppose we reduce $\beta$ to 0.01 starting in period 10 and up until period 20. 
+Suppose we impose a lockdown which will reduce the transmission rate β to a lower value. For example's sake
+suppose we reduce β to 0.01 starting in period 10 and up until period 20.
 
 ```julia
 lockdown_times = [10.0, 20.0]
-condition(u,t,integrator) = t ∈ lockdown_times  
-function affect!(integrator) 
-    if integrator.t < lockdown_times[2] 
+condition(u,t,integrator) = t ∈ lockdown_times
+function affect!(integrator)
+    if integrator.t < lockdown_times[2]
         integrator.p[1] = 0.01
     else
         integrator.p[1] = 0.05
     end
 end
-cb = PresetTimeCallback(lockdown_times, affect!)
+cb = PresetTimeCallback(lockdown_times, affect!);
 ```
 
 ## Running the model
@@ -86,18 +86,11 @@ Call the solver with the specified callback function.
 ```julia
 sol_ode = solve(prob_ode, callback = cb);
 ```
-## Post-processing
+## Plotting
 
 Let's use the `plot` recipe from the `DifferentialEquations` package:
 
 ```julia
 plot(sol_ode, label = ["S" "I" "R"], title = "Lockdown in a SIR model")
 vline!(lockdown_times, c = :red, w = 2, label = "")
-df_ode[!,:t] = t;
-```
-
-
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 ```

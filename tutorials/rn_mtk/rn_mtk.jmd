@@ -100,7 +100,3 @@ jsol = solve(jprob, SSAStepper())
 plot(jsol)
 ```
 
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

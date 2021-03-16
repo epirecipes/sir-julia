@@ -111,7 +111,3 @@ We can now plot the results.
 @benchmark solve(prob_sde,solver=FunctionMap)
 ```
 
-```{julia;echo=false;skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

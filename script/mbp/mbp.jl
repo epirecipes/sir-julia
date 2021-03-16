@@ -67,20 +67,20 @@ function condition(u,t,integrator,p) # Event when event_f(u,t) == 0
     S = S₀-C
     I = I₀+C-R
     I
-end
+end;
 
 
 function affect!(integrator)
     terminate!(integrator)
-end
+end;
 
 
 cb = ContinuousCallback(
         (u,t,integrator)->condition(u,t,integrator,p),
-        affect!)
+        affect!);
 
 
-prob_mbp = SDEProblem(sir_mbp!,sir_noise!,u0,tspan,p,noise_rate_prototype=A)
+prob_mbp = SDEProblem(sir_mbp!,sir_noise!,u0,tspan,p,noise_rate_prototype=A);
 
 
 sol_mbp = solve(prob_mbp,
@@ -94,7 +94,7 @@ df_mbp[!,:C] = exp.(df_mbp[!,:x1]) .- 1.0
 df_mbp[!,:R] = exp.(df_mbp[!,:x2]) .- 1.0
 df_mbp[!,:S] = p[4] .- df_mbp[!,:C]
 df_mbp[!,:I] = p[5] .+ df_mbp[!,:C] .- df_mbp[!,:R]
-df_mbp[!,:t] = sol_mbp.t
+df_mbp[!,:t] = sol_mbp.t;
 
 
 @df df_mbp plot(:t,
@@ -105,8 +105,4 @@ df_mbp[!,:t] = sol_mbp.t
 
 
 @benchmark solve(prob_mbp,SRA1(),callback=cb)
-
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 

@@ -55,7 +55,3 @@ jprob = JumpProblem(jumpsys, dprob, Direct())
 jsol = solve(jprob, SSAStepper())
 plot(jsol)
 
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-

@@ -16,7 +16,7 @@ eqs = [D(S) ~ -β*c*I/N*S,
        D(R) ~ γ*I];
 
 
-sys = ODESystem(eqs)
+sys = ODESystem(eqs);
 
 
 δt = 0.1
@@ -35,7 +35,7 @@ p = [β=>0.05,
      γ=>0.25];
 
 
-prob_ode = ODEProblem(sys,u0,tspan,p;jac=true)
+prob_ode = ODEProblem(sys,u0,tspan,p;jac=true);
 
 
 sol_ode = solve(prob_ode);
@@ -53,8 +53,4 @@ df_ode[!,:t] = t;
 
 
 @benchmark solve(prob_ode)
-
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 

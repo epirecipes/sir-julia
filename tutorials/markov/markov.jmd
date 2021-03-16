@@ -116,7 +116,3 @@ We can now plot the results.
 @benchmark solve(prob_markov,solver=FunctionMap)
 ```
 
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

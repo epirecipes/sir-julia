@@ -16,7 +16,7 @@ Pkg.add(PackageSpec(url="https://github.com/sdwfrost/Gillespie.jl", rev="master"
 
 The library can now be loaded along with the other packages.
 
-```{julia;echo=false}
+```julia
 using Gillespie
 using Random
 using StatsPlots
@@ -106,7 +106,3 @@ We can now plot the results.
 @benchmark ssa(u0,sir_rates,sir_transitions,p,tmax)
 ```
 
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

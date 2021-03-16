@@ -39,7 +39,7 @@ u0 = [990.0,10.0,0.0];
 p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
 
 
-prob_map = DiscreteProblem(sir_map!,u0,tspan,p)
+prob_map = DiscreteProblem(sir_map!,u0,tspan,p);
 
 
 sol_map = solve(prob_map,solver=FunctionMap);
@@ -57,8 +57,4 @@ df_map[!,:t] = t;
 
 
 @benchmark solve(prob_map,solver=FunctionMap)
-
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 

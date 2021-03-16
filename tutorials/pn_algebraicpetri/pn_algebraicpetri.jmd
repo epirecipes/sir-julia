@@ -20,7 +20,7 @@ SDE, and jump process solvers.
 using AlgebraicPetri.Epidemiology
 using Petri
 using Catlab.Theories
-using Catlab.CategoricalAlgebra.ShapeDiagrams
+using Catlab.CategoricalAlgebra.FreeDiagrams
 using Catlab.Graphics
 using OrdinaryDiffEq
 using StochasticDiffEq
@@ -173,7 +173,3 @@ sol_jump = solve(prob_jump,SSAStepper());
 plot(sol_jump)
 ```
 
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

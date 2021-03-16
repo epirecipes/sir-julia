@@ -37,7 +37,7 @@ mutable struct SIRModel
     Ia::Array{Int64}
     Ra::Array{Int64}
     allIndividuals::Array{SIRPerson}
-end
+end;
 
 
 function infection_update!(sim::Simulation,m::SIRModel)
@@ -167,8 +167,4 @@ data_des=out(des_model);
     activate(des_model)
     sir_run(des_model,tmax)
 end
-
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 

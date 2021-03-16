@@ -47,15 +47,15 @@ end;
 
 function condition(u,t,integrator) # Event when event_f(u,t) == 0
   u[2]
-end
+end;
 
 
 function affect!(integrator)
   integrator.u[2] = 0.0
-end
+end;
 
 
-cb = ContinuousCallback(condition,affect!)
+cb = ContinuousCallback(condition,affect!);
 
 
 δt = 0.1
@@ -73,7 +73,7 @@ p = [0.05,10.0,0.25]; # β,c,γ
 Random.seed!(1234);
 
 
-prob_sde = SDEProblem(sir_ode!,sir_noise!,u0,tspan,p,noise_rate_prototype=A)
+prob_sde = SDEProblem(sir_ode!,sir_noise!,u0,tspan,p,noise_rate_prototype=A);
 
 
 sol_sde = solve(prob_sde,LambaEM(),callback=cb);
@@ -91,8 +91,4 @@ df_sde[!,:t] = t;
 
 
 @benchmark solve(prob_sde,LambaEM(),callback=cb)
-
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 

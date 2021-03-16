@@ -31,7 +31,7 @@ u0 = [990.0,10.0,0.0,0.0] # S,I.R,C
 p = [0.05,10.0,0.25]; # β,c,γ
 
 
-prob_ode = ODEProblem(sir_ode!,u0,tspan,p)
+prob_ode = ODEProblem(sir_ode!,u0,tspan,p);
 
 
 sol_ode = solve(prob_ode,
@@ -40,11 +40,11 @@ sol_ode = solve(prob_ode,
 
 
 C = Array(sol_ode)[4,:] # Cumulative cases
-X = C[2:end] - C[1:(end-1)]
+X = C[2:end] - C[1:(end-1)];
 
 
 Random.seed!(1234)
-Y = rand.(Poisson.(X))
+Y = rand.(Poisson.(X));
 
 
 bar(obstimes,Y,legend=false)
@@ -106,8 +106,8 @@ function predict(y,chain)
     m = length(chain)
     # Choose random
     idx = sample(1:m)
-    i₀ = chain[:i₀].value[idx]
-    β = chain[:β].value[idx]
+    i₀ = chain[:i₀][idx]
+    β = chain[:β][idx]
     I = i₀*1000.0
     u0=[1000.0-I,I,0.0,0.0]
     p=[β,10.0,0.25]
@@ -134,8 +134,4 @@ end
 
 scatter(obstimes,Y,legend=false)
 plot!(obstimes,Xp,legend=false)
-
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
 

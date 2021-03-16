@@ -78,7 +78,7 @@ p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
 ## Running the model
 
 ```julia
-prob_map = DiscreteProblem(sir_map!,u0,tspan,p)
+prob_map = DiscreteProblem(sir_map!,u0,tspan,p);
 ```
 
 ```julia
@@ -112,7 +112,3 @@ We can now plot the results.
 @benchmark solve(prob_map,solver=FunctionMap)
 ```
 
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

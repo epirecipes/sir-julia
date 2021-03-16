@@ -49,7 +49,7 @@ mutable struct SIRModel
     Ia::Array{Int64}
     Ra::Array{Int64}
     allIndividuals::Array{SIRPerson}
-end
+end;
 ```
 
 These functions update the state of the 'world' when either an infection or recovery occurs.
@@ -216,7 +216,3 @@ data_des=out(des_model);
 end
 ```
 
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

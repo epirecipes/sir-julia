@@ -72,7 +72,7 @@ Random.seed!(1234);
 ```
 
 ```julia
-Y = rand.(Poisson.(X))
+Y = rand.(Poisson.(X));
 ```
 
 ```julia
@@ -97,7 +97,7 @@ In order to fit counts of new infections every time unit, we add a callback that
 
 ```julia
 affect!(integrator) = integrator.u[4] = 0.0
-cb_zero = PresetTimeCallback(obstimes,affect!)
+cb_zero = PresetTimeCallback(obstimes,affect!);
 ```
 
 The callback that resets `C` is added to `solve`. Note that this requires `DiffEqCallbacks`. If multiple callbacks are required, then a `CallbackSet` can be passed instead.
@@ -109,15 +109,15 @@ sol_ode_cb = solve(prob_ode,Tsit5(),saveat=δt,callback=cb_zero);
 We cannot simply convert the solution to an `Array`, as this will give us duplicated timepoints when `C` is reset. Calling the solution with the observation times generates the output before the callback.
 
 ```julia
-X_cb = sol_ode_cb(obstimes)[4,:]
+X_cb = sol_ode_cb(obstimes)[4,:];
 ```
 
 ```julia
-Random.seed!(1234)
+Random.seed!(1234);
 ```
 
 ```julia
-Y_cb = rand.(Poisson.(X_cb))
+Y_cb = rand.(Poisson.(X_cb));
 ```
 
 ```julia
@@ -154,7 +154,7 @@ end;
 ```julia
 function sir_history(p, t; idxs = 5)
     zero(t)
-end
+end;
 ```
 
 ```julia
@@ -163,7 +163,7 @@ prob_dde = DDEProblem(DDEFunction(sir_dde!),
         sir_history,
         tspan,
         p;
-        constant_lags = [1.0])
+        constant_lags = [1.0]);
 ```
 
 ```julia
@@ -171,12 +171,12 @@ sol_dde = solve(prob_dde,MethodOfSteps(Tsit5()));
 ```
 
 ```julia
-X_dde = sol_dde(obstimes)[4,:]
+X_dde = sol_dde(obstimes)[4,:];
 ```
 
 ```julia
-Random.seed!(1234);
-Y_dde = rand.(Poisson.(X_dde))
+Random.seed!(1234)
+Y_dde = rand.(Poisson.(X_dde));
 ```
 
 The following plots show that there is a difference both in the underlying model output as well as the simulated (Poisson) data using the delay differential equation.
@@ -195,7 +195,3 @@ plot(obstimes, Y_diff_dde)
 
 While all three methods are mathematically equivalent, the first method, while not directly producing daily counts of cases, results in fewer numerical issues and more easily lends itself to automatic differentiation.
 
-```{julia; echo=false; skip="notebook"}
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-```

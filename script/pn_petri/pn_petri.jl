@@ -43,7 +43,3 @@ prob_jump = JumpProblem(sir, u0, tspan, p)
 sol_jump = solve(prob_jump,SSAStepper());
 plot(sol_jump)
 
-
-include(joinpath(@__DIR__,"tutorials","appendix.jl"))
-appendix()
-
