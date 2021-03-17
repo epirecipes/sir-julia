@@ -40,6 +40,12 @@ As this is a simple model, the global state of the system is a vector of infecti
 @enum InfectionStatus Susceptible Infected Recovered
 ```
 
+The following is a fix to allow the model to be compiled, though we don't use any of the symbolic features of `DifferentialEquations.jl`.
+
+```julia
+Base.zero(::Type{InfectionStatus}) = Infected
+```
+
 ```julia
 function sir_abm!(du,u,p,t)
     (β,c,γ,δt) = p
@@ -177,4 +183,3 @@ df_abm[!,:t] = saved_values.t;
     dense=false,
     save_on=false)
 ```
-

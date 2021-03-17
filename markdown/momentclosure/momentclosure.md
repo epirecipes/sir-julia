@@ -14,17 +14,13 @@ using MomentClosure
 using ModelingToolkit
 using DiffEqJump
 using DataFrames
+using Tables
 using Statistics
 using Plots
 using StatsPlots
+using Latexify
 using BenchmarkTools
 ```
-
-```
-Error: Failed to precompile MomentClosure [01a1b25a-ecf0-48c5-ae58-55bfd539
-3600] to /home/simon/.julia/compiled/v1.5/MomentClosure/Ues3M_A0TTd.ji.
-```
-
 
 
 
@@ -103,11 +99,6 @@ We often deal with central moments (mean, variances, etc.) in epidemiological mo
 central_eqs = generate_central_moment_eqs(rs, 4, combinatoric_ratelaw=false);
 ```
 
-```
-Error: UndefVarError: generate_central_moment_eqs not defined
-```
-
-
 
 
 
@@ -128,11 +119,6 @@ I generate a dictionary with the closed equations for each method.
 closed_central_eqs = Dict(cm=>moment_closure(central_eqs,cm) for cm in closure_methods);
 ```
 
-```
-Error: UndefVarError: moment_closure not defined
-```
-
-
 
 
 
@@ -141,11 +127,6 @@ Next, I have to generate the corresponding initial condition, which is assumed t
 ```julia
 u0map = Dict(cm=> deterministic_IC(u0v,closed_central_eqs[cm]) for cm in closure_methods);
 ```
-
-```
-Error: UndefVarError: closed_central_eqs not defined
-```
-
 
 
 
@@ -159,16 +140,12 @@ closed_central_eqs_df = Dict{String,DataFrame}()
 for cm in closure_methods
     prob = ODEProblem(closed_central_eqs[cm], u0map[cm], tspan, p)
     sol = solve(prob)
-    df = DataFrame(sol(ts)',[replace(string(x[1]),"(t)" => "") for x in u0map[cm]])
+    df = DataFrame(sol(ts)')
+    rename!(df,[replace(string(x[1]),"(t)" => "") for x in u0map[cm]])
     df[!,:t] = ts
     closed_central_eqs_df[cm] = df
 end;
 ```
-
-```
-Error: UndefVarError: DataFrame not defined
-```
-
 
 
 
@@ -187,7 +164,7 @@ jprob = JumpProblem(jumpsys, dprob, Direct());
 
 ```julia
 ensemble_jprob = EnsembleProblem(jprob)
-ensemble_jsol = solve(ensemble_jprob,SSAStepper(),trajectories=20000)
+ensemble_jsol = solve(ensemble_jprob,SSAStepper(),trajectories=10000)
 ensemble_summary = EnsembleSummary(ensemble_jsol,ts);
 ```
 
@@ -197,16 +174,13 @@ ensemble_summary = EnsembleSummary(ensemble_jsol,ts);
 For plotting purposes, I extract the output into a `DataFrame`.
 
 ```julia
-ensemble_u = DataFrame(ensemble_summary.u',["μ₁₀","μ₀₁"])
-ensemble_v = DataFrame(ensemble_summary.v',["M₂₀","M₀₂"])
+ensemble_u = DataFrame(ensemble_summary.u')
+rename!(ensemble_u,["μ₁₀","μ₀₁"])
+ensemble_v = DataFrame(ensemble_summary.v')
+rename!(ensemble_v,["M₂₀","M₀₂"])
 ensemble_uv = hcat(ensemble_u,ensemble_v)
 ensemble_uv[!,:t] = ts;
 ```
-
-```
-Error: UndefVarError: DataFrame not defined
-```
-
 
 
 
@@ -223,13 +197,7 @@ jplot = @df ensemble_uv plot(:t,[:μ₁₀,:μ₀₁],
      title="Jump process")
 ```
 
-```
-Error: LoadError: UndefVarError: @df not defined
-in expression starting at /home/simon/Projects/github/sir-julia/tutorials/m
-omentclosure/momentclosure.jmd:2
-```
-
-
+![](figures/momentclosure_16_1.png)
 
 
 
@@ -249,13 +217,6 @@ for cm in closure_methods
 end;
 ```
 
-```
-Error: LoadError: UndefVarError: @df not defined
-in expression starting at /home/simon/Projects/github/sir-julia/tutorials/m
-omentclosure/momentclosure.jmd:4
-```
-
-
 
 
 
@@ -263,16 +224,13 @@ Plotting the different techniques out shows the broad agreement between the meth
 
 ```julia
 l = @layout [a b c; d e f]
-plot(vcat(jplot,pltlist)...,layout=l)
+plot(vcat(jplot,pltlist)...,
+     layout=l,
+     legendfontsize=8,
+     titlefontsize=10)
 ```
 
-```
-Error: LoadError: UndefVarError: @layout not defined
-in expression starting at /home/simon/Projects/github/sir-julia/tutorials/m
-omentclosure/momentclosure.jmd:2
-```
-
-
+![](figures/momentclosure_18_1.png)
 
 
 
@@ -289,13 +247,34 @@ for moment in [:μ₁₀,:μ₀₁,:M₂₀,:M₀₂]
         push!(v,mean(abs.(closed_central_eqs_df[cm][!,moment] - ensemble_uv[!,moment])))
     end
 end
-print(DataFrame(["Moment" => m,"Method" => c,"Normalized L1" => v]));
+df = DataFrame(Dict(["Moment" => m,"Method" => c,"Normalized L1" => v]))
+table = latexify(df,latex=false,env=:mdtable)
+table
 ```
 
-```
-Error: UndefVarError: closed_central_eqs_df not defined
-```
 
+|              Method | Moment |      Normalized L1 |
+| -------------------:| ------:| ------------------:|
+|                zero |    μ₁₀ |  2.076743811593393 |
+|              normal |    μ₁₀ | 0.9660028576471896 |
+|          log-normal |    μ₁₀ | 3.4172509695414037 |
+|               gamma |    μ₁₀ |  3.773426587708943 |
+| derivative matching |    μ₁₀ | 1.1222385637784211 |
+|                zero |    μ₀₁ | 1.0900640143265146 |
+|              normal |    μ₀₁ | 0.4506869337145166 |
+|          log-normal |    μ₀₁ |  1.135808538529116 |
+|               gamma |    μ₀₁ | 1.2360465592042413 |
+| derivative matching |    μ₀₁ | 0.5219895074782513 |
+|                zero |    M₂₀ |  859.5190426460044 |
+|              normal |    M₂₀ |  294.8175805349172 |
+|          log-normal |    M₂₀ |  2191.986285481674 |
+|               gamma |    M₂₀ |  2119.538101919365 |
+| derivative matching |    M₂₀ |  808.9884101999018 |
+|                zero |    M₀₂ | 100.01733422072681 |
+|              normal |    M₀₂ |  20.20663986521997 |
+|          log-normal |    M₀₂ |  169.9840065328225 |
+|               gamma |    M₀₂ |  206.7185371684887 |
+| derivative matching |    M₀₂ |  44.68196394821103 |
 
 
 
@@ -311,9 +290,17 @@ Let's compare the speed of the simulations versus the moment closure system ("no
 ```
 
 ```
-Error: LoadError: UndefVarError: @benchmark not defined
-in expression starting at /home/simon/Projects/github/sir-julia/tutorials/m
-omentclosure/momentclosure.jmd:2
+BenchmarkTools.Trial: 
+  memory estimate:  3.91 GiB
+  allocs estimate:  31131150
+  --------------
+  minimum time:     13.812 s (21.61% GC)
+  median time:      13.812 s (21.61% GC)
+  mean time:        13.812 s (21.61% GC)
+  maximum time:     13.812 s (21.61% GC)
+  --------------
+  samples:          1
+  evals/sample:     1
 ```
 
 
@@ -324,7 +311,17 @@ prob = ODEProblem(closed_central_eqs["normal"], u0map["normal"], tspan, p)
 ```
 
 ```
-Error: UndefVarError: closed_central_eqs not defined
+BenchmarkTools.Trial: 
+  memory estimate:  87.95 KiB
+  allocs estimate:  540
+  --------------
+  minimum time:     182.615 μs (0.00% GC)
+  median time:      268.745 μs (0.00% GC)
+  mean time:        282.346 μs (0.00% GC)
+  maximum time:     687.200 μs (0.00% GC)
+  --------------
+  samples:          10000
+  evals/sample:     1
 ```
 
 
@@ -332,4 +329,3 @@ Error: UndefVarError: closed_central_eqs not defined
 
 
 As can be seen above, if only the first few moments are of interest, the moment closure approach is much faster.
-

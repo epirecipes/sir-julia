@@ -22,7 +22,9 @@ packages = [
   "DrWatson",
   "ForwardDiff",
   "GpABC",
+  "IJulia",
   "LabelledArrays",
+  "Latexify",
   "LinearAlgebra",
   "MCMCChains",
   "ModelingToolkit",
@@ -43,7 +45,9 @@ packages = [
   "StatsBase",
   "StatsPlots",
   "StochasticDiffEq",
-  "Turing"
+  "Tables",
+  "Turing",
+  "Weave"
 ]
 
 for p in packages

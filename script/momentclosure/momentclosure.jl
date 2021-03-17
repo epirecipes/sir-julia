@@ -5,9 +5,11 @@ using MomentClosure
 using ModelingToolkit
 using DiffEqJump
 using DataFrames
+using Tables
 using Statistics
 using Plots
 using StatsPlots
+using Latexify
 using BenchmarkTools
 
 
@@ -51,7 +53,8 @@ closed_central_eqs_df = Dict{String,DataFrame}()
 for cm in closure_methods
     prob = ODEProblem(closed_central_eqs[cm], u0map[cm], tspan, p)
     sol = solve(prob)
-    df = DataFrame(sol(ts)',[replace(string(x[1]),"(t)" => "") for x in u0map[cm]])
+    df = DataFrame(sol(ts)')
+    rename!(df,[replace(string(x[1]),"(t)" => "") for x in u0map[cm]])
     df[!,:t] = ts
     closed_central_eqs_df[cm] = df
 end;
@@ -64,12 +67,14 @@ jprob = JumpProblem(jumpsys, dprob, Direct());
 
 
 ensemble_jprob = EnsembleProblem(jprob)
-ensemble_jsol = solve(ensemble_jprob,SSAStepper(),trajectories=20000)
+ensemble_jsol = solve(ensemble_jprob,SSAStepper(),trajectories=10000)
 ensemble_summary = EnsembleSummary(ensemble_jsol,ts);
 
 
-ensemble_u = DataFrame(ensemble_summary.u',["μ₁₀","μ₀₁"])
-ensemble_v = DataFrame(ensemble_summary.v',["M₂₀","M₀₂"])
+ensemble_u = DataFrame(ensemble_summary.u')
+rename!(ensemble_u,["μ₁₀","μ₀₁"])
+ensemble_v = DataFrame(ensemble_summary.v')
+rename!(ensemble_v,["M₂₀","M₀₂"])
 ensemble_uv = hcat(ensemble_u,ensemble_v)
 ensemble_uv[!,:t] = ts;
 
@@ -97,7 +102,10 @@ end;
 
 
 l = @layout [a b c; d e f]
-plot(vcat(jplot,pltlist)...,layout=l)
+plot(vcat(jplot,pltlist)...,
+     layout=l,
+     legendfontsize=8,
+     titlefontsize=10)
 
 
 m = []
@@ -110,7 +118,9 @@ for moment in [:μ₁₀,:μ₀₁,:M₂₀,:M₀₂]
         push!(v,mean(abs.(closed_central_eqs_df[cm][!,moment] - ensemble_uv[!,moment])))
     end
 end
-print(DataFrame(["Moment" => m,"Method" => c,"Normalized L1" => v]));
+df = DataFrame(Dict(["Moment" => m,"Method" => c,"Normalized L1" => v]))
+table = latexify(df,latex=false,env=:mdtable)
+table
 
 
 @benchmark solve(ensemble_jprob,SSAStepper(),trajectories=20000)
