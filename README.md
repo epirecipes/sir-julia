@@ -30,6 +30,7 @@ The above process can be represented in different kinds of ways:
 - [Stochastic differential equation using Bridge.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_bridge/sde_bridge.md)
 - [Linear noise approximation (LNA) to the stochastic differential equation](https://github.com/epirecipes/sir-julia/blob/master/markdown/lna/lna.md)
 - [Multivariate birth process reparameterisation of the stochastic differential equation](https://github.com/epirecipes/sir-julia/blob/master/markdown/mbp/mbp.md)
+- [ODEs of means, variances, etc. through moment closure](https://github.com/epirecipes/sir-julia/blob/master/markdown/momentclosure/momentclosure.md)
 - [Function map](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map/function_map.md)
 - [Stochastic Markov model](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov/markov.md)
 - [Stochastic Markov model using Soss.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_soss/markov_soss.md)
