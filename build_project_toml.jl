@@ -20,6 +20,7 @@ packages = [
   "Distances",
   "Distributions",
   "DrWatson",
+  "DynamicalSystems",
   "ForwardDiff",
   "GpABC",
   "IJulia",

@@ -25,6 +25,7 @@ The above process can be represented in different kinds of ways:
 
 - [Ordinary differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode/ode.md)
 - [Ordinary differential equation using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mtk/ode_mtk.md)
+- [Ordinary differential equation with composition using AlgebraicDynamics.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_algebraicdynamics/ode_algebraicdynamics.md)
 - [Stochastic differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde/sde.md)
 - [Stochastic differential equation using StochasticDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_stochasticdiffeq/sde_stochasticdiffeq.md)
 - [Stochastic differential equation using Bridge.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_bridge/sde_bridge.md)
@@ -32,6 +33,7 @@ The above process can be represented in different kinds of ways:
 - [Multivariate birth process reparameterisation of the stochastic differential equation](https://github.com/epirecipes/sir-julia/blob/master/markdown/mbp/mbp.md)
 - [ODEs of means, variances, etc. through moment closure](https://github.com/epirecipes/sir-julia/blob/master/markdown/momentclosure/momentclosure.md)
 - [Function map](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map/function_map.md)
+- [Function map using DynamicalSystems.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_dynamicalsystems/function_map_dynamicalsystems.md)
 - [Stochastic Markov model](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov/markov.md)
 - [Stochastic Markov model using Soss.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_soss/markov_soss.md)
 - [Jump process (Gillespie) using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process/jump_process.md)

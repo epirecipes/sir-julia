@@ -1,0 +1,4 @@
+[deps]
+AlgebraicDynamics = "5fd6ff03-a254-427e-8840-ba658f502e32"
+Catlab = "134e5e36-593f-5add-ad60-77f754baafbe"
+DynamicalSystems = "61744808-ddfa-5f27-97ff-6e42cc95d634"

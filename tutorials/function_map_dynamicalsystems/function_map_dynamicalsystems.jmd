@@ -1,0 +1,111 @@
+# Function map using DynamicalSystems.jl
+Simon Frost (@sdwfrost), 2020-04-27
+
+## Introduction
+
+The function map approach taken here is:
+
+- Deterministic
+- Discrete in time
+- Continuous in state
+
+This tutorial uses `DynamicalSystems.jl` to define a function map model.
+
+## Libraries
+
+```julia
+using DynamicalSystems
+using DataFrames
+using StatsPlots
+using BenchmarkTools
+```
+
+## Utility functions
+
+To assist in comparison with the continuous time models, we define a function that takes a constant rate, `r`, over a timespan, `t`, and converts it to a proportion.
+
+```julia
+@inline function rate_to_proportion(r,t)
+    1-exp(-r*t)
+end;
+```
+
+## Transitions
+
+We define a function that takes the 'old' state variables, `u`, and writes the 'new' state variables into `du`. Note that the timestep, `δt`, is passed as an explicit parameter.
+
+```julia
+function sir_map!(du,u,p,t)
+    (S,I,R) = u
+    (β,c,γ,δt) = p
+    N = S+I+R
+    infection = rate_to_proportion(β*c*I/N,δt)*S
+    recovery = rate_to_proportion(γ,δt)*I
+    @inbounds begin
+        du[1] = S-infection
+        du[2] = I+infection-recovery
+        du[3] = R+recovery
+    end
+    nothing
+end;
+```
+
+## Time domain
+
+```julia
+δt = 0.1
+nsteps = 400
+tmax = nsteps*δt
+t = 0.0:δt:tmax;
+```
+
+## Initial conditions
+
+Note that we define the state variables as floating point.
+
+```julia
+u0 = [990.0,10.0,0.0];
+```
+
+## Parameter values
+
+```julia
+p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
+```
+
+## Running the model
+
+```julia
+ds = DiscreteDynamicalSystem(sir_map!, u0, p, t0 = 0)
+```
+
+```julia
+sol = trajectory(ds,nsteps)
+```
+
+## Post-processing
+
+We can convert the output (a `DataSet`) to a dataframe for convenience.
+
+```julia
+df = DataFrame(Matrix(sol))
+df[!,:t] = t;
+```
+
+## Plotting
+
+We can now plot the results.
+
+```julia
+@df df plot(:t,
+    [:x1, :x2, :x3],
+    label=["S" "I" "R"],
+    xlabel="Time",
+    ylabel="Number")
+```
+
+## Benchmarking
+
+```julia
+@benchmark trajectory(ds,nsteps)
+```
