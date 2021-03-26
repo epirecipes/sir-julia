@@ -1,161 +1,142 @@
 # Petri net model using AlgebraicPetri.jl
-Micah Halter (@mehalter), 2020-07-13
+Micah Halter (@mehalter), 2021-03-26
 
 ## Introduction
 
-One representation of the SIR model is to think of it as the combination of two
-interactions, transmission and recovery.
-[AlgebraicPetri.jl](https://github.com/AlgebraicJulia/AlgebraicPetri.jl) allows
-you to define a theory of modeling (e.g. Epidemiology), and then provides a DSL
-for defining models in that theory as open dynamical systems where the
-underlying theory is preserved. This implementation defines the SIR model as the
-composition of two interactions defined at domain-level semantics, transmission
-and recovery, and then generates an appropriate
-[Petri.jl](https://github.com/mehalter/Petri.jl) model that can generate ODE,
-SDE, and jump process solvers.
+One representation of the SIR model is to think of it as the combination of
+two interactions, transmission and recovery.
+[AlgebraicPetri.jl](https://github.com/AlgebraicJulia/AlgebraicPetri.jl)
+allows you to define compositional elements of your models, and then provides
+a DSL for defining models as open dynamical systems. This implementation
+defines the SIR model as the composition of two interactions defined at
+domain-level semantics, transmission and recovery, and then generates an
+appropriate ODE solver.
 
 ## Libraries
 
 ```julia
+using AlgebraicPetri
 using AlgebraicPetri.Epidemiology
-using Petri
-using Catlab.Theories
-using Catlab.CategoricalAlgebra.FreeDiagrams
+
+using Catlab
 using Catlab.Graphics
+using Catlab.WiringDiagrams
+using Catlab.CategoricalAlgebra
+using Catlab.Programs.RelationalPrograms
+
+using LabelledArrays
 using OrdinaryDiffEq
-using StochasticDiffEq
-using DiffEqJump
 using Random
 using Plots
 
 # helper function to visualize categorical representation
-display_wd(ex) = to_graphviz(ex, orientation=LeftToRight, labels=true);
+display_uwd(ex) = to_graphviz(ex, box_labels=:name, junction_labels=:variable, edge_attrs=Dict(:len=>".75"));
 ```
 
 
 
 
-## Define a Theory
+## Define the Building Blocks
 
-AlgebraicPetri comes packaged with an `Epidemiology` module with a basic,
-predefined theory of epidemiology models. The source starts by defining a theory
-in a specified category.  Here we have 4 types ($S$: susceptible, $E$: exposed,
-$I$: infected, $R$: recovered, $D$: dead) and 5 domain processes
-($transmission: S \otimes I \rightarrow I$,
-$exposure: S \otimes I \rightarrow E \otimes I$,
-$illness: E \rightarrow I$, $recovery: I \rightarrow R$,
-$death: I \rightarrow D$).  This defines a theory thata can be use to describe
-epidemiology models at domain-level semantics.
+AlgebraicPetri comes packaged with an `Epidemiology` module with a set of
+basic, predefined pieces of epidemiology models. The source starts by
+defining a couple helper functions to define two types of interactions: a
+spontaneous change in population such as recovery or falling ill after
+exposure and an exposure interaction where one population causes a change in
+another such as infection. These two helper functions allow us to easily
+define the different interactions we find in basic epidemological models such
+as infection, exposure, illness, recovery, and death. The resulting objects
+are multi-cospan objects where each state in the building block is a leg in the cospan.
+This allows us to compose along any of these states individually.
 
 ```julia
-@present InfectiousDiseases(FreeBiproductCategory) begin
-    S::Ob
-    E::Ob
-    I::Ob
-    R::Ob
-    D::Ob
-    transmission::Hom(S⊗I, I)
-    exposure::Hom(S⊗I, E⊗I)
-    illness::Hom(E,I)
-    recovery::Hom(I,R)
-    death::Hom(I,D)
-end
+# population x spontaneously moves to population y
+spontaneous_petri(x::Symbol, y::Symbol, transition::Symbol) =
+    Open(LabelledPetriNet(unique([x,y]), transition=>(x, y)))
+# population y causes population x to move to population z
+exposure_petri(x::Symbol, y::Symbol, z::Symbol, transition::Symbol) =
+    Open(LabelledPetriNet(unique([x,y,z]), transition=>((x,y)=>(z,y))))
+
+infection = exposure_petri(:S, :I, :I, :inf)
+exposure = exposure_petri(:S, :I, :E, :exp)
+illness = spontaneous_petri(:E,:I,:ill)
+recovery = spontaneous_petri(:I,:R,:rec)
+death = spontaneous_petri(:I,:D,:death)
 ```
 
 
 
-To be able to build up large Petri nets using these terms, we must define the
-building block Petri nets that describe each of the interactions. For this we
-have the following code that defines 3 petri nets: `spontaneous_petri` defines a
-petri net with 2 states, and a transition from $S_1$ to $S_2$ to represent a
-spontaneous change; `transmission_petri` defines a petri net where $S_1$ and
-$S_2$ interact and produce 2 $S_2$; and lastly `exposure_petri` where there are
-3 states and a transition where $S_1$ and $S_2$ interact and produce an $S_2$
-and $S_3$ to represent an infected population causing the susceptible population
-to become exposed.  Lastly, we need to define a dictionary that connects the
-objects from the theory to the petri net objects that define the interactions.
+Lastly, to integrate with the relational programs syntax provided by
+[Catlab.jl](https://github.com/AlgebraicJulia/Catlab.jl) we simply need to
+provided a dictionary to connect our new building blocks to labels of their
+domain specific semantics.
 
 ```julia
-ob = PetriCospanOb(1)
-spontaneous_petri = PetriCospan([1], Petri.Model(1:2, [(Dict(1=>1), Dict(2=>1))]), [2])
-transmission_petri = PetriCospan([1], Petri.Model(1:2, [(Dict(1=>1, 2=>1), Dict(2=>2))]), [2])
-exposure_petri = PetriCospan([1, 2], Petri.Model(1:3, [(Dict(1=>1, 2=>1), Dict(3=>1, 2=>1))]), [3, 2])
+epi_dict = Dict(:infection=>infection,
+                :exposure=>exposure,
+                :illness=>illness,
+                :recovery=>recovery,
+                :death=>death)
 
-const FunctorGenerators = Dict(S=>ob, E=>ob, I=>ob, R=>ob, D=>ob,
-        transmission=>transmission_petri, exposure=>exposure_petri,
-        illness=>spontaneous_petri, recovery=>spontaneous_petri, death=>spontaneous_petri)
+oapply_epi(ex, args...) = oapply(ex, epi_dict, args...)
 ```
 
 
 
 ## Transitions
 
-Using the categorical framework provided by the AlgebraicJulia environment, we
-can think of building models as the combination of known building block open
-models.  For example we have $transmission: S \otimes I \rightarrow I$ and
-$recovery: I \rightarrow R$ interactions defined in the Epidemiology module of
-AlgebraicPetri which can be visualized as the following Petri nets.
+Using the categorical framework provided by the AlgebraicJulia environment,
+we can think of building models as defining relations between known building
+blocks operating on the system. For example we know that in a simple SIR
+model there are two interactions both infection and recovery, and they are
+related by sharing a common infected population.
 
-Transmission (where $S_1 = S$ and $S_2 = I$):
-
-```julia
-Graph(decoration(F_epi(transmission)))
-```
-
-```
-Error: UndefVarError: F_epi not defined
-```
-
-
-
-
-
-Recovery (where $S_1 = I$ and $S_2 = R$):
+Transmission:
 
 ```julia
-Graph(decoration(F_epi(recovery)))
+Graph(infection)
 ```
 
-```
-Error: UndefVarError: F_epi not defined
-```
+![](figures/pn_algebraicpetri_4_1.svg)
 
 
 
-
-
-In this approach we can think of an sir model as the composition of transmission
-and recovery. This allows us to define the relationship that the infected
-population coming out of the transmission interaction is the same as population
-of infected in the recovery interaction.
+Recovery:
 
 ```julia
-sir_wiring_diagram = transmission ⋅ recovery
-display_wd(sir_wiring_diagram)
+Graph(recovery)
 ```
 
-```
-Error: UndefVarError: transmission not defined
-```
+![](figures/pn_algebraicpetri_5_1.svg)
 
 
 
-
-
-using the function `F_epi` provided by `AlgebraicPetri.Epidemiology`, we can
-convert this categorical definition of SIR to the Petri net representation and
-visualize the newly created model (where $S_1 = S$, $S_2 = I$, and $S_3 = R$).
+With these two building block Petri nets defined, we can use the `@relation`
+macro to define an undirected wiring diagram that describes our system.
+This step plays the role of describing how we want to compose our building blocks.
 
 ```julia
-sir_model = decoration(F_epi(sir_wiring_diagram));
+sir_wiring_diagram = @relation (s, i, r) begin
+    infection(s, i)
+    recovery(i, r)
+end
+display_uwd(sir_wiring_diagram)
+```
+
+![](figures/pn_algebraicpetri_6_1.svg)
+
+
+
+using the function `oapply_epi` provided by `AlgebraicPetri.Epidemiology`, we
+can convert this categorical definition of SIR to the Petri net
+representation and visualize the newly created model.
+
+```julia
+sir_model = apex(oapply_epi(sir_wiring_diagram));
 Graph(sir_model)
 ```
 
-```
-Error: UndefVarError: F_epi not defined
-```
-
-
+![](figures/pn_algebraicpetri_7_1.svg)
 
 
 
@@ -172,8 +153,16 @@ tspan = (0.0,tmax);
 ## Initial conditions
 
 ```julia
-u0 = [990,10,0]; # S,I,R
+u0 = LVector(S=990.0, I=10.0, R=0.0)
 ```
+
+```
+3-element LabelledArrays.LArray{Float64, 1, Vector{Float64}, (:S, :I, :R)}:
+ :S => 990.0
+ :I => 10.0
+ :R => 0.0
+```
+
 
 
 
@@ -181,7 +170,7 @@ u0 = [990,10,0]; # S,I,R
 ## Parameter values
 
 ```julia
-p = [0.05*10.0/sum(u0),0.25]; # β*c/N,γ
+p = LVector(inf=0.05*10.0/sum(u0), rec=0.25); # β*c/N,γ
 ```
 
 
@@ -203,45 +192,9 @@ Random.seed!(1234);
 ### As ODEs
 
 ```julia
-prob_ode = ODEProblem(sir_model,u0,tspan,p)
+prob_ode = ODEProblem(vectorfield(sir_model),u0,tspan,p)
 sol_ode = solve(prob_ode, Tsit5());
 plot(sol_ode)
 ```
 
-```
-Error: UndefVarError: sir_model not defined
-```
-
-
-
-
-
-### As SDEs
-
-```julia
-prob_sde,cb = SDEProblem(sir_model,u0,tspan,p)
-sol_sde = solve(prob_sde,LambaEM(),callback=cb);
-plot(sol_sde)
-```
-
-```
-Error: UndefVarError: sir_model not defined
-```
-
-
-
-
-
-### As jump process
-
-```julia
-prob_jump = JumpProblem(sir_model, u0, tspan, p)
-sol_jump = solve(prob_jump,SSAStepper());
-plot(sol_jump)
-```
-
-```
-Error: UndefVarError: sir_model not defined
-```
-
-
+![](figures/pn_algebraicpetri_12_1.png)
