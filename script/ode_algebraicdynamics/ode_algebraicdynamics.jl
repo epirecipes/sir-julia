@@ -26,6 +26,8 @@ u0 = [990.0,10.0];
 
 
 dots(u, x, p, t) = [-β*u[1]*x[1]]
+
+
 doti(u, x, p, t) = [β*x[1]*u[1] - γ*u[1]];
 
 
@@ -71,6 +73,8 @@ plot(cpg_sol)
 
 
 dotsi(u,p,t) = [-β*u[1]*u[2],β*u[1]*u[2]]
+
+
 doti(u,p,t) = -γ*u;
 
 
@@ -169,6 +173,14 @@ undirected_system_stages = oapply(undirected_pattern_stages, [
     ilast_recovery])
 
 
+undirected_system_stages = oapply(undirected_pattern_stages, Dict(
+    :si_infection  => si_infection,
+    :sii_infection => sii_infection,
+    :i_transition  => i_transition,
+    :ilast_recovery => ilast_recovery
+))
+
+
 u0stages = [990.0,10.0,0.0,0.0,0.0];
 
 
@@ -188,4 +200,41 @@ undirected_stages_df[:t] = t;
 plot(undirected_stages_df[!,:t],
      [undirected_stages_df[!,:S],undirected_stages_df[!,:I]])
 plot!(undirected_sol)
+
+
+undirected_si_pattern = @relation (S, I₁, I₂, I₃, I₄) begin
+    si_box(S, I₁, I₂, I₃, I₄)
+    i_box(I₁, I₂, I₃, I₄)
+end;
+
+
+to_graphviz(undirected_si_pattern, box_labels = :name, junction_labels = :variable, edge_attrs=Dict(:len => ".75"))
+
+
+si_pattern = @relation (S, I₁, I₂, I₃, I₄) begin
+    si_infection(S,I₁)
+    sii_infection(S,I₁,I₂)
+    sii_infection(S,I₁,I₃)
+    sii_infection(S,I₁,I₄)
+end;
+
+
+to_graphviz(si_pattern, box_labels = :name, junction_labels = :variable, edge_attrs=Dict(:len => ".75"))
+
+
+i_pattern = @relation (I₁, I₂, I₃, I₄) begin
+    i_transition(I₁,I₂)
+    i_transition(I₂,I₃)
+    i_transition(I₃,I₄)
+    ilast_recovery(I₄)
+end;
+
+
+to_graphviz(i_pattern, box_labels = :name, junction_labels = :variable, edge_attrs=Dict(:len => ".75"))
+
+
+undirected_pattern_stages = ocompose(undirected_si_pattern, [si_pattern, i_pattern]);
+
+
+to_graphviz(undirected_pattern_stages, box_labels = :name, junction_labels = :variable, edge_attrs=Dict(:len => ".75"))
 

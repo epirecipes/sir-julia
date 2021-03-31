@@ -1,9 +1,11 @@
 # Composing ODE models using AlgebraicDynamics.jl
-Simon Frost (@sdwfrost), 2021-03-17
+Simon Frost (@sdwfrost) with contributions from Sophie Libkind (@slibkind), 2021-03-17
 
 ## Introduction
 
-To keep things simple, I only consider a reduced system with susceptibles and infected individuals, with a constant population size.
+The [`AlgebraicDynamics.jl`](https://github.com/AlgebraicJulia/AlgebraicDynamics.jl) package allows composition of dynamical systems i.e. building up complex models from building blocks of simpler ones. Here, we look at different ways of building up these systems, and some simple extensions of the SIR model to include vital dynamics and to consider multiple sub-stages of infected individuals to allow non-exponential distributions for the infectious period.
+
+To keep things simple, I only consider a reduced system with susceptibles and infected individuals, with a constant population size, and will onlu consider continuous time, deterministic (i.e. ODE) models.
 
 ## Libraries
 
@@ -27,6 +29,8 @@ using StatsPlots
 
 ## Time domain
 
+As before, we define a time domain in order to simulate the final system.
+
 ```julia
 δt = 0.1
 tmax = 40
@@ -39,6 +43,8 @@ t = 0:δt:tmax;
 
 ## Initial conditions
 
+As we only consider `S` and `I` individuals, we only have two initial conditions.
+
 ```julia
 u0 = [990.0,10.0];
 ```
@@ -47,6 +53,8 @@ u0 = [990.0,10.0];
 
 
 ## Parameter values
+
+The parameter values are simplified from other tutorials:
 
 ```julia
 β, γ = 0.05*10/1000, 0.25; # in other tutorials, βc/N and γ
@@ -57,11 +65,40 @@ u0 = [990.0,10.0];
 
 ## Directed transitions
 
+We can think of the SIR model as being composed of two sub-models, one for the susceptible population, `S`, and one for the infected population, `I`. When time is continuous, we define the rates at which each population changes (`u`) in response to other populations (`x`).
+
+The rate at which susceptibles change is defined as follows, where `S=u[1]` and `I=x[1]`.
+
 ```julia
 dots(u, x, p, t) = [-β*u[1]*x[1]]
+```
+
+```
+dots (generic function with 1 method)
+```
+
+
+
+
+
+The rate at which infecteds changed is as follows, where `S=x[1]` and `I=u[1]`.
+
+```julia
 doti(u, x, p, t) = [β*x[1]*u[1] - γ*u[1]];
 ```
 
+
+
+
+`AlgebraicDynamics.jl` calls the components of directed systems *machines*, which have the following components:
+
+- Inputs (also called exogenous variables)
+- States
+- Outputs
+- A dynamics function
+- A readout function
+
+We define a `ContinuousMachine` for susceptibles and infecteds, where we define the numerical type (`Float64`). Each has 1 input, 1 state, 1 output, a rate equation, and a readout function that is simply the observed state.
 
 ```julia
 susceptible_cm = ContinuousMachine{Float64}(1,1,1, dots, u -> u)
@@ -71,7 +108,7 @@ infected_cm    = ContinuousMachine{Float64}(1,1,1, doti, u -> u);
 
 
 
-We define the composition pattern incrementally, by first creating a wiring diagram, adding boxes to the diagram, and then adding wires between the boxes that determine the relationships.
+We define the composition pattern incrementally, by first creating a `WiringDiagram`, adding boxes to the diagram using `add_box!`, and then adding wires between the boxes that determine the relationships.
 
 ```julia
 directed_pattern = WiringDiagram([], [])
@@ -96,9 +133,11 @@ As a sanity check, we can display a Graphviz graph of the resulting wiring diagr
 to_graphviz(directed_pattern)
 ```
 
-![](figures/ode_algebraicdynamics_9_1.svg)
+![](figures/ode_algebraicdynamics_10_1.svg)
 
 
+
+The susceptible machine is an input to the infected machine, and vice versa.
 
 The system is composed using `oapply`, using the wiring diagram and the individual machines for S and I.
 
@@ -121,7 +160,7 @@ directed_sol = solve(directed_prob, FRK65(0));
 plot(directed_sol)
 ```
 
-![](figures/ode_algebraicdynamics_12_1.png)
+![](figures/ode_algebraicdynamics_13_1.png)
 
 
 
@@ -170,7 +209,7 @@ cpg_sol = solve(cpg_prob, FRK65(0));
 plot(cpg_sol)
 ```
 
-![](figures/ode_algebraicdynamics_16_1.png)
+![](figures/ode_algebraicdynamics_17_1.png)
 
 
 
@@ -178,8 +217,23 @@ plot(cpg_sol)
 
 For undirected transitions, we write equations for the rates of the systems in isolation from one another, then add the rates that couple the systems together. Note that the function signatures only have one state vector, `u`, passed to it rather than two (`u` and `x`).
 
+The rate equation for transmission results has two components, as transmission reduces susceptibles and increases infecteds.
+
 ```julia
 dotsi(u,p,t) = [-β*u[1]*u[2],β*u[1]*u[2]]
+```
+
+```
+dotsi (generic function with 1 method)
+```
+
+
+
+
+
+The rate equation for recovery only has one component.
+
+```julia
 doti(u,p,t) = -γ*u;
 ```
 
@@ -236,7 +290,7 @@ ACSet with elements Box = 1:2, Port = 1:3, OuterPort = 1:2, Junction = 1:2
 to_graphviz(undirected_pattern, box_labels = :name, junction_labels = :variable, edge_attrs=Dict(:len => ".75"))
 ```
 
-![](figures/ode_algebraicdynamics_20_1.svg)
+![](figures/ode_algebraicdynamics_22_1.svg)
 
 ```julia
 undirected_system = oapply(undirected_pattern, [si_infection, i_recovery]);
@@ -253,7 +307,7 @@ undirected_sol = solve(undirected_prob,FRK65(0));
 plot(undirected_sol)
 ```
 
-![](figures/ode_algebraicdynamics_23_1.png)
+![](figures/ode_algebraicdynamics_25_1.png)
 
 
 
@@ -318,7 +372,7 @@ ACSet with elements Box = 1:3, Port = 1:5, OuterPort = 1:2, Junction = 1:2
 to_graphviz(undirected_open_pattern, box_labels = :name, junction_labels = :variable, edge_attrs=Dict(:len => ".75"))
 ```
 
-![](figures/ode_algebraicdynamics_27_1.svg)
+![](figures/ode_algebraicdynamics_29_1.svg)
 
 ```julia
 undirected_open_system = oapply(undirected_open_pattern, [si_infection, i_recovery, is_birthdeath]);
@@ -335,7 +389,7 @@ undirected_open_sol = solve(undirected_open_prob,FRK65(0));
 plot(undirected_open_sol)
 ```
 
-![](figures/ode_algebraicdynamics_30_1.png)
+![](figures/ode_algebraicdynamics_32_1.png)
 
 
 
@@ -462,7 +516,11 @@ ACSet with elements Box = 1:8, Port = 1:18, OuterPort = 1:5, Junction = 1:5
 to_graphviz(undirected_pattern_stages, box_labels = :name, junction_labels = :variable, edge_attrs=Dict(:len => ".75"))
 ```
 
-![](figures/ode_algebraicdynamics_36_1.svg)
+![](figures/ode_algebraicdynamics_38_1.svg)
+
+
+
+To generate the system from the stages, we can pass a vector of resource sharers in the same order as we defined in `undirected_pattern_stages`.
 
 ```julia
 undirected_system_stages = oapply(undirected_pattern_stages, [
@@ -474,6 +532,25 @@ undirected_system_stages = oapply(undirected_pattern_stages, [
     i_transition
     i_transition
     ilast_recovery])
+```
+
+```
+ContinuousResourceSharer(ℝ^5 → ℝ^5) with 5 exposed ports
+```
+
+
+
+
+
+Alternatively, we can pass a dictionary keyed by the box name to specify which resource sharers plug into which box, where we don't have to worry about the order.
+
+```julia
+undirected_system_stages = oapply(undirected_pattern_stages, Dict(
+    :si_infection  => si_infection,
+    :sii_infection => sii_infection,
+    :i_transition  => i_transition,
+    :ilast_recovery => ilast_recovery
+))
 ```
 
 ```
@@ -522,4 +599,78 @@ plot(undirected_stages_df[!,:t],
 plot!(undirected_sol)
 ```
 
-![](figures/ode_algebraicdynamics_41_1.png)
+![](figures/ode_algebraicdynamics_44_1.png)
+
+
+
+### Composition of patterns using ocompose
+
+A more elegant way to specify the method of stages is to build out a composition pattern hierarchically. For example, we can start out with a pattern with two boxes:
+
+1. A `si_box` that we will put all of the infection boxes inside.
+2. A `i_box` that we will put all of the transition boxes inside.
+
+```julia
+undirected_si_pattern = @relation (S, I₁, I₂, I₃, I₄) begin
+    si_box(S, I₁, I₂, I₃, I₄)
+    i_box(I₁, I₂, I₃, I₄)
+end;
+```
+
+
+```julia
+to_graphviz(undirected_si_pattern, box_labels = :name, junction_labels = :variable, edge_attrs=Dict(:len => ".75"))
+```
+
+![](figures/ode_algebraicdynamics_46_1.svg)
+
+
+
+Then we can build patterns to put inside of these boxes:
+
+```julia
+si_pattern = @relation (S, I₁, I₂, I₃, I₄) begin
+    si_infection(S,I₁)
+    sii_infection(S,I₁,I₂)
+    sii_infection(S,I₁,I₃)
+    sii_infection(S,I₁,I₄)
+end;
+```
+
+
+```julia
+to_graphviz(si_pattern, box_labels = :name, junction_labels = :variable, edge_attrs=Dict(:len => ".75"))
+```
+
+![](figures/ode_algebraicdynamics_48_1.svg)
+
+```julia
+i_pattern = @relation (I₁, I₂, I₃, I₄) begin
+    i_transition(I₁,I₂)
+    i_transition(I₂,I₃)
+    i_transition(I₃,I₄)
+    ilast_recovery(I₄)
+end;
+```
+
+
+```julia
+to_graphviz(i_pattern, box_labels = :name, junction_labels = :variable, edge_attrs=Dict(:len => ".75"))
+```
+
+![](figures/ode_algebraicdynamics_50_1.svg)
+
+
+
+And finally we put the patterns inside of the boxes using `ocompose`.
+
+```julia
+undirected_pattern_stages = ocompose(undirected_si_pattern, [si_pattern, i_pattern]);
+```
+
+
+```julia
+to_graphviz(undirected_pattern_stages, box_labels = :name, junction_labels = :variable, edge_attrs=Dict(:len => ".75"))
+```
+
+![](figures/ode_algebraicdynamics_52_1.svg)
