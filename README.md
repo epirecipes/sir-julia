@@ -67,6 +67,13 @@ In addition to the above examples of simulation, there are also examples of infe
 - [Bayesian estimates of parameters of the ODE system using NestedSamplers.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_nestedsampling/ode_nestedsampling.md)
 
 
+## Extensions
+
+- [Fixed (rather than exponential) distribution of infectious period using a delay differential equation and DelayDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/dde/dde.md)
+- [An Erlang distribution for the infectious period using the method of stages is illustrated in this notebook using AlgebraicDynamics.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_algebraicdynamics/ode_algebraicdynamics.md)
+
+
+
 ## Comments on implementations
 
 Note that the implementations and choice of parameters may be suboptimal, and are intended to illustrate more-or-less the same underlying biological process with different mathematical representations. Additional optimizations may be obtained e.g. by using `StaticArrays`.
