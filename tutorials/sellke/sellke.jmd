@@ -86,7 +86,7 @@ Random.seed!(1234);
 We will sample a large number of final epidemic sizes and plot
 a histogram.
 
-```julia
+```julia; results = "hidden"
 out_sellke = map(x -> sellke(u0, p), 1:1e3)
 ```
 

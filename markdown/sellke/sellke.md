@@ -110,31 +110,6 @@ a histogram.
 out_sellke = map(x -> sellke(u0, p), 1:1e3)
 ```
 
-```
-1000-element Vector{Int64}:
-  97
-  96
-  93
-  92
-  86
-  87
-  94
-  95
-  90
-  88
-   ⋮
-  93
-  92
-  91
-  94
-  92
-  77
-  79
- 101
-  89
-```
-
-
 
 
 
@@ -157,16 +132,16 @@ histogram(out_sellke, bins=20, xlabel = "Final Epidemic Size", ylabel = "Frequen
 ```
 
 ```
-BenchmarkTools.Trial: 10000 samples with 8 evaluations.
- Range (min … max):  2.774 μs … 329.293 μs  ┊ GC (min … max): 0.00% … 98.72
+BenchmarkTools.Trial: 10000 samples with 9 evaluations.
+ Range (min … max):  2.907 μs … 264.064 μs  ┊ GC (min … max): 0.00% … 98.53
 %
- Time  (median):     2.998 μs               ┊ GC (median):    0.00%
- Time  (mean ± σ):   3.538 μs ±   8.047 μs  ┊ GC (mean ± σ):  6.38% ±  2.79
+ Time  (median):     3.112 μs               ┊ GC (median):    0.00%
+ Time  (mean ± σ):   3.636 μs ±   7.414 μs  ┊ GC (mean ± σ):  6.08% ±  2.95
 %
 
-   ▂▅▇██▇▆▄▂                   ▁▂▃▃▄▄▄▄▄▃▃▃▂▁▁                ▂
-  ▆███████████▇▇▇▆▅▄▄▄▂▃▂▂▂▃▅▆█████████████████▇▇▇▆▆▄▆▇▆▇▇█▇█ █
-  2.77 μs      Histogram: log(frequency) by time      4.94 μs <
+   ▁▄▆███▇▅▂▁                      ▂▄▄▅▅▅▄▄▄▃▂▂▁▁ ▁       ▁▁  ▃
+  ▅█████████████▇▇▇▅▅▄▄▃▁▁▃▄▄▁▁▁▅▅██████████████████▇▇▇██████ █
+  2.91 μs      Histogram: log(frequency) by time      4.82 μs <
 
  Memory estimate: 6.41 KiB, allocs estimate: 10.
 ```
