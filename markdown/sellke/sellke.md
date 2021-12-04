@@ -36,12 +36,15 @@ periods, which simply require the the infectious durations to be sampled from th
 distribution. Another nice feature of the Sellke epidemic model is that parameters can
 easily be changed without needing to draw new random numbers.
 
-Because the construction samples the final epidemic size, we do not specify the time domain.
+Because the construction samples the final epidemic size, and then creates a corresponding
+temporal trajectory, we do not specify the time domain.
+
+This particular implementation is described in the paper [How big is an outbreak likely to be? Methods for epidemic final-size calculation](https://royalsocietypublishing.org/doi/full/10.1098/rspa.2012.0436).
 
 ```julia
 function sellke(u0, p)
     (S, I, R) = u0
-    N = S+I+R
+    N = S + I + R
     (β, c, γ) = p
     λ = β*c/N
 
@@ -56,11 +59,67 @@ function sellke(u0, p)
 
     Z = findfirst(Q .> Y*λ)
 
-    if Z === nothing
-        return S+I # entire population infected
+    if isnothing(Z)
+        Z = S + I # entire population infected
     else
-        return Z+I-1
+        Z = Z + I - 1
     end
+
+    TT = [T0; T] # all infectious periods
+    QQ = [T0 * 0; Q] # all thresholds 
+    R = T[1:I] # recovery times of the initial infectives
+
+    # max num of events possible
+    max = I + 2*S
+
+    t = zeros(max)
+    St = zeros(max)
+    It = zeros(max)
+    It[1:I] = (1:I)
+    St[1:I] = N .- (1:I)
+
+    tt = 0
+    La = 0
+    j = I+1
+    k = j
+
+    while It[k-1] > 0
+        (minR, i) = findmin(R)
+        dtprop = minR-tt
+        Laprop = La + (λ * It[k-1] * dtprop)
+        if j > length(QQ) # only recoveries remain
+            R = R[setdiff(1:length(R), i)]
+            tt = minR
+            t[k] = minR
+            It[k] = It[k-1]-1
+            St[k] = St[k-1]
+            La = Laprop
+            k = k+1
+        else # infections
+            if QQ[j] > Laprop
+                R = R[setdiff(1:length(R), i)]
+                tt = minR
+                t[k] = minR
+                It[k] = It[k-1]-1
+                St[k] = St[k-1]
+                La = Laprop
+            else
+                tt = tt + ((QQ[j]-La)/(Laprop-La))*dtprop
+                La = QQ[j]
+                t[k] = tt
+                It[k] = It[k-1]+1
+                St[k] = St[k-1]-1
+                R = [R; tt+TT[j]]
+                j = j+1
+            end
+            k = k+1
+        end
+    end
+    
+    trajectory = hcat(t, St, It, N .- (St + It))
+    trajectory = trajectory[I:k-1, :]
+
+    return trajectory
 end
 ```
 
@@ -75,7 +134,7 @@ sellke (generic function with 1 method)
 ## Initial conditions
 
 ```julia
-u0 = [100,10,0]; # S,I,R
+u0 = [990,10,0]; # S,I,R
 ```
 
 
@@ -103,11 +162,8 @@ Random.seed!(1234);
 
 ## Running the model
 
-We will sample a large number of final epidemic sizes and plot
-a histogram.
-
 ```julia
-out_sellke = map(x -> sellke(u0, p), 1:1e3)
+out = sellke(u0, p)
 ```
 
 
@@ -118,7 +174,10 @@ out_sellke = map(x -> sellke(u0, p), 1:1e3)
 We plot a histogram of final epidemic sizes.
 
 ```julia
-histogram(out_sellke, bins=20, xlabel = "Final Epidemic Size", ylabel = "Frequency", legend = false)
+plot(out[:, 1], out[:, 2:end],
+    label=["S" "I" "R"],
+    xlabel="Time",
+    ylabel="Number")
 ```
 
 ![](figures/sellke_7_1.png)
@@ -132,18 +191,18 @@ histogram(out_sellke, bins=20, xlabel = "Final Epidemic Size", ylabel = "Frequen
 ```
 
 ```
-BenchmarkTools.Trial: 10000 samples with 9 evaluations.
- Range (min … max):  2.907 μs … 264.064 μs  ┊ GC (min … max): 0.00% … 98.53
-%
- Time  (median):     3.112 μs               ┊ GC (median):    0.00%
- Time  (mean ± σ):   3.636 μs ±   7.414 μs  ┊ GC (mean ± σ):  6.08% ±  2.95
-%
+BenchmarkTools.Trial: 2419 samples with 1 evaluation.
+ Range (min … max):  52.159 μs …   5.396 ms  ┊ GC (min … max): 0.00% … 40.4
+4%
+ Time  (median):      1.891 ms               ┊ GC (median):    0.00%
+ Time  (mean ± σ):    2.064 ms ± 699.651 μs  ┊ GC (mean ± σ):  8.85% ± 14.2
+9%
 
-   ▁▄▆███▇▅▂▁                      ▂▄▄▅▅▅▄▄▄▃▂▂▁▁ ▁       ▁▁  ▃
-  ▅█████████████▇▇▇▅▅▄▄▃▁▁▃▄▄▁▁▁▅▅██████████████████▇▇▇██████ █
-  2.91 μs      Histogram: log(frequency) by time      4.82 μs <
+                      ▁▄█▇▇▆▄▄▂                                 
+  ▃▁▁▁▁▁▁▁▁▁▁▁▁▂▂▃▃▄▅▇██████████▆▆▄▃▃▂▂▂▂▂▂▂▂▂▂▂▃▃▃▃▃▃▃▃▃▃▂▂▃▂ ▃
+  52.2 μs         Histogram: frequency by time         4.44 ms <
 
- Memory estimate: 6.41 KiB, allocs estimate: 10.
+ Memory estimate: 228.33 KiB, allocs estimate: 117.
 ```
 
 
