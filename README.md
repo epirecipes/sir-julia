@@ -25,6 +25,7 @@ The above process can be represented in different kinds of ways:
 
 - [Ordinary differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode/ode.md)
 - [Ordinary differential equation using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mtk/ode_mtk.md)
+- [Ordinary differential equation using Modia.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_modia/ode_modia.md)
 - [Ordinary differential equation with composition using AlgebraicDynamics.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_algebraicdynamics/ode_algebraicdynamics.md)
 - [Stochastic differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde/sde.md)
 - [Stochastic differential equation using StochasticDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_stochasticdiffeq/sde_stochasticdiffeq.md)
@@ -42,6 +43,7 @@ The above process can be represented in different kinds of ways:
 - [Petri net model to ODEs, SDEs, and jump process using Petri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_petri/pn_petri.md)
 - [Petri net model to ODEs, SDEs, and jump process using AlgebraicPetri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_algebraicpetri/pn_algebraicpetri.md)
 - [Jump process (Gillespie) using Gillespie.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_gillespie/jump_process_gillespie.md)
+- [Jump process using the Sellke construction](https://github.com/epirecipes/sir-julia/blob/master/markdown/sellke/sellke.md)
 - [Discrete event simulation using SimJulia](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
 - [Agent-based model using base Julia](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector/abm_vector.md) as well [as using DifferentialEquations](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector_diffeq/abm_vector_diffeq.md)
 - [Agent-based model using Agents.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm/abm.md)
@@ -71,7 +73,6 @@ In addition to the above examples of simulation, there are also examples of infe
 
 - [Fixed (rather than exponential) distribution of infectious period using a delay differential equation and DelayDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/dde/dde.md)
 - [An Erlang distribution for the infectious period using the method of stages is illustrated in this notebook using AlgebraicDynamics.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_algebraicdynamics/ode_algebraicdynamics.md)
-
 
 
 ## Comments on implementations
@@ -131,7 +132,7 @@ Suggested sections:
 - Benchmarking
 
 
-Change to the root directory of the repository and run the following from within Julia.
+Change to the root directory of the repository and run the following from within Julia; you will need [Weave.jl](https://github.com/JunoLab/Weave.jl) and any dependencies from the tutorial.
 
 ```julia
 include("build.jl")
