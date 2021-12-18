@@ -5,8 +5,8 @@ Sean L. Wu (@slwu89), 2021-11-30
 
 This implements a standard continuous time Markov chain (jump process) SIR model, but uses 
 [InfiniteArrays.jl](https://github.com/JuliaArrays/InfiniteArrays.jl) to track the cumulative
-number of times any individual has successfully infected another. We note that because the standard
-SIR model lacks births and deaths, a finite sized array would be sufficient, but our
+number of times any individual has successfully infected another. We note that for the standard
+SIR model a finite sized array would be sufficient, but our
 implementation should help provide an example for cases with an unbounded population size.
 
 Tracking the number of infections caused by each infective is useful to demonstrate that even
