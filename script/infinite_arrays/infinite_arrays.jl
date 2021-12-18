@@ -121,10 +121,10 @@ infectors_counts = zeros(Int64, infectors[end])
 infectors_counts[infectors] = SIR.R[infectors]
 
 plot(
-    infectors_counts, 
+    infectors_counts ./ sum(infectors_counts),
     seriestype = :bar, 
     xlabel="Number",
-    ylabel="Frequency", 
+    ylabel="Proportion", 
     color = 1:length(infectors_counts), 
     legend = false,
     xticks = 1:length(infectors_counts),
