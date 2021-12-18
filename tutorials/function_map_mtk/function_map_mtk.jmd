@@ -1,0 +1,150 @@
+# Function map using ModelingToolkit and DiscreteSystem
+Simon Frost (@sdwfrost), 2021-12-17
+
+## Introduction
+
+The function map approach taken here is:
+
+- Deterministic
+- Discrete in time
+- Continuous in state
+
+This tutorial uses the `Difference` operator and a `DiscreteSystem` in order to implement a map using `ModelingToolkit.jl`. This is based on the test case [here](https://github.com/SciML/ModelingToolkit.jl/blob/master/test/discretesystem.jl), which was in turn based on the vanilla function map example in this repository.
+
+## Libraries
+
+```julia
+using ModelingToolkit
+using DifferentialEquations
+using Distributions
+using Tables
+using DataFrames
+using StatsPlots
+using BenchmarkTools
+```
+
+## Utility functions
+
+To assist in comparison with the continuous time models, we define a function that takes a constant rate, `r`, over a timespan, `t`, and converts it to a proportion.
+
+```julia
+@inline function rate_to_proportion(r,t)
+    1-exp(-r*t)
+end;
+```
+
+## Parameters
+
+I define the parameters and set default values, including the time step, `δt`.
+
+```julia
+@parameters β=0.05 c=10.0 γ=0.25 N=1000.0 δt=0.1
+```
+
+## Initial conditions
+
+We define the states of the system and set initial conditions as their default values. In this example, the state space is extended to consider infections (`S` to `I` transitions, `SI`) and recovery events (`I` to `R` transitions, `IR`). This makes the definition of the system below a bit cleaner, and lends itself to stochastic (Markov) versions of the same model.
+
+```julia
+@variables t SI(t)=0.0 IR(t)=0.0 S(t)=990.0 I(t)=10.0 R(t)=0.0
+```
+
+### Transitions
+
+In order to solve a map rather than a set of differential equations, we define a `Difference` operator rather than a derivative. The equations then represent the new states after a discrete time step, `δt`.
+
+```julia
+D = DiscreteUpdate(t; dt=δt)
+eqs = [D(SI) ~ rate_to_proportion(β*c*I/N,δt)*S,
+       D(IR) ~ rate_to_proportion(γ,δt)*I,
+       D(S) ~ S-SI,
+       D(I) ~ I+SI-IR,
+       D(R) ~ R+IR]
+```
+
+## Running the model
+
+As we have defined the states of the system and the parameters above, we can convert the equations to a system very simply:
+
+```julia
+@named sys = DiscreteSystem(eqs)
+```
+
+The full function call would look like this.
+
+```julia
+@named sys = DiscreteSystem(eqs, t, [SI, IR, S, I, R], [β,c,γ,N,δt])
+```
+
+We have also provided default values for initial conditions and parameter values, so we can pass empty maps to `DiscreteProblem`. We will run for 401 steps, hence the `(0,400)` below.
+
+```julia
+prob = DiscreteProblem(sys, [], (0,400), [])
+```
+
+If we wanted to specify other initial conditions or parameter values, we would pass the following to `DiscreteProblem` instead.
+
+```julia
+u0 = [S => 990.0,
+      I => 10.0,
+      R => 0.0];
+p = [β=>0.05,
+     c=>10.0,
+     γ=>0.25,
+     N=>1000.0,
+     δt=>0.1];
+prob = DiscreteProblem(sys, u0, (0,400), p)
+```
+
+Now we can solve using the `FunctionMap` solver.
+
+```julia
+sol = solve(prob,solver=FunctionMap);
+```
+
+## Post-processing
+
+We can convert the output to a dataframe for convenience.
+
+```julia
+df = DataFrame(Tables.table(sol'))
+rename!(df,["SI", "IR", "S", "I", "R"])
+df[!,:t] = 0:0.1:40.0;
+```
+
+## Plotting
+
+We can now plot the results.
+
+```julia
+@df df plot(:t,
+    [:S :I :R],
+    xlabel="Time",
+    ylabel="Number")
+```
+
+We can also plot out the total number of infections per day. One way to do this is to compute the cumulative number of infections and take the difference over the appropriate time window (here, 10 observations as `δt=0.1`).
+
+```julia
+C = cumsum(df[!,:SI])
+cases = vcat(C[1:9],C[10:end] .- C[1:(end-9)])
+df[!,"cases"] = cases
+```
+
+```julia
+@df df plot(:t,
+    [:cases],
+    xlabel="Time",
+    ylabel="Cases per day")
+```
+
+## Benchmarking
+
+```julia
+@benchmark solve(prob,solver=FunctionMap)
+```
+
+```{julia; echo=false; skip="notebook"}
+include(joinpath(@__DIR__,"tutorials","appendix.jl"))
+appendix()
+```
