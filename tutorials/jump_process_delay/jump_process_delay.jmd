@@ -87,8 +87,10 @@ u0 = [990,10,0]; # S,I,R
 
 ## Parameter values
 
+To keep the simulations broadly comparable, the fixed infectious period `τ` is `1/γ` from the other tutorials.
+
 ```julia
-p = [0.05,10.0,1/0.25]; # β,c,τ
+p = [0.05,10.0,4.0]; # β,c,τ
 ```
 
 ## Random number seed
