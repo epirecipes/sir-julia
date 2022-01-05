@@ -63,7 +63,16 @@ prob = DiscreteProblem(u0,tspan,p);
 prob_jump = JumpProblem(prob, Direct(), infection_jump);
 
 
-sol_jump = solve(prob_jump,SSAStepper(), callback = recovery_callback);
+integrator = init(prob_jump,SSAStepper(), callback = recovery_callback);
+for i in 1:10
+	add_tstop!(integrator, integrator.t + p[3])
+end
+
+
+solve!(integrator)
+
+
+sol_jump = integrator.sol;
 
 
 out_jump = sol_jump(t);

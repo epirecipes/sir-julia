@@ -6,7 +6,7 @@ Sean L. Wu (@slwu89), 2021-12-30
 We demonstrate how to formulate stochastic models with delay. Here, the infection process
 fires at the points of a Poisson process with the same rate as the standard continuous time stochastic
 SIR model. However the recovery process occurs after a deterministic delay, given by the
-points of the infection process plus $\tau$, the duration of the infectious period.
+points of the infection process plus $\tau$, the duration of the infectious period. This example makes use of the [integrator interface](https://diffeq.sciml.ai/stable/basics/integrator/) to add in the recovery times directly into the system via a callback, while infection events are scheduled according to a rate.
 
 ## Libraries
 
@@ -103,6 +103,8 @@ u0 = [990,10,0]; # S,I,R
 
 
 
+Later, we will need to set the recovery times of these infected individuals, but this cannot be done until we have fully defined the `JumpProblem`.
+
 ## Parameter values
 
 To keep the simulations broadly comparable, the fixed infectious period `τ` is `1/γ` from the other tutorials.
@@ -143,8 +145,30 @@ prob_jump = JumpProblem(prob, Direct(), infection_jump);
 ```
 
 
+
+
+The recovery events for the initial infected individuals aren't queued yet, so we add them here using the integrator interface (`init` and `solve!` rather than just passing a `Problem` to `solve`). For consistency with the DDE formulation, we assume that all initial infected individuals became infected at `t=0` and so they all recover at `t=τ=p[3]`.
+
 ```julia
-sol_jump = solve(prob_jump,SSAStepper(), callback = recovery_callback);
+integrator = init(prob_jump,SSAStepper(), callback = recovery_callback);
+for i in 1:10
+	add_tstop!(integrator, integrator.t + p[3])
+end
+```
+
+
+```julia
+solve!(integrator)
+```
+
+```
+false
+```
+
+
+
+```julia
+sol_jump = integrator.sol;
 ```
 
 
@@ -174,7 +198,7 @@ plot(
 )
 ```
 
-![](figures/jump_process_delay_13_1.png)
+![](figures/jump_process_delay_15_1.png)
 
 
 
