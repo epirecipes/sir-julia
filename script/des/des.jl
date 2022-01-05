@@ -162,6 +162,56 @@ data_des=out(des_model);
     ylab="Number")
 
 
+@resumable function live_delay(sim::Simulation, individual::SIRPerson, m::SIRModel)
+  while individual.status==:S
+      # Wait until next contact
+      @yield timeout(sim,rand(Distributions.Exponential(1/m.c)))
+      # Choose random alter
+      alter=individual
+      while alter==individual
+          N=length(m.allIndividuals)
+          index=rand(Distributions.DiscreteUniform(1,N))
+          alter=m.allIndividuals[index]
+      end
+      # If alter is infected
+      if alter.status==:I
+          infect = rand(Distributions.Uniform(0,1))
+          if infect < m.β
+              individual.status=:I
+              infection_update!(sim,m)
+          end
+      end
+  end
+  # The following is modified to capture a fixed infection delay
+  if individual.status==:I
+      # Wait until recovery, here fixed
+      @yield timeout(sim,1/m.γ)
+      individual.status=:R
+      recovery_update!(sim,m)
+  end
+end;
+
+
+function activate_delay(m::SIRModel)
+     [@process live_delay(m.sim,individual,m) for individual in m.allIndividuals]
+end;
+
+
+des_delay_model = MakeSIRModel(u0,p)
+activate_delay(des_delay_model)
+sir_run(des_delay_model,tmax)
+
+
+data_delay_des=out(des_delay_model);
+
+
+@df data_delay_des plot(:t,
+    [:S :I :R],
+    labels = ["S" "I" "R"],
+    xlab="Time",
+    ylab="Number")
+
+
 @benchmark begin
     des_model = MakeSIRModel(u0,p)
     activate(des_model)

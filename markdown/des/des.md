@@ -249,6 +249,74 @@ data_des=out(des_model);
 
 
 
+## A model with a fixed delay
+
+One of the advantages of a discrete event framework is that it is straightforward to include different distributions for the transitions between states. We can update the above example to include a fixed delay using the following code.
+
+
+```julia
+@resumable function live_delay(sim::Simulation, individual::SIRPerson, m::SIRModel)
+  while individual.status==:S
+      # Wait until next contact
+      @yield timeout(sim,rand(Distributions.Exponential(1/m.c)))
+      # Choose random alter
+      alter=individual
+      while alter==individual
+          N=length(m.allIndividuals)
+          index=rand(Distributions.DiscreteUniform(1,N))
+          alter=m.allIndividuals[index]
+      end
+      # If alter is infected
+      if alter.status==:I
+          infect = rand(Distributions.Uniform(0,1))
+          if infect < m.β
+              individual.status=:I
+              infection_update!(sim,m)
+          end
+      end
+  end
+  # The following is modified to capture a fixed infection delay
+  if individual.status==:I
+      # Wait until recovery, here fixed
+      @yield timeout(sim,1/m.γ)
+      individual.status=:R
+      recovery_update!(sim,m)
+  end
+end;
+```
+
+
+```julia
+function activate_delay(m::SIRModel)
+     [@process live_delay(m.sim,individual,m) for individual in m.allIndividuals]
+end;
+```
+
+
+```julia
+des_delay_model = MakeSIRModel(u0,p)
+activate_delay(des_delay_model)
+sir_run(des_delay_model,tmax)
+```
+
+
+```julia
+data_delay_des=out(des_delay_model);
+```
+
+
+```julia
+@df data_delay_des plot(:t,
+    [:S :I :R],
+    labels = ["S" "I" "R"],
+    xlab="Time",
+    ylab="Number")
+```
+
+![](figures/des_23_1.png)
+
+
+
 ## Benchmarking
 
 ```julia
@@ -260,17 +328,18 @@ end
 ```
 
 ```
-BenchmarkTools.Trial: 
-  memory estimate:  66.44 MiB
-  allocs estimate:  2261362
-  --------------
-  minimum time:     424.347 ms (2.38% GC)
-  median time:      487.078 ms (2.02% GC)
-  mean time:        482.077 ms (1.70% GC)
-  maximum time:     523.663 ms (2.14% GC)
-  --------------
-  samples:          11
-  evals/sample:     1
+BenchmarkTools.Trial: 11 samples with 1 evaluation.
+ Range (min … max):  399.768 ms … 501.322 ms  ┊ GC (min … max): 4.59% … 3.6
+7%
+ Time  (median):     470.421 ms               ┊ GC (median):    3.84%
+ Time  (mean ± σ):   459.710 ms ±  34.598 ms  ┊ GC (mean ± σ):  2.18% ± 2.1
+3%
+
+  █          █  █          █      █         █  █   █     █  █ █  
+  █▁▁▁▁▁▁▁▁▁▁█▁▁█▁▁▁▁▁▁▁▁▁▁█▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▁█▁▁█▁▁▁█▁▁▁▁▁█▁▁█▁█ ▁
+  400 ms           Histogram: frequency by time          501 ms <
+
+ Memory estimate: 71.04 MiB, allocs estimate: 2506315.
 ```
 
 

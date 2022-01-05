@@ -4,8 +4,8 @@ Sean L. Wu (@slwu89), 2021-12-30
 ## Introduction
 
 We demonstrate how to formulate stochastic models with delay. Here, the infection process
-fires at the points of a Poisson process with the same rate as the standard continuous time stochastic 
-SIR model. However the recovery process occurs after a deterministic delay, given by the 
+fires at the points of a Poisson process with the same rate as the standard continuous time stochastic
+SIR model. However the recovery process occurs after a deterministic delay, given by the
 points of the infection process plus $\tau$, the duration of the infectious period.
 
 ## Libraries
@@ -45,7 +45,7 @@ infection_jump = ConstantRateJump(infection_rate,infection!);
 ## Callbacks
 
 The recovery process is a callback that fires according to the queued
-times in `tstops`. When it fires we need to delete that element of `tstops` and 
+times in `tstops`. When it fires we need to delete that element of `tstops` and
 decrement `tstops_idx`.
 
 ```julia; results = "hidden"
@@ -147,4 +147,3 @@ plot(
 ```julia
 @benchmark solve(prob_jump,SSAStepper(), callback = recovery_callback);
 ```
-

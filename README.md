@@ -39,7 +39,7 @@ The above process can be represented in different kinds of ways:
 - [Stochastic Markov model](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov/markov.md)
 - [Stochastic Markov model using Soss.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_soss/markov_soss.md)
 - [Jump process (Gillespie) using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process/jump_process.md)
-    - - [Jump process with a large number of states - in this case, the number of people some infects - captured by an InfiniteArray](https://github.com/epirecipes/sir-julia/blob/master/markdown/infinite_arrays/infinite_arrays.md)
+    - [Jump process with a large number of states - in this case, the number of people some infects - captured by an InfiniteArray](https://github.com/epirecipes/sir-julia/blob/master/markdown/infinite_arrays/infinite_arrays.md)
 - [Jump process (Gillespie) using reaction networks from Catalyst.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_catalyst/jump_process_catalyst.md)
 - [Reaction network conversion to ODEs, SDEs and jump process using ModelingToolkit](https://github.com/epirecipes/sir-julia/blob/master/markdown/rn_mtk/rn_mtk.md)
 - [Petri net model to ODEs, SDEs, and jump process using Petri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_petri/pn_petri.md)
@@ -73,7 +73,10 @@ In addition to the above examples of simulation, there are also examples of infe
 
 ## Extensions
 
-- [Fixed (rather than exponential) distribution of infectious period using a delay differential equation and DelayDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/dde/dde.md)
+- Fixed (rather than exponential) distribution of infectious period:
+    - [Using a delay differential equation and DelayDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/dde/dde.md)
+    - [Using a fixed delay in a jump system, making use of the integrator](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_delay/jump_process_delay.md)
+    - [Using a fixed delay in a discrete event simulation using SimJulia (see end of file)](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
 - [An Erlang distribution for the infectious period using the method of stages is illustrated in this notebook using AlgebraicDynamics.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_algebraicdynamics/ode_algebraicdynamics.md)
 
 
