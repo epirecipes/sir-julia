@@ -1,6 +1,8 @@
 
 using DifferentialEquations
 using DelayDiffEq
+using DiffEqCallbacks
+using Tables
 using DataFrames
 using StatsPlots
 using BenchmarkTools
@@ -32,12 +34,21 @@ t = 0.0:δt:tmax;
 u0 = [990.0,10.0,0.0]; # S,I.R
 
 
+p = [0.05,10.0,4.0]; # β,c,τ
+
+
 function sir_history(p, t)
     [1000.0, 0.0, 0.0]
 end;
 
 
-p = [0.05,10.0,4.0]; # β,c,τ
+function affect_initial_recovery!(integrator)
+    integrator.u[2] -= u0[2]
+    integrator.u[3] += u0[2]
+
+    reset_aggregated_jumps!(integrator)
+end
+cb_initial_recovery = DiscreteCallback((u,t,integrator) -> t == p[3], affect_initial_recovery!);
 
 
 prob_dde = DDEProblem(DDEFunction(sir_dde!),
@@ -51,19 +62,56 @@ prob_dde = DDEProblem(DDEFunction(sir_dde!),
 alg = MethodOfSteps(Tsit5());
 
 
-sol_dde = solve(prob_dde,alg);
+sol_dde = solve(prob_dde,alg, callback=cb_initial_recovery);
 
 
-df_dde = DataFrame(sol_dde(t)')
+df_dde = DataFrame(Tables.table(sol_dde(t)'))
+rename!(df_dde,["S","I","R"])
 df_dde[!,:t] = t;
 
 
 @df df_dde plot(:t,
-    [:x1 :x2 :x3],
+    [:S :I :R],
     label=["S" "I" "R"],
     xlabel="Time",
     ylabel="Number")
 
 
-@benchmark solve(prob_dde, alg)
+function sir_ode_initial!(du,u,p,t)
+    (S,I,R) = u
+    (β,c,γ) = p
+    N = S+I+R
+    @inbounds begin
+        du[1] = -β*c*I/N*S
+        du[2] = β*c*I/N*S
+        du[3] = 0
+    end
+    nothing
+end;
+
+
+prob_ode = ODEProblem(sir_ode_initial!,u0,(0,p[3]),p);
+sol_ode = solve(prob_ode);
+u1 = sol_ode[end]
+u1[2] -= u0[2]
+u1[3] += u0[2]
+
+
+function ode_history(p, t, sol)
+    sol(t)
+end;
+sir_history1(p,t)=ode_history(p,t,sol_ode)
+
+
+prob_dde1 = DDEProblem(DDEFunction(sir_dde!),
+        u1,
+        sir_history1,
+        (p[3],tmax),
+        p;
+        constant_lags = [p[3]]);
+alg1 = MethodOfSteps(Tsit5());
+sol_dde1 = solve(prob_dde1,alg1);
+
+
+@benchmark solve(prob_dde, alg, callback=cb_initial_recovery)
 

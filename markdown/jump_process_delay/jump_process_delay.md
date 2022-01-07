@@ -127,8 +127,6 @@ u0 = [990,10,0]; # S,I,R
 
 
 
-Later, we will need to set the recovery times of these infected individuals, but this cannot be done until we have fully defined the `JumpProblem`.
-
 ## Parameter values
 
 To keep the simulations broadly comparable, the fixed infectious period `τ` is `1/γ` from the other tutorials.
@@ -169,28 +167,6 @@ prob_jump = JumpProblem(prob, Direct(), infection_jump);
 ```
 
 
-
-
-The recovery events for the initial infected individuals aren't queued yet, so we add them here using the integrator interface (`init` and `solve!` rather than just passing a `Problem` to `solve`). For consistency with the DDE formulation, we assume that all initial infected individuals became infected at `t=0` and so they all recover at `t=τ=p[3]`.
-
-```julia
-integrator = init(prob_jump,SSAStepper(), callback = recovery_callback);
-for i in 1:10
-	add_tstop!(integrator, integrator.t + p[3])
-end
-```
-
-
-```julia
-solve!(integrator)
-```
-
-```
-false
-```
-
-
-
 ```julia
 sol_jump = solve(prob_jump, SSAStepper(), callback = CallbackSet(cb_initial_recovery, recovery_callback), tstops = [p[3]]);
 ```
@@ -222,7 +198,72 @@ plot(
 )
 ```
 
-![](figures/jump_process_delay_15_1.png)
+![](figures/jump_process_delay_14_1.png)
+
+
+
+## Notes
+
+As an alternative to using a callback, we could manually add `tstops` to the integrator, as below.
+
+```julia
+integrator = init(prob_jump,SSAStepper(), callback = recovery_callback);
+for i in 1:10
+	add_tstop!(integrator, integrator.t + p[3])
+end
+solve!(integrator)
+sol_jump2 = integrator.sol
+```
+
+```
+retcode: Default
+Interpolation: Piecewise constant interpolation
+t: 1524-element Vector{Float64}:
+  0.0
+  0.1257438866275816
+  0.17996023375269485
+  0.21024105301749613
+  0.2577318665841408
+  0.2992737043509679
+  0.3787932286751834
+  0.5210240350413188
+  0.6070859730904811
+  0.6184008311350182
+  ⋮
+ 23.626384894467268
+ 23.669055333405325
+ 24.132071045440973
+ 24.93542233343815
+ 25.003740397701982
+ 25.6119510740526
+ 26.98861863907332
+ 27.626384894467268
+ 40.0
+u: 1524-element Vector{Vector{Int64}}:
+ [990, 10, 0]
+ [989, 11, 0]
+ [988, 12, 0]
+ [987, 13, 0]
+ [986, 14, 0]
+ [985, 15, 0]
+ [984, 16, 0]
+ [983, 17, 0]
+ [982, 18, 0]
+ [981, 19, 0]
+ ⋮
+ [234, 7, 759]
+ [234, 7, 759]
+ [234, 6, 760]
+ [234, 5, 761]
+ [234, 4, 762]
+ [234, 3, 763]
+ [234, 2, 764]
+ [234, 1, 765]
+ [234, 0, 766]
+```
+
+
+
 
 
 ## Benchmarking

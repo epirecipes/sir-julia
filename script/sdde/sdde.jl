@@ -65,6 +65,15 @@ end;
 cb = ContinuousCallback(condition,affect!);
 
 
+function affect_initial_recovery!(integrator)
+    integrator.u[2] -= u0[2]
+    integrator.u[3] += u0[2]
+
+    reset_aggregated_jumps!(integrator)
+end
+cb_initial_recovery = DiscreteCallback((u,t,integrator) -> t == p[3], affect_initial_recovery!)
+
+
 δt = 0.1
 tmax = 40.0
 tspan = (0.0,tmax)
@@ -88,7 +97,7 @@ Random.seed!(1234);
 prob_sdde = SDDEProblem(sir_dde!,sir_delayed_noise!,u0,sir_history,tspan,p;noise_rate_prototype=A);
 
 
-sol_sdde = solve(prob_sdde,LambaEM(),callback=cb);
+sol_sdde = solve(prob_sdde,LambaEM(),callback=CallbackSet(cb,cb_initial_recovery));
 
 
 df_sdde = DataFrame(Tables.table(sol_sdde(t)'))
@@ -103,5 +112,5 @@ df_sdde[!,:t] = t;
     ylabel="Number")
 
 
-# @benchmark solve(prob_sdde,LambaEM(),callback=cb)
+#@benchmark solve(prob_sdde,LambaEM(),callback=CallbackSet(cb,cb_initial_recovery))
 

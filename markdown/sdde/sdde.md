@@ -111,6 +111,30 @@ cb = ContinuousCallback(condition,affect!);
 
 
 
+Here is a callback that forces the initial infecteds to recover at a fixed time.
+
+```julia
+function affect_initial_recovery!(integrator)
+    integrator.u[2] -= u0[2]
+    integrator.u[3] += u0[2]
+
+    reset_aggregated_jumps!(integrator)
+end
+cb_initial_recovery = DiscreteCallback((u,t,integrator) -> t == p[3], affect_initial_recovery!)
+```
+
+```
+DiscreteCallback{Main.##WeaveSandBox#1004.var"#1#2", typeof(Main.##WeaveSan
+dBox#1004.affect_initial_recovery!), typeof(SciMLBase.INITIALIZE_DEFAULT), 
+typeof(SciMLBase.FINALIZE_DEFAULT)}(Main.##WeaveSandBox#1004.var"#1#2"(), M
+ain.##WeaveSandBox#1004.affect_initial_recovery!, SciMLBase.INITIALIZE_DEFA
+ULT, SciMLBase.FINALIZE_DEFAULT, Bool[1, 1])
+```
+
+
+
+
+
 ## Time domain
 
 ```julia
@@ -177,7 +201,7 @@ prob_sdde = SDDEProblem(sir_dde!,sir_delayed_noise!,u0,sir_history,tspan,p;noise
 The noise process used here is fairly general (non-diagonal and dependent on the states of the system), so the `LambaEM` solver is used.
 
 ```julia
-sol_sdde = solve(prob_sdde,LambaEM(),callback=cb);
+sol_sdde = solve(prob_sdde,LambaEM(),callback=CallbackSet(cb,cb_initial_recovery));
 ```
 
 
@@ -208,13 +232,17 @@ We can now plot the results.
     ylabel="Number")
 ```
 
-![](figures/sdde_16_1.png)
+![](figures/sdde_17_1.png)
 
 
+
+## Alternative approaches
+
+As in the DDE example, we could simulate a SDE while `t<τ` and use this to initialize an SDDE.
 
 ## Benchmarking
 
 ```julia
-# @benchmark solve(prob_sdde,LambaEM(),callback=cb)
+#@benchmark solve(prob_sdde,LambaEM(),callback=CallbackSet(cb,cb_initial_recovery))
 ```
 

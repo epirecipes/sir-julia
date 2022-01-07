@@ -74,7 +74,9 @@ prob = DiscreteProblem(u0,tspan,p);
 
 prob_jump = JumpProblem(prob, Direct(), infection_jump);
 
+
 sol_jump = solve(prob_jump, SSAStepper(), callback = CallbackSet(cb_initial_recovery, recovery_callback), tstops = [p[3]]);
+
 
 out_jump = sol_jump(t);
 
@@ -85,6 +87,14 @@ plot(
     xlabel="Time",
     ylabel="Number"
 )
+
+
+integrator = init(prob_jump,SSAStepper(), callback = recovery_callback);
+for i in 1:10
+	add_tstop!(integrator, integrator.t + p[3])
+end
+solve!(integrator)
+sol_jump2 = integrator.sol
 
 
 @benchmark solve(prob_jump, SSAStepper(), callback = CallbackSet(cb_initial_recovery, recovery_callback), tstops = [p[3]]);
