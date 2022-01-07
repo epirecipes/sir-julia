@@ -52,7 +52,12 @@ infection_jump = ConstantRateJump(infection_rate,infection!);
 
 The recovery process is a callback that fires according to the queued
 times in `tstops`. When it fires we need to delete that element of `tstops` and
-decrement `tstops_idx`.
+decrement `tstops_idx`. The check in the `affect!` function is because DifferentialEquations.jl
+also uses `tstops` to store the final time point in the time span of the solution, so
+we only allow a person to be moved from the I to R compartment if there are persons in I.
+
+We use `reset_aggregated_jumps!` because the callback modifies the rate of the
+infection jump process, so it must be recalculated after the callback fires.
 
 ```julia
 function recovery_condition(u,t,integrator)
@@ -60,15 +65,34 @@ function recovery_condition(u,t,integrator)
 end
 
 function recovery!(integrator)
-	integrator.u[2] -= 1
-	integrator.u[3] += 1
-
-	reset_aggregated_jumps!(integrator)
-    popfirst!(integrator.tstops)
-    integrator.tstops_idx -= 1
+    if integrator.u[2] > 0
+        integrator.u[2] -= 1
+        integrator.u[3] += 1
+    
+        reset_aggregated_jumps!(integrator)
+        popfirst!(integrator.tstops)
+        integrator.tstops_idx -= 1
+    end
 end
 
 recovery_callback = DiscreteCallback(recovery_condition, recovery!, save_positions = (false, false))
+```
+
+
+
+
+We must also code a callback that will fire when the initial 10 infectives recover. Because the infectious
+period is deterministic, we use a `DiscreteCallback` that fires at time $\tau$.
+
+```julia
+function affect_initial_recovery!(integrator)
+    integrator.u[2] -= u0[2]
+    integrator.u[3] += u0[2]
+
+    reset_aggregated_jumps!(integrator)
+end
+
+cb_initial_recovery = DiscreteCallback((u,t,integrator) -> t == p[3], affect_initial_recovery!)
 ```
 
 
@@ -168,7 +192,7 @@ false
 
 
 ```julia
-sol_jump = integrator.sol;
+sol_jump = solve(prob_jump, SSAStepper(), callback = CallbackSet(cb_initial_recovery, recovery_callback), tstops = [p[3]]);
 ```
 
 
@@ -201,10 +225,9 @@ plot(
 ![](figures/jump_process_delay_15_1.png)
 
 
-
 ## Benchmarking
 
 ```julia
-@benchmark solve(prob_jump,SSAStepper(), callback = recovery_callback);
+@benchmark solve(prob_jump, SSAStepper(), callback = CallbackSet(cb_initial_recovery, recovery_callback), tstops = [p[3]]);
 ```
 

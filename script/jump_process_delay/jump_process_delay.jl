@@ -29,15 +29,27 @@ function recovery_condition(u,t,integrator)
 end
 
 function recovery!(integrator)
-	integrator.u[2] -= 1
-	integrator.u[3] += 1
-
-	reset_aggregated_jumps!(integrator)
-    popfirst!(integrator.tstops)
-    integrator.tstops_idx -= 1
+    if integrator.u[2] > 0
+        integrator.u[2] -= 1
+        integrator.u[3] += 1
+    
+        reset_aggregated_jumps!(integrator)
+        popfirst!(integrator.tstops)
+        integrator.tstops_idx -= 1
+    end
 end
 
 recovery_callback = DiscreteCallback(recovery_condition, recovery!, save_positions = (false, false))
+
+
+function affect_initial_recovery!(integrator)
+    integrator.u[2] -= u0[2]
+    integrator.u[3] += u0[2]
+
+    reset_aggregated_jumps!(integrator)
+end
+
+cb_initial_recovery = DiscreteCallback((u,t,integrator) -> t == p[3], affect_initial_recovery!)
 
 
 tmax = 40.0
@@ -62,18 +74,7 @@ prob = DiscreteProblem(u0,tspan,p);
 
 prob_jump = JumpProblem(prob, Direct(), infection_jump);
 
-
-integrator = init(prob_jump,SSAStepper(), callback = recovery_callback);
-for i in 1:10
-	add_tstop!(integrator, integrator.t + p[3])
-end
-
-
-solve!(integrator)
-
-
-sol_jump = integrator.sol;
-
+sol_jump = solve(prob_jump, SSAStepper(), callback = CallbackSet(cb_initial_recovery, recovery_callback), tstops = [p[3]]);
 
 out_jump = sol_jump(t);
 
@@ -86,5 +87,5 @@ plot(
 )
 
 
-@benchmark solve(prob_jump,SSAStepper(), callback = recovery_callback);
+@benchmark solve(prob_jump, SSAStepper(), callback = CallbackSet(cb_initial_recovery, recovery_callback), tstops = [p[3]]);
 
