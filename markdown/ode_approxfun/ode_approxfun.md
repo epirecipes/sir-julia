@@ -1,0 +1,109 @@
+# Ordinary differential equation model
+Simon Frost (@sdwfrost), 2022-01-07
+
+## Introduction
+
+The classical ODE version of the SIR model is:
+
+- Deterministic
+- Continuous in time
+- Continuous in state
+
+This uses the `ApproxFun.jl` library to solve the ODE. We consider a reduced system of only `S` and `I` for computational expediency.
+
+## Libraries
+
+```julia
+using ApproxFun
+using Plots
+using BenchmarkTools
+```
+
+
+
+
+## Transitions
+
+The following function returns the initial conditions and the rates, in a format similar to a differential-algebraic equation model, where each entry should equate to zero.
+
+```julia
+function sir_eqn(S,I,u0,p)
+  (β,γ) = p
+  (S0,I0) = u0
+   return [S(0)-S0,
+           I(0)-I0,
+           S' + β*S*I,
+           I' - β*S*I + γ*I]
+end;
+```
+
+
+
+
+## Time domain
+
+We set the timespan for simulations using a `Fun`.
+
+```julia
+tmax = 40.0
+t=Fun(identity, 0..tmax);
+```
+
+
+
+
+## Initial conditions
+
+```julia
+u0 = [990.0,10.0]; # S,I
+```
+
+
+
+
+## Parameter values
+
+```julia
+p = [0.0005,0.25]; # β,γ
+```
+
+
+
+
+## Running the model
+
+We use a Newton solver to simulate the model, passing the transitions, the initial conditions, and setting `maxiterations` higher than the default in order to get higher accuracy.
+
+```julia
+S,I = newton((S,I)->sir_eqn(S,I,u0,p), u0 .* one(t); maxiterations=50);
+```
+
+
+
+
+## Plotting
+
+We can now plot the results.
+
+```julia
+plot(S,label="S",xlabel="Time",ylabel="Number")
+plot!(I,label="I")
+```
+
+![](figures/ode_approxfun_7_1.png)
+
+
+
+## Benchmarking
+
+```julia
+@benchmark newton((S,I)->sir_eqn(S,I,u0,p), u0 .* one(t); maxiterations=50)
+```
+
+```
+BenchmarkTools.Trial: 1 sample with 1 evaluation.
+ Single result which took 14.641 s (2.02% GC) to evaluate,
+ with a memory estimate of 2.89 GiB, over 99672961 allocations.
+```
+
+
