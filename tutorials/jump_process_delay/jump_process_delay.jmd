@@ -6,7 +6,7 @@ Sean L. Wu (@slwu89), 2021-12-30
 We demonstrate how to formulate stochastic models with delay. Here, the infection process
 fires at the points of a Poisson process with the same rate as the standard continuous time stochastic
 SIR model. However the recovery process occurs after a deterministic delay, given by the
-points of the infection process plus $\tau$, the duration of the infectious period.
+points of the infection process plus $\tau$, the duration of the infectious period. This example makes use of the [integrator interface](https://diffeq.sciml.ai/stable/basics/integrator/) to add in the recovery times directly into the system via a callback, while infection events are scheduled according to a rate.
 
 ## Libraries
 
@@ -161,6 +161,19 @@ plot(
     xlabel="Time",
     ylabel="Number"
 )
+```
+
+## Notes
+
+As an alternative to using a callback, we could manually add `tstops` to the integrator, as below.
+
+```julia
+integrator = init(prob_jump,SSAStepper(), callback = recovery_callback);
+for i in 1:10
+	add_tstop!(integrator, integrator.t + p[3])
+end
+solve!(integrator)
+sol_jump2 = integrator.sol
 ```
 
 ## Benchmarking

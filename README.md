@@ -60,6 +60,7 @@ We usually do not observe the trajectory of susceptible, infected, and recovered
 
 - [Changing parameter values at fixed times e.g. lockdown in an SIR model](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_lockdown/ode_lockdown.md)
 - [Preventing negative populations in stochastic differential equations](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_stochasticdiffeq/sde_stochasticdiffeq.md)
+- [Scheduling recovery times to model a fixed infectious period](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_delay/jump_process_delay.md)
 
 ## Inference
 
@@ -76,6 +77,7 @@ In addition to the above examples of simulation, there are also examples of infe
 - Fixed (rather than exponential) distribution of infectious period:
     - [Using a delay differential equation and DelayDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/dde/dde.md)
     - [Using a fixed delay in a jump system, making use of the integrator](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_delay/jump_process_delay.md)
+    - [Using a stochastic delay differential equation in StochasticDelayDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sdde/sdde.md)
     - [Using a fixed delay in a discrete event simulation using SimJulia (see end of file)](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
 - [An Erlang distribution for the infectious period using the method of stages is illustrated in this notebook using AlgebraicDynamics.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_algebraicdynamics/ode_algebraicdynamics.md)
 

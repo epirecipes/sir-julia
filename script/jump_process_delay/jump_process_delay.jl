@@ -74,9 +74,7 @@ prob = DiscreteProblem(u0,tspan,p);
 
 prob_jump = JumpProblem(prob, Direct(), infection_jump);
 
-
 sol_jump = solve(prob_jump, SSAStepper(), callback = CallbackSet(cb_initial_recovery, recovery_callback), tstops = [p[3]]);
-
 
 out_jump = sol_jump(t);
 
