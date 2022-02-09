@@ -28,6 +28,7 @@ The above process can be represented in different kinds of ways:
 - [Ordinary differential equation using Modia.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_modia/ode_modia.md)
 - [Ordinary differential equation using ApproxFun.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_approxfun/ode_approxfun.md)
 - [Ordinary differential equation with composition using AlgebraicDynamics.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_algebraicdynamics/ode_algebraicdynamics.md)
+- [Volterra integral equation using the Adomian decomposition method](https://github.com/epirecipes/sir-julia/blob/master/markdown/adomian/adomian.md)
 - [Stochastic differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde/sde.md)
 - [Stochastic differential equation using StochasticDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_stochasticdiffeq/sde_stochasticdiffeq.md)
 - [Stochastic differential equation using Bridge.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_bridge/sde_bridge.md)
