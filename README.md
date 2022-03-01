@@ -88,6 +88,7 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 ### Sensitivity to parameters
 
 - [Global sensitivity analysis of an ODE model using Latin hypercube sampling](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_global_sensitivity/ode_global_sensitivity.md)
+- [Uncertainty propagation of an ODE model using MonteCarloMeasurements.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_montecarlomeasurements/ode_montecarlomeasurements.md)
 
 ## Extensions
 
