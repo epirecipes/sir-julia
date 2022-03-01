@@ -73,6 +73,14 @@ In addition to the above examples of simulation, there are also examples of infe
 - [Bayesian estimates of parameters of the ODE system using Turing.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_turing/ode_turing.md)
 - [Bayesian estimates of parameters of the ODE system using NestedSamplers.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_nestedsampler/ode_nestedsampler.md)
 
+## Uncertainty
+
+Incorporating uncertainty in its many forms is important for using models to make decisions.
+
+### Probabilistic integration
+
+- [Probabilistic integration using `ProbNumDiffEq.jl`](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_probint_probnumdiffeq/ode_probint_probnumdiffeq.md)
+- [Probabilistic integration using `DiffEqUncertainty.jl`](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_probint_diffequncertainty/ode_probint_diffequncertainty.md)
 
 ## Extensions
 
