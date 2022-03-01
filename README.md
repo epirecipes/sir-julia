@@ -79,8 +79,15 @@ Incorporating uncertainty in its many forms is important for using models to mak
 
 ### Probabilistic integration
 
-- [Probabilistic integration using `ProbNumDiffEq.jl`](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_probint_probnumdiffeq/ode_probint_probnumdiffeq.md)
-- [Probabilistic integration using `DiffEqUncertainty.jl`](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_probint_diffequncertainty/ode_probint_diffequncertainty.md)
+When solving continuous-time models like ODEs, the discretization can lead to numerical errors. Probabilistic integration treats this error as a statistical problem to capture the uncertainty in the model outputs generated using the solver.
+
+- [Probabilistic integration of an ODE model using Bayesian filtering and `ProbNumDiffEq.jl`](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_probint_probnumdiffeq/ode_probint_probnumdiffeq.md)
+- [Probabilistic integration of an ODE model by converting to a SDE using `DiffEqUncertainty.jl` (can also handle SDEs and DDEs)](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_probint_diffequncertainty/ode_probint_diffequncertainty.md)
+
+
+### Sensitivity to parameters
+
+- [Global sensitivity analysis of an ODE model using Latin hypercube sampling](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_global_sensitivity/ode_global_sensitivity.md)
 
 ## Extensions
 
