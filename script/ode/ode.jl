@@ -1,6 +1,7 @@
 
 using DifferentialEquations
 using SimpleDiffEq
+using Tables
 using DataFrames
 using StatsPlots
 using BenchmarkTools
@@ -22,31 +23,31 @@ end;
 δt = 0.1
 tmax = 40.0
 tspan = (0.0,tmax)
-t = 0.0:δt:tmax;
 
 
-u0 = [990.0,10.0,0.0]; # S,I.R
+u0 = [990.0,10.0,0.0]; # S,I,R
 
 
 p = [0.05,10.0,0.25]; # β,c,γ
 
 
-prob_ode = ODEProblem(sir_ode!,u0,tspan,p);
+prob_ode = ODEProblem(sir_ode!, u0, tspan, p);
 
 
-sol_ode = solve(prob_ode);
+sol_ode = solve(prob_ode, dt = δt);
 
 
-df_ode = DataFrame(sol_ode(t)')
-df_ode[!,:t] = t;
+df_ode = DataFrame(Tables.table(sol_ode'))
+rename!(df_ode,["S","I","R"])
+df_ode[!,:t] = sol_ode.t;
 
 
 @df df_ode plot(:t,
-    [:x1 :x2 :x3],
+    [:S :I :R],
     label=["S" "I" "R"],
     xlabel="Time",
     ylabel="Number")
 
 
-@benchmark solve(prob_ode)
+@benchmark solve(prob_ode, dt = δt);
 

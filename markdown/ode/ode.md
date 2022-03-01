@@ -14,6 +14,7 @@ The classical ODE version of the SIR model is:
 ```julia
 using DifferentialEquations
 using SimpleDiffEq
+using Tables
 using DataFrames
 using StatsPlots
 using BenchmarkTools
@@ -45,14 +46,18 @@ end;
 
 ## Time domain
 
-We set the timespan for simulations, `tspan`, initial conditions, `u0`, and parameter values, `p` (which are unpacked above as `[β,γ]`).
+We set the timespan for simulations, `tspan`, initial conditions, `u0`, and parameter values, `p` (which are unpacked above as `[β,c,γ]`).
 
 ```julia
 δt = 0.1
 tmax = 40.0
 tspan = (0.0,tmax)
-t = 0.0:δt:tmax;
 ```
+
+```
+(0.0, 40.0)
+```
+
 
 
 
@@ -60,7 +65,7 @@ t = 0.0:δt:tmax;
 ## Initial conditions
 
 ```julia
-u0 = [990.0,10.0,0.0]; # S,I.R
+u0 = [990.0,10.0,0.0]; # S,I,R
 ```
 
 
@@ -78,12 +83,12 @@ p = [0.05,10.0,0.25]; # β,c,γ
 ## Running the model
 
 ```julia
-prob_ode = ODEProblem(sir_ode!,u0,tspan,p);
+prob_ode = ODEProblem(sir_ode!, u0, tspan, p);
 ```
 
 
 ```julia
-sol_ode = solve(prob_ode);
+sol_ode = solve(prob_ode, dt = δt);
 ```
 
 
@@ -94,8 +99,9 @@ sol_ode = solve(prob_ode);
 We can convert the output to a dataframe for convenience.
 
 ```julia
-df_ode = DataFrame(sol_ode(t)')
-df_ode[!,:t] = t;
+df_ode = DataFrame(Tables.table(sol_ode'))
+rename!(df_ode,["S","I","R"])
+df_ode[!,:t] = sol_ode.t;
 ```
 
 
@@ -107,7 +113,7 @@ We can now plot the results.
 
 ```julia
 @df df_ode plot(:t,
-    [:x1 :x2 :x3],
+    [:S :I :R],
     label=["S" "I" "R"],
     xlabel="Time",
     ylabel="Number")
@@ -120,21 +126,6 @@ We can now plot the results.
 ## Benchmarking
 
 ```julia
-@benchmark solve(prob_ode)
+@benchmark solve(prob_ode, dt = δt);
 ```
-
-```
-BenchmarkTools.Trial: 
-  memory estimate:  30.94 KiB
-  allocs estimate:  303
-  --------------
-  minimum time:     23.174 μs (0.00% GC)
-  median time:      26.267 μs (0.00% GC)
-  mean time:        31.533 μs (7.52% GC)
-  maximum time:     8.013 ms (98.62% GC)
-  --------------
-  samples:          10000
-  evals/sample:     1
-```
-
 
