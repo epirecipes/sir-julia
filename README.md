@@ -73,6 +73,12 @@ In addition to the above examples of simulation, there are also examples of infe
 - [Bayesian estimates of parameters of the ODE system using Turing.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_turing/ode_turing.md)
 - [Bayesian estimates of parameters of the ODE system using NestedSamplers.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_nestedsampler/ode_nestedsampler.md)
 
+## Identifiability
+
+In conducting inference, it is important to know the extent to which parameters are identifiable from the available data.
+
+- [Identifiability analysis of an ODE model using StructuralIdentifiability.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_identifiability/ode_identifiability.md)
+
 ## Uncertainty
 
 Incorporating uncertainty in its many forms is important for using models to make decisions.
@@ -88,6 +94,7 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 ### Sensitivity to parameters
 
 - [Global sensitivity analysis of an ODE model using Latin hypercube sampling](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_global_sensitivity/ode_global_sensitivity.md)
+- [Global sensitivity analysis of an ODE model using multiple algorithms from GlobalSensitivity.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_global_sensitivity2/ode_global_sensitivity2.md)
 - [Uncertainty propagation of an ODE model using MonteCarloMeasurements.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_montecarlomeasurements/ode_montecarlomeasurements.md)
 
 ## Extensions

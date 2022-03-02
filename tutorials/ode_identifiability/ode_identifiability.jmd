@@ -1,0 +1,128 @@
+# Identifiability analysis applied to ordinary differential equation models
+Simon Frost (@sdwfrost), 2022-03-02
+
+## Introduction
+
+This tutorial uses tools from the `StructuralIdentifiability.jl` package to determine identifiability of model parameters in a series of SIR models of increasing (albeit still limited) complexity.
+
+## Libraries
+
+```julia
+using StructuralIdentifiability
+using ModelingToolkit
+```
+
+## Parameter values
+
+Parameters and variables are the same as that in the [ModelingToolkit.jl tutorial](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mtk/ode_mtk.md), with the exception that `StructuralIdentifiability.jl` does not take unicode characters (`β`,`γ`), so these are replaced by `b` and `g` respectively.
+
+```julia
+@parameters b c g
+@variables t S(t) I(t) R(t) N(t)
+N = S + I + R
+D = Differential(t);
+```
+
+## Transitions
+
+### Model 1
+
+We first consider a simple system with just two parameters and ['mass action' transmission](https://www.sciencedirect.com/science/article/pii/S0169534701021449), `βSI`.
+
+```julia
+sir_eqs1 = [
+  D(S) ~ -b*S*I,
+  D(I) ~ b*S*I-g*I,
+  D(R) ~ g*I
+]
+sir_ode1 = ODESystem(sir_eqs1, t, name=:SIR1)
+```
+
+### Model 2
+
+Often, we consider models that are overparameterized, as these parameters may have easier biological interpretations, e.g. `β` as the *probability* of transmission and `c` as the contact rate, rather than a single 'infectivity' parameter.
+
+```julia
+sir_eqs2 = [
+  D(S) ~ -b*c*S*I,
+  D(I) ~ b*c*S*I-g*I,
+  D(R) ~ g*I
+]
+sir_ode2 = ODESystem(sir_eqs2, t, name=:SIR2)
+```
+
+### Model 3
+
+In addition, the model below considers [frequency dependent transmission](https://www.sciencedirect.com/science/article/pii/S0169534701021449), `βSI/N`.
+
+```julia
+sir_eqs3 = [
+  D(S) ~ -b*c*S*I/N,
+  D(I) ~ b*c*S*I/N-g*I,
+  D(R) ~ g*I
+]
+sir_ode3 = ODESystem(sir_eqs3, t, name=:SIR3)
+```
+
+## Assessing identifiability
+
+### Model 1
+
+In order to assess identifiability, we need to specify what the measured quantities are. Let us assume that we only have access to the infection rate and define a single observable, `y`.
+
+```julia
+@variables y(t)
+measured_quantities1 = [y ~ b*S*I];
+```
+
+We can now specify parameters (or combination of parameters) to check for identifiability.
+
+```julia
+funcs_to_check1 = [b,g,b/g]
+ident1 = assess_identifiability(sir_ode1; measured_quantities= measured_quantities1, funcs_to_check = funcs_to_check1)
+```
+
+For this model, all parameters are identifiable (at least in theory).
+
+### Model 2
+
+For the second model, it is clear that `b` and `c` are nonidentifiable from inspecting the equations, and this is also shown in the output of `assess_identifiability`.
+
+```julia
+funcs_to_check2 = [b,c,g,b*c]
+measured_quantities2 = [y ~ b*c*S*I]
+ident2 = assess_identifiability(sir_ode2; measured_quantities= measured_quantities2, funcs_to_check = funcs_to_check2)
+```
+
+### Model 3
+
+Running this model, which has frequency dependent transmission, through `assess_identifiability` shows that `b*c` is non-identifiable.
+
+```julia
+funcs_to_check3 = [b,c,g,b*c]
+measured_quantities3 = [y ~ b*c*S*I/N]
+ident3 = assess_identifiability(sir_ode3; measured_quantities= measured_quantities3, funcs_to_check = funcs_to_check3)
+```
+
+In this case, this can be fixed by adding in another observable, the total population size, `N`.
+
+```julia
+@variables n(t)
+measured_quantities3a = [y ~ b*c*S*I/N, n ~ N]
+ident3a = assess_identifiability(sir_ode3; measured_quantities= measured_quantities3a, funcs_to_check = funcs_to_check3)
+```
+
+## Discussion
+
+While analysis of identifiability is useful, especially when considering how to infer parameters from data, in practice, model parameters may not be identifiable even if the above analysis suggests that they are. For example, when an epidemic starts, there is exponential growth, and the parameters `b` and `g` are not identifiable - we need to have the peak and the decline in infected individuals in order to separate these two variables. This can be demonstrated if we remove the equation for `D(S)` (effectively treating it as a constant).
+
+```julia
+exp_eqs = [
+  D(I) ~ b*S*I-g*I,
+  D(R) ~ g*I
+]
+exp_ode = ODESystem(exp_eqs, t, name=:EXP)
+assess_identifiability(exp_ode;
+                       measured_quantities= [y ~ b*S*I],
+                       funcs_to_check = [b,g])
+```
