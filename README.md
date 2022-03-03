@@ -100,7 +100,7 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 
 ### Local sensitivity
 
-- [Local sensitivity of an ODE model using Zygote.jl and DiffEqSensitivity.jl]((https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_local_sensitivity/ode_local_sensitivity.md))
+- [Local sensitivity of an ODE model using Zygote.jl and DiffEqSensitivity.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_local_sensitivity/ode_local_sensitivity.md)
 
 ## Extensions
 
