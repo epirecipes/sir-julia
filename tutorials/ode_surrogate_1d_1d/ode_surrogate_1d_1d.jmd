@@ -173,7 +173,7 @@ fs_test_pred = fs_surrogate.(β_test);
 
 ```julia
 l = @layout [a b]
-pl1 = plot(β_grid,final_size.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Final size")
+pl1 = plot(β_grid,final_size.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Final size",legend=:right)
 scatter!(pl1, β_test,fs_test_pred,color=:blue,label="Surrogate")
 pl2 = scatter(fs_test,fs_test_pred,color=:blue,legend=false,xlabel="Final size",ylabel="Surrogate final size")
 Plots.abline!(pl2,1.0,0.0)
@@ -211,7 +211,7 @@ end
 The peak infected is more difficult to emulate than the final size, due to the discontinuity; when the basic reproductive number, R₀,  is less than 1, the number of infected individuals decreases, and peak infected is I(0) regardless of β.
 
 ```julia
-plot(β_grid, peak_infected,xlabel="β",ylabel="Peak infected")
+plot(β_grid, peak_infected,xlabel="β",ylabel="Peak infected",legend=false)
 ```
 
 The workflow we used to generate a surrogate for final size is repeated here.
@@ -233,7 +233,7 @@ pk_test_pred = pk_surrogate.(β_test);
 
 ```julia
 l = @layout [a b]
-pl1 = plot(β_grid,peak_infected.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Peak infected")
+pl1 = plot(β_grid,peak_infected.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Peak infected",legend=:right)
 scatter!(pl1, β_test,pk_test_pred,color=:blue,label="Surrogate")
 pl2 = scatter(pk_test,pk_test_pred,color=:blue,legend=false,xlabel="Peak infected",ylabel="Surrogate peak infected")
 Plots.abline!(pl2,1.0,0.0)
@@ -267,7 +267,7 @@ end
 ```
 
 ```julia
-plot(β_grid,peak_time,xlabel="β",ylabel="Peak time")
+plot(β_grid,peak_time,xlabel="β",ylabel="Peak time",legend=false)
 ```
 
 ```julia
@@ -285,9 +285,11 @@ pt_test = peak_time.(β_test)
 pt_test_pred = pt_surrogate.(β_test);
 ```
 
+Compared to the other quantities of interest, peak time is not as easily captured by the same (albeit simple) surrogate approach, with deviations at either end of the range.
+
 ```julia
 l = @layout [a b]
-pl1 = plot(β_grid,peak_time.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Peak time")
+pl1 = plot(β_grid,peak_time.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Peak time",legend=:right)
 scatter!(pl1, β_test,pt_test_pred,color=:blue,label="Surrogate")
 pl2 = scatter(pt_test,pt_test_pred,color=:blue,legend=false,xlabel="Peak time",ylabel="Surrogate peak time")
 Plots.abline!(pl2,1.0,0.0)
@@ -304,4 +306,4 @@ plot(pl1,pl2,layout=l)
 
 ## Discussion
 
-With a fairly small number of actual model simulations, the above code generates surrogate models for three separate outputs that work well across the range of parameter inputs and are several orders of magnitude faster than the original model.
+With a fairly small number of actual model simulations, the above code generates surrogate models for three separate outputs that work well across the range of parameter inputs and are several orders of magnitude faster than the original model. More complex functional responses e.g. the time to the peak may be harder to capture, and approaches that search new parameter candidates in the local vicinity of existing parameter values may be suboptimal in this case.

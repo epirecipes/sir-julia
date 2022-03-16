@@ -104,7 +104,7 @@ fs_test_pred = fs_surrogate.(β_test);
 
 
 l = @layout [a b]
-pl1 = plot(β_grid,final_size.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Final size")
+pl1 = plot(β_grid,final_size.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Final size",legend=:right)
 scatter!(pl1, β_test,fs_test_pred,color=:blue,label="Surrogate")
 pl2 = scatter(fs_test,fs_test_pred,color=:blue,legend=false,xlabel="Final size",ylabel="Surrogate final size")
 Plots.abline!(pl2,1.0,0.0)
@@ -130,7 +130,7 @@ peak_infected = function(β)
 end
 
 
-plot(β_grid, peak_infected,xlabel="β",ylabel="Peak infected")
+plot(β_grid, peak_infected,xlabel="β",ylabel="Peak infected",legend=false)
 
 
 pk = peak_infected.(β)
@@ -148,7 +148,7 @@ pk_test_pred = pk_surrogate.(β_test);
 
 
 l = @layout [a b]
-pl1 = plot(β_grid,peak_infected.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Peak infected")
+pl1 = plot(β_grid,peak_infected.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Peak infected",legend=:right)
 scatter!(pl1, β_test,pk_test_pred,color=:blue,label="Surrogate")
 pl2 = scatter(pk_test,pk_test_pred,color=:blue,legend=false,xlabel="Peak infected",ylabel="Surrogate peak infected")
 Plots.abline!(pl2,1.0,0.0)
@@ -174,7 +174,7 @@ peak_time = function(β)
 end
 
 
-plot(β_grid,peak_time,xlabel="β",ylabel="Peak time")
+plot(β_grid,peak_time,xlabel="β",ylabel="Peak time",legend=false)
 
 
 pt = peak_time.(β)
@@ -192,7 +192,7 @@ pt_test_pred = pt_surrogate.(β_test);
 
 
 l = @layout [a b]
-pl1 = plot(β_grid,peak_time.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Peak time")
+pl1 = plot(β_grid,peak_time.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Peak time",legend=:right)
 scatter!(pl1, β_test,pt_test_pred,color=:blue,label="Surrogate")
 pl2 = scatter(pt_test,pt_test_pred,color=:blue,legend=false,xlabel="Peak time",ylabel="Surrogate peak time")
 Plots.abline!(pl2,1.0,0.0)

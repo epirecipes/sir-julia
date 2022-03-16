@@ -234,7 +234,7 @@ fs_test_pred = fs_surrogate.(β_test);
 
 ```julia
 l = @layout [a b]
-pl1 = plot(β_grid,final_size.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Final size")
+pl1 = plot(β_grid,final_size.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Final size",legend=:right)
 scatter!(pl1, β_test,fs_test_pred,color=:blue,label="Surrogate")
 pl2 = scatter(fs_test,fs_test_pred,color=:blue,legend=false,xlabel="Final size",ylabel="Surrogate final size")
 Plots.abline!(pl2,1.0,0.0)
@@ -253,15 +253,15 @@ Although this is a toy example, where the model runs quickly, the emulator is or
 
 ```
 BenchmarkTools.Trial: 10000 samples with 1 evaluation.
- Range (min … max):  273.173 μs … 71.132 ms  ┊ GC (min … max): 0.00% … 99.2
-9%
- Time  (median):     380.820 μs              ┊ GC (median):    0.00%
- Time  (mean ± σ):   465.401 μs ±  1.216 ms  ┊ GC (mean ± σ):  4.47% ±  1.7
+ Range (min … max):  270.104 μs … 72.356 ms  ┊ GC (min … max): 0.00% … 99.4
+6%
+ Time  (median):     342.034 μs              ┊ GC (median):    0.00%
+ Time  (mean ± σ):   378.619 μs ±  1.232 ms  ┊ GC (mean ± σ):  5.62% ±  1.7
 2%
 
-  ▂ ▂█▆▂▁▁                                                      
-  █▆███████▇▆▅▅▄▄▄▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁ ▂
-  273 μs          Histogram: frequency by time         1.18 ms <
+   ▅       ▃█▆▄                                                 
+  ██▆▅▃▄▄▄▄█████▇█▇▇▇▇▆▆▅▆▅▅▅▄▄▅▄▄▄▃▃▃▃▃▃▃▂▃▃▂▂▂▂▂▂▂▂▁▁▂▂▂▁▁▁▁ ▃
+  270 μs          Histogram: frequency by time          546 μs <
 
  Memory estimate: 125.98 KiB, allocs estimate: 1357.
 ```
@@ -274,15 +274,15 @@ BenchmarkTools.Trial: 10000 samples with 1 evaluation.
 
 ```
 BenchmarkTools.Trial: 10000 samples with 9 evaluations.
- Range (min … max):  2.777 μs …   7.800 ms  ┊ GC (min … max):  0.00% … 99.9
+ Range (min … max):  2.841 μs …   7.541 ms  ┊ GC (min … max):  0.00% … 99.9
 0%
- Time  (median):     4.821 μs               ┊ GC (median):     0.00%
- Time  (mean ± σ):   7.449 μs ± 109.684 μs  ┊ GC (mean ± σ):  20.81% ±  1.4
+ Time  (median):     4.121 μs               ┊ GC (median):     0.00%
+ Time  (mean ± σ):   6.324 μs ± 103.978 μs  ┊ GC (mean ± σ):  23.23% ±  1.4
 1%
 
-   ▆█▄▁                                                        
-  █████▇▆▅▅▅▇▇▆▅▅▄▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▁▁▂▁▁▁▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁ ▂
-  2.78 μs         Histogram: frequency by time        18.2 μs <
+   ▁█▆▂                                                        
+  ▅█████▇▆▅▅▅▄▃▃▃▂▂▂▂▃▄▆▆▅▄▃▃▄▄▄▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▂▁▁▁▁▁▁▁▁▁ ▂
+  2.84 μs         Histogram: frequency by time        10.3 μs <
 
  Memory estimate: 8.92 KiB, allocs estimate: 96.
 ```
@@ -320,7 +320,7 @@ end
 The peak infected is more difficult to emulate than the final size, due to the discontinuity; when the basic reproductive number, R₀,  is less than 1, the number of infected individuals decreases, and peak infected is I(0) regardless of β.
 
 ```julia
-plot(β_grid, peak_infected,xlabel="β",ylabel="Peak infected")
+plot(β_grid, peak_infected,xlabel="β",ylabel="Peak infected",legend=false)
 ```
 
 ![](figures/ode_surrogate_1d_1d_23_1.png)
@@ -352,7 +352,7 @@ Exiting, scale too big
 
 ```julia
 l = @layout [a b]
-pl1 = plot(β_grid,peak_infected.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Peak infected")
+pl1 = plot(β_grid,peak_infected.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Peak infected",legend=:right)
 scatter!(pl1, β_test,pk_test_pred,color=:blue,label="Surrogate")
 pl2 = scatter(pk_test,pk_test_pred,color=:blue,legend=false,xlabel="Peak infected",ylabel="Surrogate peak infected")
 Plots.abline!(pl2,1.0,0.0)
@@ -366,16 +366,16 @@ plot(pl1,pl2,layout=l)
 ```
 
 ```
-BenchmarkTools.Trial: 9925 samples with 1 evaluation.
- Range (min … max):  275.047 μs … 85.287 ms  ┊ GC (min … max): 0.00% … 99.3
-0%
- Time  (median):     417.096 μs              ┊ GC (median):    0.00%
- Time  (mean ± σ):   495.418 μs ±  1.412 ms  ┊ GC (mean ± σ):  4.89% ±  1.7
+BenchmarkTools.Trial: 10000 samples with 1 evaluation.
+ Range (min … max):  271.725 μs … 72.015 ms  ┊ GC (min … max): 0.00% … 99.3
+8%
+ Time  (median):     346.188 μs              ┊ GC (median):    0.00%
+ Time  (mean ± σ):   386.950 μs ±  1.219 ms  ┊ GC (mean ± σ):  5.44% ±  1.7
 2%
 
-    ▁▇██▆▇▇▆▃▄▂▁                                                
-  ▆▇████████████▇▆▅▄▃▃▃▃▂▃▂▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁ ▃
-  275 μs          Histogram: frequency by time         1.21 ms <
+  ▃▂     █▆▂                                                    
+  ██▆▄▄▄▅███▇██▇▇▆▆▅▅▅▅▅▄▄▄▄▄▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁ ▃
+  272 μs          Histogram: frequency by time          637 μs <
 
  Memory estimate: 126.56 KiB, allocs estimate: 1367.
 ```
@@ -388,15 +388,15 @@ BenchmarkTools.Trial: 9925 samples with 1 evaluation.
 
 ```
 BenchmarkTools.Trial: 10000 samples with 8 evaluations.
- Range (min … max):  3.511 μs …   8.639 ms  ┊ GC (min … max):  0.00% … 99.8
-4%
- Time  (median):     5.392 μs               ┊ GC (median):     0.00%
- Time  (mean ± σ):   8.205 μs ± 121.846 μs  ┊ GC (mean ± σ):  20.98% ±  1.4
+ Range (min … max):  3.516 μs …   9.187 ms  ┊ GC (min … max):  0.00% … 99.8
+8%
+ Time  (median):     5.272 μs               ┊ GC (median):     0.00%
+ Time  (mean ± σ):   7.848 μs ± 125.410 μs  ┊ GC (mean ± σ):  22.57% ±  1.4
 1%
 
-   ▁▄▄▄█▆▅▄                                                    
-  ▆██████████▆▆▅▄▄▃▃▃▄▅▆▅▄▄▃▅▅▆▆▆▅▄▄▄▃▄▃▃▃▃▂▂▂▂▂▂▂▂▁▂▁▁▁▁▁▁▁▁ ▃
-  3.51 μs         Histogram: frequency by time        13.4 μs <
+   ▂█▄▃▂                                                       
+  ▆██████▇▆▅▅▄▃▃▃▃▃▃▃▄▄▆▇▆▆▅▄▄▄▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁ ▃
+  3.52 μs         Histogram: frequency by time        12.8 μs <
 
  Memory estimate: 11.17 KiB, allocs estimate: 120.
 ```
@@ -430,7 +430,7 @@ end
 
 
 ```julia
-plot(β_grid,peak_time,xlabel="β",ylabel="Peak time")
+plot(β_grid,peak_time,xlabel="β",ylabel="Peak time",legend=false)
 ```
 
 ![](figures/ode_surrogate_1d_1d_29_1.png)
@@ -456,9 +456,13 @@ Exiting, scale too big
 
 
 
+
+
+Compared to the other quantities of interest, peak time is not as easily captured by the same (albeit simple) surrogate approach, with deviations at either end of the range.
+
 ```julia
 l = @layout [a b]
-pl1 = plot(β_grid,peak_time.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Peak time")
+pl1 = plot(β_grid,peak_time.(β_grid),color=:red,label="Model",xlabel="β",ylabel="Peak time",legend=:right)
 scatter!(pl1, β_test,pt_test_pred,color=:blue,label="Surrogate")
 pl2 = scatter(pt_test,pt_test_pred,color=:blue,legend=false,xlabel="Peak time",ylabel="Surrogate peak time")
 Plots.abline!(pl2,1.0,0.0)
@@ -473,15 +477,15 @@ plot(pl1,pl2,layout=l)
 
 ```
 BenchmarkTools.Trial: 10000 samples with 1 evaluation.
- Range (min … max):  273.684 μs … 68.865 ms  ┊ GC (min … max): 0.00% … 99.3
-9%
- Time  (median):     357.782 μs              ┊ GC (median):    0.00%
- Time  (mean ± σ):   394.097 μs ±  1.183 ms  ┊ GC (mean ± σ):  5.18% ±  1.7
+ Range (min … max):  271.371 μs … 71.790 ms  ┊ GC (min … max): 0.00% … 99.3
+3%
+ Time  (median):     343.739 μs              ┊ GC (median):    0.00%
+ Time  (mean ± σ):   379.984 μs ±  1.216 ms  ┊ GC (mean ± σ):  5.52% ±  1.7
 2%
 
-   ▄ ▃ ▂  ▄▇▇███▆▅▄▄▂▂▁▁                                        
-  ▇█▇█▇██▇██████████████████▇▆▆▇▆▆▅▆▄▅▄▄▄▄▃▃▃▃▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁ ▄
-  274 μs          Histogram: frequency by time          590 μs <
+   █        ▅▃▁                                                 
+  ▅█▇▄▄▃▃▃▃▇███▇▅▆▆▆▆▅▅▅▅▄▄▄▄▄▄▄▄▄▄▄▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁ ▃
+  271 μs          Histogram: frequency by time          542 μs <
 
  Memory estimate: 126.55 KiB, allocs estimate: 1366.
 ```
@@ -494,15 +498,15 @@ BenchmarkTools.Trial: 10000 samples with 1 evaluation.
 
 ```
 BenchmarkTools.Trial: 10000 samples with 6 evaluations.
- Range (min … max):   5.179 μs …  10.916 ms  ┊ GC (min … max):  0.00% … 99.
-87%
- Time  (median):      8.090 μs               ┊ GC (median):     0.00%
- Time  (mean ± σ):   12.325 μs ± 186.504 μs  ┊ GC (mean ± σ):  26.19% ±  1.
+ Range (min … max):   5.093 μs …  12.951 ms  ┊ GC (min … max):  0.00% … 99.
+65%
+ Time  (median):      7.974 μs               ┊ GC (median):     0.00%
+ Time  (mean ± σ):   12.973 μs ± 201.436 μs  ┊ GC (mean ± σ):  26.76% ±  1.
 73%
 
-  ▃▅▆█▆▅▃▁               ▁▁                                     
-  █████████▇▆▆▅▄▄▄▃▃▃▃▃▄▇████▆▅▆▅▅▅▄▄▄▃▃▃▃▃▃▃▂▃▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁ ▃
-  5.18 μs         Histogram: frequency by time         18.2 μs <
+   ▃█▅▃▁                                                        
+  ▇██████▇▆▄▄▃▃▃▃▂▃▄▇▆▅▄▄▄▄▃▃▃▃▃▃▃▃▃▃▃▃▂▃▂▂▂▂▂▂▂▂▂▁▂▁▁▁▁▁▁▁▁▁▁ ▃
+  5.09 μs         Histogram: frequency by time         21.8 μs <
 
  Memory estimate: 16.52 KiB, allocs estimate: 177.
 ```
@@ -513,4 +517,4 @@ BenchmarkTools.Trial: 10000 samples with 6 evaluations.
 
 ## Discussion
 
-With a fairly small number of actual model simulations, the above code generates surrogate models for three separate outputs that work well across the range of parameter inputs and are several orders of magnitude faster than the original model.
+With a fairly small number of actual model simulations, the above code generates surrogate models for three separate outputs that work well across the range of parameter inputs and are several orders of magnitude faster than the original model. More complex functional responses e.g. the time to the peak may be harder to capture, and approaches that search new parameter candidates in the local vicinity of existing parameter values may be suboptimal in this case.
