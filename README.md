@@ -90,17 +90,22 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 - [Probabilistic integration of an ODE model using Bayesian filtering and `ProbNumDiffEq.jl`](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_probint_probnumdiffeq/ode_probint_probnumdiffeq.md)
 - [Probabilistic integration of an ODE model by converting to a SDE using `DiffEqUncertainty.jl` (can also handle SDEs and DDEs)](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_probint_diffequncertainty/ode_probint_diffequncertainty.md)
 
-
 ### Global sensitivity
 
 - [Global sensitivity analysis of an ODE model using Latin hypercube sampling](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_global_sensitivity/ode_global_sensitivity.md)
 - [Global sensitivity analysis of an ODE model using multiple algorithms from GlobalSensitivity.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_global_sensitivity2/ode_global_sensitivity2.md)
 - [Uncertainty propagation of an ODE model using MonteCarloMeasurements.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_montecarlomeasurements/ode_montecarlomeasurements.md)
 - [Uncertainty propagation of an ODE model using the Koopman expectation and DiffEqUncertainty.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_koopman/ode_koopman.md)
+- [Uncertainty analysis of an ODE model with an uncertain input and an uncertain output using Bayesian melding](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_bayesian_melding_1d/ode_bayesian_melding_1d.md)
 
 ### Local sensitivity
 
 - [Local sensitivity of an ODE model using Zygote.jl and DiffEqSensitivity.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_local_sensitivity/ode_local_sensitivity.md)
+
+
+### Surrogate models
+
+- [Surrogate models (single input/single output) of an ODE model using Surrogates.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_surrogate_1d_1d/ode_surrogate_1d_1d.md)
 
 ## Extensions
 
