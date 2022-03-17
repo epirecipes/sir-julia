@@ -48,6 +48,7 @@ The above process can be represented in different kinds of ways:
 - [Petri net model to ODEs, SDEs, and jump process using AlgebraicPetri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_algebraicpetri/pn_algebraicpetri.md)
 - [Jump process (Gillespie) using Gillespie.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_gillespie/jump_process_gillespie.md)
 - [Jump process using the Sellke construction](https://github.com/epirecipes/sir-julia/blob/master/markdown/sellke/sellke.md)
+- [Jump process using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_mtk/jump_process_mtk.md)
 - [Discrete event simulation using SimJulia](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
 - [Agent-based model using base Julia](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector/abm_vector.md) as well [as using DifferentialEquations](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector_diffeq/abm_vector_diffeq.md)
 - [Agent-based model using Agents.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm/abm.md)
@@ -106,6 +107,7 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 ### Surrogate models
 
 - [Surrogate models (single input/single output) of an ODE model using Surrogates.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_surrogate_1d_1d/ode_surrogate_1d_1d.md)
+- [Gaussian process surrogate model (two inputs/one output) of an ODE model using the Python package mogp-emulator, with an example of history matching](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mogp/ode_mogp.md)
 
 ## Extensions
 
