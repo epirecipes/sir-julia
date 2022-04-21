@@ -109,6 +109,13 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 - [Surrogate models (single input/single output) of an ODE model using Surrogates.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_surrogate_1d_1d/ode_surrogate_1d_1d.md)
 - [Gaussian process surrogate model (two inputs/one output) of an ODE model using the Python package mogp-emulator, with an example of history matching](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mogp/ode_mogp.md)
 
+### Flexible models
+
+- [Data-driven models of an ODE using DataDrivenDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ddeq/ode_ddeq.md)
+- [A neural ODE, which replaces all the derivatives of the model with a neural network](https://github.com/epirecipes/sir-julia/blob/master/markdown/node/node.md)
+- [A universal ODE, modeling force of infection using a neural network](https://github.com/epirecipes/sir-julia/blob/master/markdown/ude/ude.md)
+- [A partially specified ODE, modeling force of infection using a basus](https://github.com/epirecipes/sir-julia/blob/master/markdown/psm/psm.md)
+
 ## Extensions
 
 - Fixed (rather than exponential) distribution of infectious period:
