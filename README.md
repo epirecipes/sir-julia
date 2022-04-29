@@ -107,7 +107,8 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 ### Surrogate models
 
 - [Surrogate models (single input/single output) of an ODE model using Surrogates.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_surrogate_1d_1d/ode_surrogate_1d_1d.md)
-- [Gaussian process surrogate model (two inputs/one output) of an ODE model using the Python package mogp-emulator, with an example of history matching](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mogp/ode_mogp.md)
+- [Gaussian process surrogate model (two inputs/one output) of an ODE model using the Python package `mogp-emulator`, with an example of history matching](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mogp/ode_mogp.md)
+- [Bayes linear surrogate model (two inputs/one output) of an ODE model using the R package `hmer`, with an example of history matching](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mhmer/ode_hmer.md)
 
 ### Flexible models
 
