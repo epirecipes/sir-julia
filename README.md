@@ -23,6 +23,7 @@ There are two types of parameterization commonly used in this project; the 'stan
 
 The above process can be represented in different kinds of ways:
 
+- [Ordinary differential equation using the Euler method](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_euler/ode_euler.md)
 - [Ordinary differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode/ode.md)
 - [Ordinary differential equation using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mtk/ode_mtk.md)
 - [Ordinary differential equation using Modia.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_modia/ode_modia.md)
