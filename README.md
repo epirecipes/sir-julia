@@ -116,7 +116,7 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 - [Data-driven models of an ODE using DataDrivenDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ddeq/ode_ddeq.md)
 - [A neural ODE, which replaces all the derivatives of the model with a neural network](https://github.com/epirecipes/sir-julia/blob/master/markdown/node/node.md)
 - [A universal ODE, modeling force of infection using a neural network](https://github.com/epirecipes/sir-julia/blob/master/markdown/ude/ude.md)
-- [A partially specified ODE, modeling force of infection using a basus](https://github.com/epirecipes/sir-julia/blob/master/markdown/psm/psm.md)
+- [A partially specified ODE, modeling force of infection using a basis](https://github.com/epirecipes/sir-julia/blob/master/markdown/psm/psm.md)
 
 ## Extensions
 
