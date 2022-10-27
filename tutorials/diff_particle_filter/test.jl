@@ -5,25 +5,28 @@ using Zygote
 using ForwardDiff
 using StaticArrays
 
+using Plots
+using Statistics
+
 @inline function rate_to_proportion(r, t)
     1-exp(-r*t)
 end
 
-struct StochasticModel{TType<:Integer,T1,T2,T3}
-    T::TType # time steps
-    start::T1 # prior
-    dyn::T2 # dynamical model
-    obs::T3 # observation model
-end
+# struct StochasticModel{TType<:Integer,T1,T2,T3}
+#     T::TType # time steps
+#     start::T1 # prior
+#     dyn::T2 # dynamical model
+#     obs::T3 # observation model
+# end
 
-struct SIR
-    dyn::T1
-    obs::T2
-end
+# struct SIR
+#     dyn::T1
+#     obs::T2
+# end
 
-struct SIRparticle{T <: Integer}
-    x::SVector{3, T}
-end
+# struct SIRparticle{T <: Integer}
+#     x::SVector{3, T}
+# end
 
 function dyn(x::T, θ) where {T <: SVector}
     S,I,R = x
@@ -36,8 +39,151 @@ function dyn(x::T, θ) where {T <: SVector}
     return T(S - infection, I + infection - recovery, R + recovery)
 end
 
+# function obs(x::T, θ) where {T <: SVector}
+    
+# end
+
 x = SVector{3, Int64}(50,20,5)
-θ = [1, 0.05, 1]
+θ = [0.5, 0.25, 0.1]
 
 dyn(x, θ)
 @code_warntype dyn(x, θ)
+
+function simulate_single(nsteps::Integer, x0::T, θ) where {T <: SVector}
+    xs = zeros(eltype(x0), nsteps, 3)
+    x = T(x0)
+    xs[1, :] = x
+    for n in 2:nsteps
+        x = dyn(x, θ)
+        xs[n, :] = x
+    end
+    return xs
+end
+
+
+nsteps = 400
+tmax = nsteps*θ[end]
+x0 = SVector{3, Int64}(990, 10, 0)
+
+traj = simulate_single(nsteps, x0, θ)
+
+@code_warntype simulate_single(nsteps, x0, θ)
+
+plot(traj)
+
+
+function simulate_multiple(nreps::Integer, nsteps::Integer, x0::T, θ) where {T <: SVector}
+    reps = zeros(eltype(x0), nsteps, 3, nreps)
+    for n in 1:nreps
+        reps[:,:,n] = simulate_single(nsteps, x0, θ)
+    end
+    return reps
+end
+
+trajs = simulate_multiple(100, nsteps, x0, θ)
+
+trajs_qt_S = hcat([quantile(trajs[i,1,:], [0.025, 0.5, 0.975]) for i=axes(trajs,1)]...)
+trajs_qt_I = hcat([quantile(trajs[i,2,:], [0.025, 0.5, 0.975]) for i=axes(trajs,1)]...)
+trajs_qt_R = hcat([quantile(trajs[i,3,:], [0.025, 0.5, 0.975]) for i=axes(trajs,1)]...)
+
+plot(trajs_qt_S[2,:], color = 1)
+plot!(trajs_qt_S[3,:], fillrange = trajs_qt_S[1,:], alpha = 0.25, color = 1)
+
+plot!(trajs_qt_I[2,:], color = 2)
+plot!(trajs_qt_I[3,:], fillrange = trajs_qt_I[1,:], alpha = 0.25, color = 2)
+
+plot!(trajs_qt_R[2,:], color = 3)
+plot!(trajs_qt_R[3,:], fillrange = trajs_qt_R[1,:], alpha = 0.25, color = 3, legend = false)
+
+
+# make some data
+data = collect(10:10:400) # times at which we observe data
+data = hcat(data, rand.(Poisson.(traj[data, 2])))
+
+
+
+# resampling particles
+function sample_stratified(p, K, sump=1)
+    n = length(p)
+    U = rand()
+    is = zeros(Int, K)
+    i = 1
+    cw = p[1]
+    for k in 1:K
+        t = sump * (k - 1 + U) / K
+        while cw < t && i < n
+            i += 1
+            @inbounds cw += p[i]
+        end
+        is[k] = i
+    end
+    return is
+end
+
+function resample(m, X, W, ω, sample_strategy)
+    js = Zygote.ignore(() -> sample_strategy(W, m, ω))
+    X_new = X[js]
+    # differentiable resampling
+    W_chosen = W[js]
+    W_new = map(w -> ω * new_weight(w / ω) / m, W_chosen)
+    X_new, W_new
+end
+
+# the particle filter
+m = 1000 # number of particles
+
+X = fill(x0, m)
+W = [1/m for i in 1:m]
+ω = 1.0 # total weight
+
+n = 1 # timestep of particles
+
+for i in axes(data,1)
+    t = data[i,1]
+    # propagate particles to next data time point
+    while n < t
+        # update all particles
+        for j in 1:m
+            X[j] = dyn(X[j],θ)
+        end
+        n += 1
+    end
+    # update weights
+    wi = map((x) -> pdf(Poisson(x[2]), data[i,2]), X)
+    W = W .* wi
+    ω = sum(W)
+    # resample particles
+    if t < size(data,1)
+        X, W = resample(m, X, W, ω, sample_strategy)
+    end
+end
+
+# function particle_filter(m::Integer, x0::T) where {T <: SVector}
+#     X = fill(x0, m)
+#     W = [1/m for i in 1:m]
+#     ω = 1.0 # total weight
+    
+#     n = 1 # timestep of particles
+    
+#     for i in axes(data,1)
+#         t = data[i,1]
+#         # propagate particles to next data time point
+#         while n < t
+#             # update all particles
+#             for j in 1:m
+#                 X[j] = dyn(X[j],θ)
+#             end
+#             n += 1
+#         end
+#         # update weights
+#         wi = map((x) -> pdf(Poisson(x[2]), data[i,2]), X)
+#         W = W .* wi
+#         ω = sum(W)
+#         # resample particles
+#         if t < size(data,1)
+#             X, W = resample(m, X, W, ω, sample_strategy)
+#         end
+#     end
+    
+#     return X, W
+# end
