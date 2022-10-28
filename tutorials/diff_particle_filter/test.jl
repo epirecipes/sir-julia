@@ -39,15 +39,13 @@ function dyn(x::T, θ) where {T <: SVector}
     return T(S - infection, I + infection - recovery, R + recovery)
 end
 
-# function obs(x::T, θ) where {T <: SVector}
-    
-# end
 
-x = SVector{3, Int64}(50,20,5)
-θ = [0.5, 0.25, 0.1]
 
-dyn(x, θ)
-@code_warntype dyn(x, θ)
+# x = SVector{3, Int64}(50,20,5)
+# θ = [0.5, 0.25, 0.1]
+
+# dyn(x, θ)
+# @code_warntype dyn(x, θ)
 
 function simulate_single(nsteps::Integer, x0::T, θ) where {T <: SVector}
     xs = zeros(eltype(x0), nsteps, 3)
@@ -61,13 +59,15 @@ function simulate_single(nsteps::Integer, x0::T, θ) where {T <: SVector}
 end
 
 
+θ = [0.5, 0.25, 0.1]
+
 nsteps = 400
 tmax = nsteps*θ[end]
 x0 = SVector{3, Int64}(990, 10, 0)
 
 traj = simulate_single(nsteps, x0, θ)
 
-@code_warntype simulate_single(nsteps, x0, θ)
+# @code_warntype simulate_single(nsteps, x0, θ)
 
 plot(traj)
 
@@ -129,61 +129,90 @@ function resample(m, X, W, ω, sample_strategy)
     X_new, W_new
 end
 
-# the particle filter
-m = 1000 # number of particles
 
-X = fill(x0, m)
-W = [1/m for i in 1:m]
-ω = 1.0 # total weight
 
-n = 1 # timestep of particles
+# # the particle filter
+# m = 100 # number of particles
 
-for i in axes(data,1)
-    t = data[i,1]
-    # propagate particles to next data time point
-    while n < t
-        # update all particles
-        for j in 1:m
-            X[j] = dyn(X[j],θ)
+# X = fill(x0, m)
+# W = [1/m for i in 1:m]
+# ω = 1.0 # total weight
+
+# n = 1 # timestep of particles
+
+# for i in axes(data,1)
+#     t = data[i,1]
+#     # propagate particles to next data time point
+#     while n < t
+#         # update all particles
+#         for j in 1:m
+#             X[j] = dyn(X[j],θ)
+#         end
+#         n += 1
+#     end
+#     # update weights
+#     # wi = map((x) -> pdf(Poisson(x[2]), data[i,2]), X)
+#     # W = W .* wi
+#     # ω = sum(W)
+#     W = map((x) -> pdf(Poisson(x[2]), data[i,2]), X)
+#     ω = sum(W)
+
+#     # resample particles
+#     if t < size(data,1)
+#         X, W = resample(m, X, W, ω, sample_strategy)
+#     end
+# end
+
+
+function particle_filter(data, m::Integer, x0::T, θ; store_path = false) where {T <: SVector}
+    X = fill(x0, m)
+    W = [1/m for i in 1:m]
+    ω = 1.0 # total weight
+    
+    n = 1 # timestep of particles
+
+    store_path && (Xs = [X])
+    
+    for i in axes(data,1)
+        t = data[i,1]
+        # propagate particles to next data time point
+        while n < t
+            # update all particles
+            for j in 1:m
+                X[j] = dyn(X[j],θ)
+            end
+            n += 1
         end
-        n += 1
+        store_path && Zygote.ignore(() -> push!(Xs, X))
+        # update weights
+        wi = map((x) -> pdf(Poisson(x[2]), data[i,2]), X)
+        W = W .* wi
+        ω = sum(W)
+        # resample particles
+        if i < size(data,1)
+            X, W = resample(m, X, W, ω, sample_stratified)
+        end
     end
-    # update weights
-    wi = map((x) -> pdf(Poisson(x[2]), data[i,2]), X)
-    W = W .* wi
-    ω = sum(W)
-    # resample particles
-    if t < size(data,1)
-        X, W = resample(m, X, W, ω, sample_strategy)
+    
+    return (store_path ? Xs : X), W
+end
+
+
+Xs, W = particle_filter(data, 1000, x0, θ, store_path=true)
+
+log(sum(W)) # estimated log-likelihood
+
+# plot filtered trajectories
+m = 1000
+plot(data[:,1], data[:,2])
+
+filter_I = Float64[]
+filter_t = Float64[]
+for t in 1:size(Xs,1)
+    for j in 1:m  
+        push!(filter_t, t == 1 ? 0 : t/θ[end] - 10) 
+        push!(filter_I, Xs[t][j][2])     
     end
 end
 
-# function particle_filter(m::Integer, x0::T) where {T <: SVector}
-#     X = fill(x0, m)
-#     W = [1/m for i in 1:m]
-#     ω = 1.0 # total weight
-    
-#     n = 1 # timestep of particles
-    
-#     for i in axes(data,1)
-#         t = data[i,1]
-#         # propagate particles to next data time point
-#         while n < t
-#             # update all particles
-#             for j in 1:m
-#                 X[j] = dyn(X[j],θ)
-#             end
-#             n += 1
-#         end
-#         # update weights
-#         wi = map((x) -> pdf(Poisson(x[2]), data[i,2]), X)
-#         W = W .* wi
-#         ω = sum(W)
-#         # resample particles
-#         if t < size(data,1)
-#             X, W = resample(m, X, W, ω, sample_strategy)
-#         end
-#     end
-    
-#     return X, W
-# end
+scatter!(filter_t, filter_I, alpha = 0.05, legend = false)
