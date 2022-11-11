@@ -28,12 +28,12 @@ end
 #     x::SVector{3, T}
 # end
 
-function dyn(x::T, θ) where {T <: SVector}
+function dyn(x::T, θ) where {T <: AbstractVector}
     S,I,R = x
-    (β,γ,δt) = θ
+    (β,γ) = θ
     N = S+I+R
-    ifrac = rate_to_proportion(β*I/N,δt)
-    rfrac = rate_to_proportion(γ,δt)
+    ifrac = rate_to_proportion(β*I/N,Δt)
+    rfrac = rate_to_proportion(γ,Δt)
     infection=rand(Binomial(S,ifrac))
     recovery=rand(Binomial(I,rfrac))
     return T(S - infection, I + infection - recovery, R + recovery)
@@ -47,7 +47,7 @@ end
 # dyn(x, θ)
 # @code_warntype dyn(x, θ)
 
-function simulate_single(nsteps::Integer, x0::T, θ) where {T <: SVector}
+function simulate_single(nsteps::Integer, x0::T, θ) where {T <: AbstractVector}
     xs = zeros(eltype(x0), nsteps, 3)
     x = T(x0)
     xs[1, :] = x
@@ -59,10 +59,11 @@ function simulate_single(nsteps::Integer, x0::T, θ) where {T <: SVector}
 end
 
 
-θ = [0.5, 0.25, 0.1]
+θ = [0.5, 0.25]
+Δt = 0.1
 
 nsteps = 400
-tmax = nsteps*θ[end]
+tmax = nsteps*Δt
 x0 = SVector{3, Int64}(990, 10, 0)
 
 traj = simulate_single(nsteps, x0, θ)
@@ -178,9 +179,10 @@ function particle_filter(data, m::Integer, x0::T, θ; store_path = false) where 
         # propagate particles to next data time point
         while n < t
             # update all particles
-            for j in 1:m
-                X[j] = dyn(X[j],θ)
-            end
+            # for j in 1:m
+            #     X[j] = dyn(X[j],θ)
+            # end
+            X = map(x -> dyn(x,θ), X)
             n += 1
         end
         store_path && Zygote.ignore(() -> push!(Xs, X))
@@ -211,8 +213,76 @@ filter_t = Float64[]
 for t in 1:size(Xs,1)
     for j in 1:m  
         push!(filter_t, t == 1 ? 0 : t/θ[end] - 10) 
-        push!(filter_I, Xs[t][j][2])     
+        push!(filter_I, Xs[t][j][2])
     end
 end
 
 scatter!(filter_t, filter_I, alpha = 0.05, legend = false)
+
+
+# get the estimated (filtered) log-likelihood
+function log_likelihood(θ, data, m, x0)
+    _, W = particle_filter(data, m, x0, θ, store_path=false)
+    log(sum(W))
+end
+
+m = 1000
+ForwardDiff.gradient(θ -> log_likelihood(θ, data, m, x0), θ)
+Zygote.gradient(θ -> log_likelihood(θ, data, m, x0), θ)
+
+
+
+x0 = [990,10,0]
+
+function epi_size(p)
+    simulate_single(nsteps, x0, p)[end,3]
+end
+
+ForwardDiff.gradient(θ -> epi_size(θ), θ)
+
+derivative_estimate(θ -> epi_size(θ), θ)
+
+using Debugger
+
+stochastic_triple(θ -> epi_size(θ), θ)
+
+# issue: can't propogate the stochastic_Triple through the T() ctor in the dynamics function;
+# need to find a way to code time stepping update functions which can return stochastic_triples
+
+# code a single function which does this.
+
+θ = [0.5, 0.25]
+Δt = 0.1
+
+nsteps = 400
+tmax = nsteps*Δt
+x0 = SVector{3, Int64}(990, 10, 0)
+
+
+function dyn1(x::T, θ) where {T <: AbstractVector}
+    S,I,R = x
+    (β,γ) = θ
+    N = S+I+R
+    ifrac = rate_to_proportion(β*I/N,Δt)
+    rfrac = rate_to_proportion(γ,Δt)
+    infection=rand(Binomial(S,ifrac))
+    recovery=rand(Binomial(I,rfrac))
+    return [S - infection, I + infection - recovery, R + recovery]
+end
+
+function simulate_single1(nsteps::Integer, x0::T, θ) where {T <: AbstractVector}
+    
+    x = x0
+
+    for n in 2:nsteps
+        x = dyn1(x, θ)
+    end
+    return x
+end
+
+function epi_size1(p)
+    simulate_single1(nsteps, x0, p)[3]
+end
+
+derivative_estimate(θ -> epi_size1(θ), θ)
+stochastic_triple(θ -> epi_size1(θ), θ)
