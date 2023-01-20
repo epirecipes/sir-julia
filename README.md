@@ -104,8 +104,9 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 
 - [Local sensitivity of an ODE model using Zygote.jl and DiffEqSensitivity.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_local_sensitivity/ode_local_sensitivity.md)
 
-### Profile likelihood intervals
+### Likelihood intervals
 
+- [Full likelihood intervals using ProfileLikelihood.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_likelihoodintervals/ode_likelihoodintervals.md)
 - [Profile likelihood using ProfileLikelihood.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_profilelikelihood/ode_profilelikelihood.md)
 - [Profile likelihood using LikelihoodProfiler.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_likelihoodprofiler/ode_likelihoodprofiler.md)
 
