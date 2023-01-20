@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<HTML lang = "en">
+<HEAD>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  
+  
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+  </script>
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+
+  
+<style>
+pre.hljl {
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+    overflow-x: auto;
+    color: rgb(68,68,68); background-color: rgb(251,251,251); }
+pre.hljl > span.hljl-t { }
+pre.hljl > span.hljl-w { }
+pre.hljl > span.hljl-e { }
+pre.hljl > span.hljl-eB { }
+pre.hljl > span.hljl-o { }
+pre.hljl > span.hljl-k { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kc { color: rgb(59,151,46); font-style: italic; }
+pre.hljl > span.hljl-kd { color: rgb(214,102,97); font-style: italic; }
+pre.hljl > span.hljl-kn { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kp { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kr { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kt { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-n { }
+pre.hljl > span.hljl-na { }
+pre.hljl > span.hljl-nb { }
+pre.hljl > span.hljl-nbp { }
+pre.hljl > span.hljl-nc { }
+pre.hljl > span.hljl-ncB { }
+pre.hljl > span.hljl-nd { color: rgb(214,102,97); }
+pre.hljl > span.hljl-ne { }
+pre.hljl > span.hljl-neB { }
+pre.hljl > span.hljl-nf { color: rgb(66,102,213); }
+pre.hljl > span.hljl-nfm { color: rgb(66,102,213); }
+pre.hljl > span.hljl-np { }
+pre.hljl > span.hljl-nl { }
+pre.hljl > span.hljl-nn { }
+pre.hljl > span.hljl-no { }
+pre.hljl > span.hljl-nt { }
+pre.hljl > span.hljl-nv { }
+pre.hljl > span.hljl-nvc { }
+pre.hljl > span.hljl-nvg { }
+pre.hljl > span.hljl-nvi { }
+pre.hljl > span.hljl-nvm { }
+pre.hljl > span.hljl-l { }
+pre.hljl > span.hljl-ld { color: rgb(148,91,176); font-style: italic; }
+pre.hljl > span.hljl-s { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sa { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sb { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sc { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sd { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdC { color: rgb(201,61,57); }
+pre.hljl > span.hljl-se { color: rgb(59,151,46); }
+pre.hljl > span.hljl-sh { color: rgb(201,61,57); }
+pre.hljl > span.hljl-si { }
+pre.hljl > span.hljl-so { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sr { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ss { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ssB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-nB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nbB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nfB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nh { color: rgb(59,151,46); }
+pre.hljl > span.hljl-ni { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nil { color: rgb(59,151,46); }
+pre.hljl > span.hljl-noB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-oB { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-ow { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-p { }
+pre.hljl > span.hljl-c { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-ch { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cm { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cp { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cpB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cs { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-csB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-g { }
+pre.hljl > span.hljl-gd { }
+pre.hljl > span.hljl-ge { }
+pre.hljl > span.hljl-geB { }
+pre.hljl > span.hljl-gh { }
+pre.hljl > span.hljl-gi { }
+pre.hljl > span.hljl-go { }
+pre.hljl > span.hljl-gp { }
+pre.hljl > span.hljl-gs { }
+pre.hljl > span.hljl-gsB { }
+pre.hljl > span.hljl-gt { }
+</style>
+
+
+
+  <style type="text/css">
+  @font-face {
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 600;
+}
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+body {
+  margin: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 1em 40px;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+pre {
+  overflow: auto;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; /* 2 */
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
+}
+textarea {
+  overflow: auto;
+}
+optgroup {
+  font-weight: bold;
+}
+table {
+  font-family: monospace, monospace;
+  font-size : 0.8em;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+thead th {
+    border-bottom: 1px solid black;
+    background-color: white;
+}
+tr:nth-child(odd){
+  background-color: rgb(248,248,248);
+}
+
+
+/*
+* Skeleton V2.0.4
+* Copyright 2014, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 12/29/2014
+*/
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box; }
+.column,
+.columns {
+  width: 100%;
+  float: left;
+  box-sizing: border-box; }
+@media (min-width: 400px) {
+  .container {
+    width: 85%;
+    padding: 0; }
+}
+@media (min-width: 550px) {
+  .container {
+    width: 80%; }
+  .column,
+  .columns {
+    margin-left: 4%; }
+  .column:first-child,
+  .columns:first-child {
+    margin-left: 0; }
+
+  .one.column,
+  .one.columns                    { width: 4.66666666667%; }
+  .two.columns                    { width: 13.3333333333%; }
+  .three.columns                  { width: 22%;            }
+  .four.columns                   { width: 30.6666666667%; }
+  .five.columns                   { width: 39.3333333333%; }
+  .six.columns                    { width: 48%;            }
+  .seven.columns                  { width: 56.6666666667%; }
+  .eight.columns                  { width: 65.3333333333%; }
+  .nine.columns                   { width: 74.0%;          }
+  .ten.columns                    { width: 82.6666666667%; }
+  .eleven.columns                 { width: 91.3333333333%; }
+  .twelve.columns                 { width: 100%; margin-left: 0; }
+
+  .one-third.column               { width: 30.6666666667%; }
+  .two-thirds.column              { width: 65.3333333333%; }
+
+  .one-half.column                { width: 48%; }
+
+  /* Offsets */
+  .offset-by-one.column,
+  .offset-by-one.columns          { margin-left: 8.66666666667%; }
+  .offset-by-two.column,
+  .offset-by-two.columns          { margin-left: 17.3333333333%; }
+  .offset-by-three.column,
+  .offset-by-three.columns        { margin-left: 26%;            }
+  .offset-by-four.column,
+  .offset-by-four.columns         { margin-left: 34.6666666667%; }
+  .offset-by-five.column,
+  .offset-by-five.columns         { margin-left: 43.3333333333%; }
+  .offset-by-six.column,
+  .offset-by-six.columns          { margin-left: 52%;            }
+  .offset-by-seven.column,
+  .offset-by-seven.columns        { margin-left: 60.6666666667%; }
+  .offset-by-eight.column,
+  .offset-by-eight.columns        { margin-left: 69.3333333333%; }
+  .offset-by-nine.column,
+  .offset-by-nine.columns         { margin-left: 78.0%;          }
+  .offset-by-ten.column,
+  .offset-by-ten.columns          { margin-left: 86.6666666667%; }
+  .offset-by-eleven.column,
+  .offset-by-eleven.columns       { margin-left: 95.3333333333%; }
+
+  .offset-by-one-third.column,
+  .offset-by-one-third.columns    { margin-left: 34.6666666667%; }
+  .offset-by-two-thirds.column,
+  .offset-by-two-thirds.columns   { margin-left: 69.3333333333%; }
+
+  .offset-by-one-half.column,
+  .offset-by-one-half.columns     { margin-left: 52%; }
+
+}
+html {
+  font-size: 62.5%; }
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #222; }
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-weight: 300; }
+h1 { font-size: 3.6rem; line-height: 1.2;  letter-spacing: -.1rem;}
+h2 { font-size: 3.4rem; line-height: 1.25; letter-spacing: -.1rem; }
+h3 { font-size: 3.2rem; line-height: 1.3;  letter-spacing: -.1rem; }
+h4 { font-size: 2.8rem; line-height: 1.35; letter-spacing: -.08rem; }
+h5 { font-size: 2.4rem; line-height: 1.5;  letter-spacing: -.05rem; }
+h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
+
+p {
+  margin-top: 0; }
+a {
+  color: #1EAEDB; }
+a:hover {
+  color: #0FA0CE; }
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-block;
+  height: 38px;
+  padding: 0 30px;
+  color: #555;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  box-sizing: border-box; }
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:focus,
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus {
+  color: #333;
+  border-color: #888;
+  outline: 0; }
+.button.button-primary,
+button.button-primary,
+input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary {
+  color: #FFF;
+  background-color: #33C3F0;
+  border-color: #33C3F0; }
+.button.button-primary:hover,
+button.button-primary:hover,
+input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus,
+input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus {
+  color: #FFF;
+  background-color: #1EAEDB;
+  border-color: #1EAEDB; }
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+  height: 38px;
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box; }
+/* Removes awkward default styles on some inputs for iOS */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; }
+textarea {
+  min-height: 65px;
+  padding-top: 6px;
+  padding-bottom: 6px; }
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid #33C3F0;
+  outline: 0; }
+label,
+legend {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600; }
+fieldset {
+  padding: 0;
+  border-width: 0; }
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline; }
+label > .label-body {
+  display: inline-block;
+  margin-left: .5rem;
+  font-weight: normal; }
+ul {
+  list-style: circle; }
+ol {
+  list-style: decimal; }
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin: 1.5rem 0 1.5rem 3rem;
+  font-size: 90%; }
+li > p {margin : 0;}
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #E1E1E1; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+  padding-right: 0; }
+button,
+.button {
+  margin-bottom: 1rem; }
+input,
+textarea,
+select,
+fieldset {
+  margin-bottom: 1.5rem; }
+pre,
+blockquote,
+dl,
+figure,
+table,
+p,
+ul,
+ol,
+form {
+  margin-bottom: 1.0rem; }
+.u-full-width {
+  width: 100%;
+  box-sizing: border-box; }
+.u-max-full-width {
+  max-width: 100%;
+  box-sizing: border-box; }
+.u-pull-right {
+  float: right; }
+.u-pull-left {
+  float: left; }
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
+  border-width: 0;
+  border-top: 1px solid #E1E1E1; }
+.container:after,
+.row:after,
+.u-cf {
+  content: "";
+  display: table;
+  clear: both; }
+
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre.hljl {
+  margin: 0 0 10px;
+  display: block;
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding : 5px;
+}
+
+pre.output {
+  background: #ffffff;
+}
+
+pre.code {
+  background: #ffffff;
+}
+
+pre.julia-error {
+  color : red
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 13px;
+}
+
+
+@media (min-width: 400px) {}
+@media (min-width: 550px) {}
+@media (min-width: 750px) {}
+@media (min-width: 1000px) {}
+@media (min-width: 1200px) {}
+
+h1.title {margin-top : 20px}
+img {max-width : 100%}
+div.title {text-align: center;}
+
+  </style>
+</HEAD>
+
+<BODY>
+  <div class ="container">
+    <div class = "row">
+      <div class = "col-md-12 twelve columns">
+        <div class="title">
+          
+          
+          
+        </div>
+
+        <h1>Ordinary differential equation model with full likelihood intervals using ProfileLikelihood.jl</h1>
+<p>Simon Frost &#40;@sdwfrost&#41;, 2022-12-22</p>
+<h2>Introduction</h2>
+<p>The classical ODE version of the SIR model is:</p>
+<ul>
+<li><p>Deterministic</p>
+</li>
+<li><p>Continuous in time</p>
+</li>
+<li><p>Continuous in state</p>
+</li>
+</ul>
+<p>In this notebook, we try to infer the parameter values from a simulated dataset using a full likelihood approach to capture uncertainty, using tools from the <a href="https://github.com/ph-kev/ProfileLikelihood.jl">ProfileLikelihood.jl</a> package.</p>
+<h2>Libraries</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>OrdinaryDiffEq</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>ProfileLikelihood</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>StatsFuns</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Random</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Distributions</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Optimization</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>OptimizationOptimJL</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>QuasiMonteCarlo</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>CairoMakie</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>LaTeXStrings</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>DataFrames</span>
+</pre>
+
+
+
+<h2>Transitions</h2>
+<p>The following function provides the derivatives of the model, which it changes in-place. A variable is included for the cumulative number of infections, <span class="math">$C$</span>.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>sir_ode!</span><span class='hljl-p'>(</span><span class='hljl-n'>du</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>u</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>p</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>t</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-p'>(</span><span class='hljl-n'>S</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>I</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>R</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>u</span><span class='hljl-t'>
+    </span><span class='hljl-p'>(</span><span class='hljl-n'>β</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>c</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>γ</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>p</span><span class='hljl-t'>
+    </span><span class='hljl-n'>N</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>S</span><span class='hljl-oB'>+</span><span class='hljl-n'>I</span><span class='hljl-oB'>+</span><span class='hljl-n'>R</span><span class='hljl-t'>
+    </span><span class='hljl-n'>infection</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>β</span><span class='hljl-oB'>*</span><span class='hljl-n'>c</span><span class='hljl-oB'>*</span><span class='hljl-n'>I</span><span class='hljl-oB'>/</span><span class='hljl-n'>N</span><span class='hljl-oB'>*</span><span class='hljl-n'>S</span><span class='hljl-t'>
+    </span><span class='hljl-n'>recovery</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>γ</span><span class='hljl-oB'>*</span><span class='hljl-n'>I</span><span class='hljl-t'>
+    </span><span class='hljl-nd'>@inbounds</span><span class='hljl-t'> </span><span class='hljl-k'>begin</span><span class='hljl-t'>
+        </span><span class='hljl-n'>du</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-n'>infection</span><span class='hljl-t'>
+        </span><span class='hljl-n'>du</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>infection</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-t'> </span><span class='hljl-n'>recovery</span><span class='hljl-t'>
+        </span><span class='hljl-n'>du</span><span class='hljl-p'>[</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>recovery</span><span class='hljl-t'>
+        </span><span class='hljl-n'>du</span><span class='hljl-p'>[</span><span class='hljl-ni'>4</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>infection</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-n'>nothing</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-p'>;</span>
+</pre>
+
+
+
+<h2>Time domain</h2>
+<p>We set the timespan for simulations, <code>tspan</code>, initial conditions, <code>u0</code>, and parameter values, <code>p</code> &#40;which are unpacked above as <code>&#91;β, c, γ&#93;</code>&#41;.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>δt</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-t'>
+</span><span class='hljl-n'>tmax</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>40.0</span><span class='hljl-t'>
+</span><span class='hljl-n'>tspan</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-n'>tmax</span><span class='hljl-p'>);</span>
+</pre>
+
+
+
+<h2>Initial conditions</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>u₀</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>990.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>10.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>];</span><span class='hljl-t'> </span><span class='hljl-cs'># S, I, R, C</span>
+</pre>
+
+
+
+<h2>Parameter values</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>p</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>0.05</span><span class='hljl-p'>,</span><span class='hljl-nfB'>10.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.25</span><span class='hljl-p'>];</span><span class='hljl-t'> </span><span class='hljl-cs'># β, c, γ</span>
+</pre>
+
+
+
+<h2>Running the model</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>prob_ode</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>ODEProblem</span><span class='hljl-p'>(</span><span class='hljl-n'>sir_ode!</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>u₀</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>tspan</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>p</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>sol_ode</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>solve</span><span class='hljl-p'>(</span><span class='hljl-n'>prob_ode</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nf'>Tsit5</span><span class='hljl-p'>(),</span><span class='hljl-t'> </span><span class='hljl-n'>saveat</span><span class='hljl-oB'>=</span><span class='hljl-n'>δt</span><span class='hljl-p'>);</span>
+</pre>
+
+
+
+<p>We convert the output to an <code>Array</code> for further processing.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>out</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Array</span><span class='hljl-p'>(</span><span class='hljl-n'>sol_ode</span><span class='hljl-p'>);</span>
+</pre>
+
+
+
+<h2>Plotting the solution</h2>
+<p>The following code demonstrates how to plot the time series using <a href="https://github.com/MakieOrg/Makie.jl">Makie.jl</a>.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>colors</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-sc'>:blue</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-sc'>:red</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-sc'>:green</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-sc'>:purple</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-n'>legends</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-s'>&quot;S&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;I&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;R&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;C&quot;</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-n'>fig</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Figure</span><span class='hljl-p'>()</span><span class='hljl-t'>
+</span><span class='hljl-n'>ax</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Axis</span><span class='hljl-p'>(</span><span class='hljl-n'>fig</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-p'>])</span><span class='hljl-t'>
+</span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>4</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>lines!</span><span class='hljl-p'>(</span><span class='hljl-n'>ax</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>sol_ode</span><span class='hljl-oB'>.</span><span class='hljl-n'>t</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>out</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>,</span><span class='hljl-oB'>:</span><span class='hljl-p'>],</span><span class='hljl-t'> </span><span class='hljl-n'>label</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>legends</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>],</span><span class='hljl-t'> </span><span class='hljl-n'>color</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>colors</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>])</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+</span><span class='hljl-nf'>axislegend</span><span class='hljl-p'>(</span><span class='hljl-n'>ax</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>ax</span><span class='hljl-oB'>.</span><span class='hljl-n'>xlabel</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;Time&quot;</span><span class='hljl-t'>
+</span><span class='hljl-n'>ax</span><span class='hljl-oB'>.</span><span class='hljl-n'>ylabel</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;Number&quot;</span><span class='hljl-t'>
+</span><span class='hljl-n'>fig</span>
+</pre>
+
+
+<img src="data:image/png;base64,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"  />
+
+<h2>Generating data</h2>
+<p>The cumulative counts are extracted.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>C</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>out</span><span class='hljl-p'>[</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-oB'>:</span><span class='hljl-p'>];</span>
+</pre>
+
+
+
+<p>The new cases per day are calculated from the cumulative counts.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>.-</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-p'>(</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>)];</span>
+</pre>
+
+
+
+<p>Although the ODE system is deterministic, we can add measurement error to the counts of new cases. Here, a Poisson distribution is used, although a negative binomial could also be used &#40;which would introduce an additional parameter for the variance&#41;.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>Random</span><span class='hljl-oB'>.</span><span class='hljl-nf'>seed!</span><span class='hljl-p'>(</span><span class='hljl-ni'>1234</span><span class='hljl-p'>);</span>
+</pre>
+
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>data</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>rand</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>Poisson</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>X</span><span class='hljl-p'>));</span>
+</pre>
+
+
+
+<h2>Optimization</h2>
+<p>ProfileLikelihood.jl expects a log-likelihood function with the parameter vector, <code>θ</code>, the data, and the integrator used for the model - see the documentation on <a href="https://docs.sciml.ai/DiffEqDocs/stable/basics/integrator/">the integrator interface of <code>DifferentialEquations.jl</code></a> for more details.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>ll</span><span class='hljl-p'>(</span><span class='hljl-n'>θ</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>data</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>integrator</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-p'>(</span><span class='hljl-n'>i0</span><span class='hljl-p'>,</span><span class='hljl-n'>β</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>θ</span><span class='hljl-t'>
+    </span><span class='hljl-n'>integrator</span><span class='hljl-oB'>.</span><span class='hljl-n'>p</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>β</span><span class='hljl-t'>
+    </span><span class='hljl-n'>integrator</span><span class='hljl-oB'>.</span><span class='hljl-n'>p</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>10.0</span><span class='hljl-t'>
+    </span><span class='hljl-n'>integrator</span><span class='hljl-oB'>.</span><span class='hljl-n'>p</span><span class='hljl-p'>[</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.25</span><span class='hljl-t'>
+    </span><span class='hljl-n'>I</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>i0</span><span class='hljl-oB'>*</span><span class='hljl-nfB'>1000.0</span><span class='hljl-t'>
+    </span><span class='hljl-n'>u₀</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-nfB'>1000.0</span><span class='hljl-oB'>-</span><span class='hljl-n'>I</span><span class='hljl-p'>,</span><span class='hljl-n'>I</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>reinit!</span><span class='hljl-p'>(</span><span class='hljl-n'>integrator</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>u₀</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>solve!</span><span class='hljl-p'>(</span><span class='hljl-n'>integrator</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>sol</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>integrator</span><span class='hljl-oB'>.</span><span class='hljl-n'>sol</span><span class='hljl-t'>
+    </span><span class='hljl-n'>out</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Array</span><span class='hljl-p'>(</span><span class='hljl-n'>sol</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>C</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>out</span><span class='hljl-p'>[</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-oB'>:</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>.-</span><span class='hljl-t'> </span><span class='hljl-n'>C</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-p'>(</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>)]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>nonpos</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>X</span><span class='hljl-t'> </span><span class='hljl-oB'>.&lt;=</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>nonpos</span><span class='hljl-t'> </span><span class='hljl-oB'>&gt;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>
+        </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>Inf</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>logpdf</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>Poisson</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>X</span><span class='hljl-p'>),</span><span class='hljl-n'>data</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-p'>;</span>
+</pre>
+
+
+
+<p>We specify the lower and upper bounds of the parameter values, <code>lb</code> and <code>ub</code> respectively, and the initial parameter values, <code>θ₀</code>.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>lb</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>0.001</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.01</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-cs'># Lower bound</span><span class='hljl-t'>
+</span><span class='hljl-n'>ub</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>0.1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.1</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-cs'># Upper bound</span><span class='hljl-t'>
+</span><span class='hljl-n'>θ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>0.01</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.05</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-cs'># Exact values</span><span class='hljl-t'>
+</span><span class='hljl-n'>θ₀</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>0.002</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.08</span><span class='hljl-p'>];</span><span class='hljl-t'> </span><span class='hljl-cs'># Initial conditions for optimization</span>
+</pre>
+
+
+
+<p>The following shows how to obtain a single log-likelihood value for a set of parameter values using the integrator interface.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>integrator</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>init</span><span class='hljl-p'>(</span><span class='hljl-n'>prob_ode</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nf'>Tsit5</span><span class='hljl-p'>();</span><span class='hljl-t'> </span><span class='hljl-n'>saveat</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>δt</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'># takes the same arguments as `solve`</span><span class='hljl-t'>
+</span><span class='hljl-nf'>ll</span><span class='hljl-p'>(</span><span class='hljl-n'>θ₀</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>data</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>integrator</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+-561.9030701968085
+</pre>
+
+
+<p>We use the log-likelihood function, <code>ll</code>, to define a <code>LikelihoodProblem</code>, along with initial parameter values, <code>θ₀</code>, the function describing the model, <code>sir_ode&#33;</code>, the initial conditions, <code>u₀</code>, and the maximum time.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>syms</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-sc'>:i₀</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-sc'>:β</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-n'>prob</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>LikelihoodProblem</span><span class='hljl-p'>(</span><span class='hljl-t'>
+    </span><span class='hljl-n'>ll</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>θ₀</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>sir_ode!</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>u₀</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>tmax</span><span class='hljl-p'>;</span><span class='hljl-t'> 
+    </span><span class='hljl-n'>syms</span><span class='hljl-oB'>=</span><span class='hljl-n'>syms</span><span class='hljl-p'>,</span><span class='hljl-t'>
+    </span><span class='hljl-n'>data</span><span class='hljl-oB'>=</span><span class='hljl-n'>data</span><span class='hljl-p'>,</span><span class='hljl-t'>
+    </span><span class='hljl-n'>ode_parameters</span><span class='hljl-oB'>=</span><span class='hljl-n'>p</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-cs'># temp values for p</span><span class='hljl-t'>
+    </span><span class='hljl-n'>ode_kwargs</span><span class='hljl-oB'>=</span><span class='hljl-p'>(</span><span class='hljl-n'>verbose</span><span class='hljl-oB'>=</span><span class='hljl-kc'>false</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>saveat</span><span class='hljl-oB'>=</span><span class='hljl-n'>δt</span><span class='hljl-p'>),</span><span class='hljl-t'>
+    </span><span class='hljl-n'>f_kwargs</span><span class='hljl-oB'>=</span><span class='hljl-p'>(</span><span class='hljl-n'>adtype</span><span class='hljl-oB'>=</span><span class='hljl-n'>Optimization</span><span class='hljl-oB'>.</span><span class='hljl-nf'>AutoFiniteDiff</span><span class='hljl-p'>(),),</span><span class='hljl-t'>
+    </span><span class='hljl-n'>prob_kwargs</span><span class='hljl-oB'>=</span><span class='hljl-p'>(</span><span class='hljl-n'>lb</span><span class='hljl-oB'>=</span><span class='hljl-n'>lb</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>ub</span><span class='hljl-oB'>=</span><span class='hljl-n'>ub</span><span class='hljl-p'>),</span><span class='hljl-t'>
+    </span><span class='hljl-n'>ode_alg</span><span class='hljl-oB'>=</span><span class='hljl-nf'>Tsit5</span><span class='hljl-p'>()</span><span class='hljl-t'>
+</span><span class='hljl-p'>);</span>
+</pre>
+
+
+
+<h2>Grid search to identify the maximum likelihood value and the likelihood region</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>crit_val</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.5</span><span class='hljl-oB'>*</span><span class='hljl-nf'>quantile</span><span class='hljl-p'>(</span><span class='hljl-nf'>Chisq</span><span class='hljl-p'>(</span><span class='hljl-ni'>2</span><span class='hljl-p'>),</span><span class='hljl-nfB'>0.95</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+2.99573227355399
+</pre>
+
+
+<h3>Regular grid</h3>
+<p>We first use a coarse regular grid to refine the bounds of the parameters.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>regular_grid</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>RegularGrid</span><span class='hljl-p'>(</span><span class='hljl-n'>lb</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>ub</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+ProfileLikelihood.RegularGrid&#123;2, Vector&#123;Float64&#125;, Int64, Vector&#123;Float64&#125;, F
+loat64&#125;&#40;&#91;0.001, 0.01&#93;, &#91;0.1, 0.1&#93;, 10, &#91;0.011000000000000001, 0.01000000000
+0000002&#93;&#41;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>gs</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>loglik_vals</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>grid_search</span><span class='hljl-p'>(</span><span class='hljl-n'>prob</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>regular_grid</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-n'>save_vals</span><span class='hljl-oB'>=</span><span class='hljl-nf'>Val</span><span class='hljl-p'>(</span><span class='hljl-kc'>true</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-n'>parallel</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Val</span><span class='hljl-p'>(</span><span class='hljl-kc'>true</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-n'>gs</span>
+</pre>
+
+
+<pre class="output">
+LikelihoodSolution. retcode: Success
+Maximum likelihood: -113.53871145848349
+Maximum likelihood estimates: 2-element Vector&#123;Float64&#125;
+     i₀: 0.012
+     β: 0.05000000000000001
+</pre>
+
+
+<p>This is going to give us a crude maximum likelihood estimate and region, but this can still be used to discard unlikely parameter values.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>gs_max_lik</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>gs_max_idx</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>findmax</span><span class='hljl-p'>(</span><span class='hljl-n'>loglik_vals</span><span class='hljl-p'>);</span>
+</pre>
+
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>nroy</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>loglik_vals</span><span class='hljl-t'> </span><span class='hljl-oB'>.&gt;=</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-n'>gs_max_lik</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-t'> </span><span class='hljl-n'>crit_val</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>nroyp</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-n'>ProfileLikelihood</span><span class='hljl-oB'>.</span><span class='hljl-nf'>get_parameters</span><span class='hljl-p'>(</span><span class='hljl-n'>regular_grid</span><span class='hljl-p'>,(</span><span class='hljl-n'>i</span><span class='hljl-p'>,</span><span class='hljl-n'>j</span><span class='hljl-p'>))</span><span class='hljl-t'> </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>100</span><span class='hljl-t'> </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>j</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>100</span><span class='hljl-t'> </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>nroy</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>,</span><span class='hljl-n'>j</span><span class='hljl-p'>]</span><span class='hljl-oB'>==</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: BoundsError: attempt to access 10×10 BitMatrix at index &#91;1, 11&#93;
+</pre>
+
+
+<h3>Latin hypercube sampling</h3>
+<p>We now refine the parameter bounds from our coarse grid search, and run the model using a Latin hypercube sample over a fine &#40;irregular&#41; grid.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>lb2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nf'>minimum</span><span class='hljl-p'>([</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-n'>nroyp</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>]])</span><span class='hljl-t'> </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>2</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>.*</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.5</span><span class='hljl-t'>
+</span><span class='hljl-n'>ub2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nf'>maximum</span><span class='hljl-p'>([</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-n'>nroyp</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>]])</span><span class='hljl-t'> </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>2</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>.*</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: UndefVarError: nroyp not defined
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>n_samples</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>10000</span><span class='hljl-t'>
+</span><span class='hljl-n'>parameter_vals</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>QuasiMonteCarlo</span><span class='hljl-oB'>.</span><span class='hljl-nf'>sample</span><span class='hljl-p'>(</span><span class='hljl-n'>n_samples</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>lb2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>ub2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nf'>LatinHypercubeSample</span><span class='hljl-p'>());</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: UndefVarError: lb2 not defined
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>irregular_grid</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>IrregularGrid</span><span class='hljl-p'>(</span><span class='hljl-n'>lb</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>ub</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>parameter_vals</span><span class='hljl-p'>);</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: UndefVarError: parameter_vals not defined
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>gs_ir</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>loglik_vals_ir</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>grid_search</span><span class='hljl-p'>(</span><span class='hljl-n'>prob</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>irregular_grid</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-n'>save_vals</span><span class='hljl-oB'>=</span><span class='hljl-nf'>Val</span><span class='hljl-p'>(</span><span class='hljl-kc'>true</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-n'>parallel</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Val</span><span class='hljl-p'>(</span><span class='hljl-kc'>true</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-n'>gs_ir</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: UndefVarError: irregular_grid not defined
+</pre>
+
+
+<h2>ML</h2>
+<p>We can obtain the maximum likelhood estimate of the parameters using one of the algorithms in <code>Optimization.jl</code>. Here, we use <code>NelderMead</code> from <code>Optim.jl</code>, imported with <code>using OptimizationOptimJL</code> at the beginning of the notebook, using an updated initial estimate from our coarse grid search.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>prob</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>update_initial_estimate</span><span class='hljl-p'>(</span><span class='hljl-n'>prob</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>gs_ir</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>sol</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>mle</span><span class='hljl-p'>(</span><span class='hljl-n'>prob</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>Optim</span><span class='hljl-oB'>.</span><span class='hljl-nf'>LBFGS</span><span class='hljl-p'>())</span><span class='hljl-t'>
+</span><span class='hljl-n'>θ̂</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>get_mle</span><span class='hljl-p'>(</span><span class='hljl-n'>sol</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: UndefVarError: gs_ir not defined
+</pre>
+
+
+<h2>Plotting ML and likelhood surface</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>fig</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Figure</span><span class='hljl-p'>(</span><span class='hljl-n'>fontsize</span><span class='hljl-oB'>=</span><span class='hljl-ni'>38</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>i₀_grid</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>get_range</span><span class='hljl-p'>(</span><span class='hljl-n'>regular_grid</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-cs'>#i₀_grid_ir = [ProfileLikelihood.get_parameters(irregular_grid,i)[1] for i in 1:10000]</span><span class='hljl-t'>
+</span><span class='hljl-n'>β_grid</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>get_range</span><span class='hljl-p'>(</span><span class='hljl-n'>regular_grid</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-cs'>#β_grid_ir = [ProfileLikelihood.get_parameters(irregular_grid,i)[2] for i in 1:10000]</span><span class='hljl-t'>
+</span><span class='hljl-n'>ax</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Axis</span><span class='hljl-p'>(</span><span class='hljl-n'>fig</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-p'>],</span><span class='hljl-t'>
+    </span><span class='hljl-n'>xlabel</span><span class='hljl-oB'>=</span><span class='hljl-so'>L&quot;i_0&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>ylabel</span><span class='hljl-oB'>=</span><span class='hljl-so'>L&quot;\beta&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>co</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>heatmap!</span><span class='hljl-p'>(</span><span class='hljl-n'>ax</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>i₀_grid</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>β_grid</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>loglik_vals</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>colormap</span><span class='hljl-oB'>=</span><span class='hljl-nf'>Reverse</span><span class='hljl-p'>(</span><span class='hljl-sc'>:matter</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-nf'>contour!</span><span class='hljl-p'>(</span><span class='hljl-n'>ax</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>i₀_grid</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>β_grid</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>loglik_vals</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>levels</span><span class='hljl-oB'>=</span><span class='hljl-ni'>40</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>color</span><span class='hljl-oB'>=:</span><span class='hljl-n'>black</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>linewidth</span><span class='hljl-oB'>=</span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-oB'>/</span><span class='hljl-t'> </span><span class='hljl-ni'>4</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>contour!</span><span class='hljl-p'>(</span><span class='hljl-n'>ax</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>i₀_grid</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>β_grid</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>loglik_vals</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>levels</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-nf'>minimum</span><span class='hljl-p'>(</span><span class='hljl-n'>loglik_vals</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-nf'>maximum</span><span class='hljl-p'>(</span><span class='hljl-n'>loglik_vals</span><span class='hljl-p'>)</span><span class='hljl-oB'>-</span><span class='hljl-n'>crit_val</span><span class='hljl-p'>],</span><span class='hljl-t'> </span><span class='hljl-n'>color</span><span class='hljl-oB'>=:</span><span class='hljl-n'>red</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>linewidth</span><span class='hljl-oB'>=</span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-oB'>/</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>scatter!</span><span class='hljl-p'>(</span><span class='hljl-n'>ax</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-n'>θ</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]],</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-n'>θ</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>]],</span><span class='hljl-t'> </span><span class='hljl-n'>color</span><span class='hljl-oB'>=:</span><span class='hljl-n'>blue</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>markersize</span><span class='hljl-oB'>=</span><span class='hljl-ni'>14</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>scatter!</span><span class='hljl-p'>(</span><span class='hljl-n'>ax</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-n'>θ̂</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]],</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-n'>θ̂</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>]],</span><span class='hljl-t'> </span><span class='hljl-n'>color</span><span class='hljl-oB'>=:</span><span class='hljl-n'>red</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>markersize</span><span class='hljl-oB'>=</span><span class='hljl-ni'>14</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>clb</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Colorbar</span><span class='hljl-p'>(</span><span class='hljl-n'>fig</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-p'>],</span><span class='hljl-t'> </span><span class='hljl-n'>co</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>label</span><span class='hljl-oB'>=</span><span class='hljl-so'>L&quot;\ell(i_0, \beta)&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>vertical</span><span class='hljl-oB'>=</span><span class='hljl-kc'>true</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>fig</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: UndefVarError: θ̂ not defined
+</pre>
+
+
+<h2>Generating prediction intervals</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>prediction_function</span><span class='hljl-p'>(</span><span class='hljl-n'>θ</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>data</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-p'>(</span><span class='hljl-n'>i0</span><span class='hljl-p'>,</span><span class='hljl-n'>β</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>θ</span><span class='hljl-t'>
+    </span><span class='hljl-n'>tspan</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>data</span><span class='hljl-p'>[</span><span class='hljl-s'>&quot;tspan&quot;</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>npts</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>data</span><span class='hljl-p'>[</span><span class='hljl-s'>&quot;npts&quot;</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>t2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>LinRange</span><span class='hljl-p'>(</span><span class='hljl-n'>tspan</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-oB'>+</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>tspan</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>],</span><span class='hljl-t'> </span><span class='hljl-n'>npts</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>t1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>LinRange</span><span class='hljl-p'>(</span><span class='hljl-n'>tspan</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>],</span><span class='hljl-t'> </span><span class='hljl-n'>tspan</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>]</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>npts</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>I</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>i0</span><span class='hljl-oB'>*</span><span class='hljl-nfB'>1000.0</span><span class='hljl-t'>
+    </span><span class='hljl-n'>prob</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>remake</span><span class='hljl-p'>(</span><span class='hljl-n'>prob_ode</span><span class='hljl-p'>,</span><span class='hljl-n'>u0</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-nfB'>1000.0</span><span class='hljl-oB'>-</span><span class='hljl-n'>I</span><span class='hljl-p'>,</span><span class='hljl-n'>I</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.0</span><span class='hljl-p'>],</span><span class='hljl-n'>p</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-n'>β</span><span class='hljl-p'>,</span><span class='hljl-nfB'>10.0</span><span class='hljl-p'>,</span><span class='hljl-nfB'>0.25</span><span class='hljl-p'>],</span><span class='hljl-n'>tspan</span><span class='hljl-oB'>=</span><span class='hljl-n'>tspan</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>sol</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>solve</span><span class='hljl-p'>(</span><span class='hljl-n'>prob</span><span class='hljl-p'>,</span><span class='hljl-nf'>Tsit5</span><span class='hljl-p'>())</span><span class='hljl-t'>
+    </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-nf'>sol</span><span class='hljl-p'>(</span><span class='hljl-n'>t2</span><span class='hljl-p'>)[</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-oB'>:</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>.-</span><span class='hljl-t'> </span><span class='hljl-nf'>sol</span><span class='hljl-p'>(</span><span class='hljl-n'>t1</span><span class='hljl-p'>)[</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-oB'>:</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+prediction_function &#40;generic function with 1 method&#41;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>npts</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>1000</span><span class='hljl-t'>
+</span><span class='hljl-n'>t_pred</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>LinRange</span><span class='hljl-p'>(</span><span class='hljl-n'>tspan</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-oB'>+</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>tspan</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>],</span><span class='hljl-t'> </span><span class='hljl-n'>npts</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>d</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Dict</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;tspan&quot;</span><span class='hljl-t'> </span><span class='hljl-oB'>=&gt;</span><span class='hljl-t'> </span><span class='hljl-n'>tspan</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;npts&quot;</span><span class='hljl-t'> </span><span class='hljl-oB'>=&gt;</span><span class='hljl-t'> </span><span class='hljl-n'>npts</span><span class='hljl-p'>);</span>
+</pre>
+
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>exact_soln</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>prediction_function</span><span class='hljl-p'>(</span><span class='hljl-n'>θ</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>d</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>mle_soln</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>prediction_function</span><span class='hljl-p'>(</span><span class='hljl-n'>θ̂</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>d</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: UndefVarError: θ̂ not defined
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>threshold</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>maximum</span><span class='hljl-p'>(</span><span class='hljl-n'>loglik_vals_ir</span><span class='hljl-p'>)</span><span class='hljl-oB'>-</span><span class='hljl-n'>crit_val</span><span class='hljl-t'>
+</span><span class='hljl-n'>θₗₕₛ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-n'>ProfileLikelihood</span><span class='hljl-oB'>.</span><span class='hljl-nf'>get_parameters</span><span class='hljl-p'>(</span><span class='hljl-n'>irregular_grid</span><span class='hljl-p'>,</span><span class='hljl-n'>i</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>10000</span><span class='hljl-t'> </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>loglik_vals_ir</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>&gt;=</span><span class='hljl-t'> </span><span class='hljl-n'>threshold</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-n'>lhs_soln</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nf'>prediction_function</span><span class='hljl-p'>(</span><span class='hljl-n'>theta</span><span class='hljl-p'>,</span><span class='hljl-n'>d</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>theta</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-n'>θₗₕₛ</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: UndefVarError: loglik_vals_ir not defined
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>lhs_lci</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>vec</span><span class='hljl-p'>(</span><span class='hljl-nf'>minimum</span><span class='hljl-p'>(</span><span class='hljl-nf'>hcat</span><span class='hljl-p'>(</span><span class='hljl-n'>pred_lhs</span><span class='hljl-oB'>...</span><span class='hljl-p'>),</span><span class='hljl-n'>dims</span><span class='hljl-oB'>=</span><span class='hljl-ni'>2</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-n'>lhs_uci</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>vec</span><span class='hljl-p'>(</span><span class='hljl-nf'>maximum</span><span class='hljl-p'>(</span><span class='hljl-nf'>hcat</span><span class='hljl-p'>(</span><span class='hljl-n'>pred_lhs</span><span class='hljl-oB'>...</span><span class='hljl-p'>),</span><span class='hljl-n'>dims</span><span class='hljl-oB'>=</span><span class='hljl-ni'>2</span><span class='hljl-p'>));</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: UndefVarError: pred_lhs not defined
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>fig</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Figure</span><span class='hljl-p'>(</span><span class='hljl-n'>fontsize</span><span class='hljl-oB'>=</span><span class='hljl-ni'>32</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>resolution</span><span class='hljl-oB'>=</span><span class='hljl-p'>(</span><span class='hljl-ni'>500</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>400</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-n'>ax</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Axis</span><span class='hljl-p'>(</span><span class='hljl-n'>fig</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-p'>],</span><span class='hljl-t'> </span><span class='hljl-n'>width</span><span class='hljl-oB'>=</span><span class='hljl-ni'>400</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>height</span><span class='hljl-oB'>=</span><span class='hljl-ni'>300</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>lines!</span><span class='hljl-p'>(</span><span class='hljl-n'>ax</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>t_pred</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>lci</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>color</span><span class='hljl-oB'>=:</span><span class='hljl-n'>black</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>linewidth</span><span class='hljl-oB'>=</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>lines!</span><span class='hljl-p'>(</span><span class='hljl-n'>ax</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>t_pred</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>uci</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>color</span><span class='hljl-oB'>=:</span><span class='hljl-n'>black</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>linewidth</span><span class='hljl-oB'>=</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>band!</span><span class='hljl-p'>(</span><span class='hljl-n'>ax</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>t_pred</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>lci</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>uci</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>color</span><span class='hljl-oB'>=:</span><span class='hljl-n'>grey</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>lines!</span><span class='hljl-p'>(</span><span class='hljl-n'>ax</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>t_pred</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>exact_soln</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>color</span><span class='hljl-oB'>=:</span><span class='hljl-n'>red</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>lines!</span><span class='hljl-p'>(</span><span class='hljl-n'>ax</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>t_pred</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>mle_soln</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>color</span><span class='hljl-oB'>=:</span><span class='hljl-n'>blue</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>linestyle</span><span class='hljl-oB'>=:</span><span class='hljl-n'>dash</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>fig</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: UndefVarError: lci not defined
+</pre>
+
+
+
+        <HR/>
+        <div class="footer">
+          <p>
+            Published from <a href="ode_likelihoodintervals.jmd">ode_likelihoodintervals.jmd</a>
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.9 on 2023-01-14.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BODY>
+
+</HTML>
