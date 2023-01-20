@@ -129,7 +129,9 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
     - [Using a fixed delay in a jump system, making use of the integrator](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_delay/jump_process_delay.md)
     - [Using a stochastic delay differential equation in StochasticDelayDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sdde/sdde.md)
     - [Using a fixed delay in a discrete event simulation using SimJulia (see end of file)](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
-- [An Erlang distribution for the infectious period using the method of stages is illustrated in this notebook using AlgebraicDynamics.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_algebraicdynamics/ode_algebraicdynamics.md)
+- An Erlang distribution for the infectious period using the method of stages:
+  - [Using AlgebraicDynamics.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_algebraicdynamics/ode_algebraicdynamics.md)
+  - [Using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_stages/ode_stages.md)
 - Fractional differential equations
   - [Using FdeSolver.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_fdesolver/ode_fdesolver.md)
   - [Using FractionalDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_fractionaldiffeq/ode_fractionaldiffeq.md)
