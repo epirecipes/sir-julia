@@ -135,39 +135,6 @@ df_res = DataFrame(
 df_res
 
 
-lb2 = [confints[i][1] for i in 1:2]*0.5
-ub2 = [confints[i][2] for i in 1:2]*2;
-
-
-regular_grid = RegularGrid(lb2, ub2, 100);
-
-
-gs, loglik_vals = grid_search(prob, regular_grid; save_vals=Val(true), parallel = Val(true));
-
-
-fig = Figure(fontsize=38)
-i₀_grid = get_range(regular_grid, 1)
-β_grid = get_range(regular_grid, 2)
-ax = Axis(fig[1, 1],
-    xlabel=L"i_0", ylabel=L"\beta")
-co = heatmap!(ax, i₀_grid, β_grid, loglik_vals, colormap=Reverse(:matter))
-contour!(ax, i₀_grid, β_grid, loglik_vals, levels=40, color=:black, linewidth=1 / 4)
-scatter!(ax, [θ[1]], [θ[2]], color=:white, markersize=14)
-scatter!(ax, [gs[:i₀]], [gs[:β]], color=:blue, markersize=14)
-clb = Colorbar(fig[1, 2], co, label=L"\ell(i_0, \beta)", vertical=true)
-fig
-
-
-n_samples = 10000
-parameter_vals = QuasiMonteCarlo.sample(n_samples, lb2, ub2, LatinHypercubeSample());
-
-
-irregular_grid = IrregularGrid(lb2, ub2, parameter_vals);
-
-
-gs_ir, loglik_vals_ir = grid_search(prob, irregular_grid; save_vals=Val(true), parallel = Val(true));
-
-
 function prediction_function(θ, data)
     (i0,β) = θ
     tspan = data["tspan"]
@@ -202,6 +169,7 @@ latex_names = [L"i_0", L"\beta"]
 for i in 1:2
     ax = Axis(fig[1, i], title=L"(%$(alp[i])): Profile-wise PI for %$(latex_names[i])",
         titlealign=:left, width=400, height=300)
+    band!(ax, t_pred, getindex.(parameter_wise[i], 1), getindex.(parameter_wise[1], 2), color=(:grey, 0.7), transparency=true)
     lines!(ax, t_pred, exact_soln, color=:red)
     lines!(ax, t_pred, mle_soln, color=:blue, linestyle=:dash)
     lines!(ax, t_pred, getindex.(parameter_wise[i], 1), color=:black, linewidth=3)
@@ -209,7 +177,7 @@ for i in 1:2
 end
 ax = Axis(fig[1,3], title=L"(c):$ $ Union of all intervals",
     titlealign=:left, width=400, height=300)
-#band!(ax, t_pred, getindex.(union_intervals, 1), getindex.(union_intervals, 2), color=:grey)
+band!(ax, t_pred, getindex.(union_intervals, 1), getindex.(union_intervals, 2), color=(:grey, 0.7), transparency=true)
 lines!(ax, t_pred, getindex.(union_intervals, 1), color=:black, linewidth=3)
 lines!(ax, t_pred, getindex.(union_intervals, 2), color=:black, linewidth=3)
 lines!(ax, t_pred, exact_soln, color=:red)

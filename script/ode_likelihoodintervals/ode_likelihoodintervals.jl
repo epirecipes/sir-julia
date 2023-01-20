@@ -36,7 +36,7 @@ tspan = (0.0,tmax);
 u₀ = [990.0, 10.0, 0.0, 0.0]; # S, I, R, C
 
 
-p = [0.05,10.0,0.25]; # β, c, γ
+p = [0.05, 10.0, 0.25]; # β, c, γ
 
 
 prob_ode = ODEProblem(sir_ode!, u₀, tspan, p)
@@ -118,26 +118,25 @@ prob = LikelihoodProblem(
 crit_val = 0.5*quantile(Chisq(2),0.95)
 
 
-regular_grid = RegularGrid(lb, ub, 10)
+n_regular_grid = 50
+regular_grid = RegularGrid(lb, ub, n_regular_grid);
 
 
 gs, loglik_vals = grid_search(prob, regular_grid; save_vals=Val(true), parallel = Val(true))
 gs
 
 
-gs_max_lik, gs_max_idx = findmax(loglik_vals);
-
-
+gs_max_lik, gs_max_idx = findmax(loglik_vals)
 nroy = loglik_vals .>= (gs_max_lik - crit_val)
-nroyp = [ProfileLikelihood.get_parameters(regular_grid,(i,j)) for i in 1:100 for j in 1:100 if nroy[i,j]==1]
+nroyp = [ProfileLikelihood.get_parameters(regular_grid,(i,j)) for i in 1:n_regular_grid for j in 1:n_regular_grid if nroy[i,j]==1]
 
 
 lb2 = [minimum([x for x in nroyp[i]]) for i in 1:2] .* 0.5
-ub2 = [maximum([x for x in nroyp[i]]) for i in 1:2] .* 2
+ub2 = [maximum([x for x in nroyp[i]]) for i in 1:2] .* 2;
 
 
-n_samples = 10000
-parameter_vals = QuasiMonteCarlo.sample(n_samples, lb2, ub2, LatinHypercubeSample());
+n_lhs = 10000
+parameter_vals = QuasiMonteCarlo.sample(n_lhs, lb2, ub2, LatinHypercubeSample());
 
 
 irregular_grid = IrregularGrid(lb, ub, parameter_vals);
@@ -149,18 +148,18 @@ gs_ir
 
 prob = update_initial_estimate(prob, gs_ir)
 sol = mle(prob, Optim.LBFGS())
-θ̂ = get_mle(sol)
+θ̂ = get_mle(sol);
 
 
 fig = Figure(fontsize=38)
 i₀_grid = get_range(regular_grid, 1)
-#i₀_grid_ir = [ProfileLikelihood.get_parameters(irregular_grid,i)[1] for i in 1:10000]
 β_grid = get_range(regular_grid, 2)
-#β_grid_ir = [ProfileLikelihood.get_parameters(irregular_grid,i)[2] for i in 1:10000]
-ax = Axis(fig[1, 1],
-    xlabel=L"i_0", ylabel=L"\beta")
+# Corresponding code for the irregular grid is below
+# i₀_grid = [ProfileLikelihood.get_parameters(irregular_grid,i)[1] for i in 1:n_lhs]
+# β_grid = [ProfileLikelihood.get_parameters(irregular_grid,i)[2] for i in 1:n_lhs]
+ax = Axis(fig[1, 1], xlabel=L"i_0", ylabel=L"\beta")
 co = heatmap!(ax, i₀_grid, β_grid, loglik_vals, colormap=Reverse(:matter))
-contour!(ax, i₀_grid, β_grid, loglik_vals, levels=40, color=:black, linewidth=1 / 4)
+contour!(ax, i₀_grid, β_grid, loglik_vals, levels=40, color=:black, linewidth=1/4)
 contour!(ax, i₀_grid, β_grid, loglik_vals, levels=[minimum(loglik_vals), maximum(loglik_vals)-crit_val], color=:red, linewidth=1 / 2)
 scatter!(ax, [θ[1]], [θ[2]], color=:blue, markersize=14)
 scatter!(ax, [θ̂[1]], [θ̂[2]], color=:red, markersize=14)
@@ -178,7 +177,7 @@ function prediction_function(θ, data)
     prob = remake(prob_ode,u0=[1000.0-I,I,0.0,0.0],p=[β,10.0,0.25],tspan=tspan)
     sol = solve(prob,Tsit5())
     return sol(t2)[4,:] .- sol(t1)[4,:]
-end
+end;
 
 
 npts = 1000
@@ -187,24 +186,27 @@ d = Dict("tspan" => tspan, "npts" => npts);
 
 
 exact_soln = prediction_function(θ, d)
-mle_soln = prediction_function(θ̂, d)
+mle_soln = prediction_function(θ̂, d);
 
 
 threshold = maximum(loglik_vals_ir)-crit_val
 θₗₕₛ = [ProfileLikelihood.get_parameters(irregular_grid,i) for i in 1:10000 if loglik_vals_ir[i] >= threshold]
-lhs_soln = [prediction_function(theta,d) for theta in θₗₕₛ]
+pred_lhs = [prediction_function(theta,d) for theta in θₗₕₛ];
 
 
 lhs_lci = vec(minimum(hcat(pred_lhs...),dims=2))
 lhs_uci = vec(maximum(hcat(pred_lhs...),dims=2));
 
 
-fig = Figure(fontsize=32, resolution=(500, 400))
+fig = Figure(fontsize=20, resolution=(600, 500))
 ax = Axis(fig[1, 1], width=400, height=300)
-lines!(ax, t_pred, lci, color=:black, linewidth=3)
-lines!(ax, t_pred, uci, color=:black, linewidth=3)
-band!(ax, t_pred, lci, uci, color=:grey)
-lines!(ax, t_pred, exact_soln, color=:red)
-lines!(ax, t_pred, mle_soln, color=:blue, linestyle=:dash)
+lines!(ax, t_pred, lhs_lci, color=:gray, linewidth=3)
+lines!(ax, t_pred, lhs_uci, color=:gray, linewidth=3)
+lines!(ax, t_pred, exact_soln, color=:red, label="True value")
+lines!(ax, t_pred, mle_soln, color=:blue, linestyle=:dash, label="ML estimate")
+band!(ax, t_pred, lhs_lci, lhs_uci, color=(:grey, 0.7), transparency=true, label="95% interval")
+axislegend(ax)
+ax.xlabel = "Time"
+ax.ylabel = "Number"
 fig
 

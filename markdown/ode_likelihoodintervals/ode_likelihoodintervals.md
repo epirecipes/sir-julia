@@ -79,7 +79,7 @@ u₀ = [990.0, 10.0, 0.0, 0.0]; # S, I, R, C
 ## Parameter values
 
 ```julia
-p = [0.05,10.0,0.25]; # β, c, γ
+p = [0.05, 10.0, 0.25]; # β, c, γ
 ```
 
 
@@ -162,7 +162,7 @@ data = rand.(Poisson.(X));
 
 ## Optimization
 
-ProfileLikelihood.jl expects a log-likelihood function with the parameter vector, `θ`, the data, and the integrator used for the model - see the documentation on [the integrator interface of `DifferentialEquations.jl`](https://docs.sciml.ai/DiffEqDocs/stable/basics/integrator/) for more details.
+`ProfileLikelihood.jl` expects a log-likelihood function with the parameter vector, `θ`, the data, and the integrator used for the model - see the documentation on [the integrator interface of `DifferentialEquations.jl`](https://docs.sciml.ai/DiffEqDocs/stable/basics/integrator/) for more details.
 
 ```julia
 function ll(θ, data, integrator)
@@ -237,6 +237,8 @@ prob = LikelihoodProblem(
 
 ## Grid search to identify the maximum likelihood value and the likelihood region
 
+We first set the critical value of the likelihood in order to calculate the intervals.
+
 ```julia
 crit_val = 0.5*quantile(Chisq(2),0.95)
 ```
@@ -251,18 +253,12 @@ crit_val = 0.5*quantile(Chisq(2),0.95)
 
 ### Regular grid
 
-We first use a coarse regular grid to refine the bounds of the parameters.
+We first use a coarse regular grid (with 10 points along each of the axes) to refine the bounds of the parameters.
 
 ```julia
-regular_grid = RegularGrid(lb, ub, 10)
+n_regular_grid = 50
+regular_grid = RegularGrid(lb, ub, n_regular_grid);
 ```
-
-```
-ProfileLikelihood.RegularGrid{2, Vector{Float64}, Int64, Vector{Float64}, F
-loat64}([0.001, 0.01], [0.1, 0.1], 10, [0.011000000000000001, 0.01000000000
-0000002])
-```
-
 
 
 ```julia
@@ -272,30 +268,29 @@ gs
 
 ```
 LikelihoodSolution. retcode: Success
-Maximum likelihood: -113.53871145848349
+Maximum likelihood: -108.10376989661182
 Maximum likelihood estimates: 2-element Vector{Float64}
-     i₀: 0.012
-     β: 0.05000000000000001
+     i₀: 0.009081632653061226
+     β: 0.05040816326530613
 ```
 
 
 
 
 
-This is going to give us a crude maximum likelihood estimate and region, but this can still be used to discard unlikely parameter values.
+This is going to give us a crude maximum likelihood estimate and region, but this can still be used to discard unlikely parameter values and keep ones that are more consistent with the data ('Not Ruled Out Yet' or NROY). Note that only a small number of samples are NROY.
 
 ```julia
-gs_max_lik, gs_max_idx = findmax(loglik_vals);
-```
-
-
-```julia
+gs_max_lik, gs_max_idx = findmax(loglik_vals)
 nroy = loglik_vals .>= (gs_max_lik - crit_val)
-nroyp = [ProfileLikelihood.get_parameters(regular_grid,(i,j)) for i in 1:100 for j in 1:100 if nroy[i,j]==1]
+nroyp = [ProfileLikelihood.get_parameters(regular_grid,(i,j)) for i in 1:n_regular_grid for j in 1:n_regular_grid if nroy[i,j]==1]
 ```
 
 ```
-Error: BoundsError: attempt to access 10×10 BitMatrix at index [1, 11]
+3-element Vector{Vector{Float64}}:
+ [0.007061224489795919, 0.052244897959183675]
+ [0.009081632653061226, 0.05040816326530613]
+ [0.011102040816326531, 0.04857142857142858]
 ```
 
 
@@ -308,34 +303,19 @@ We now refine the parameter bounds from our coarse grid search, and run the mode
 
 ```julia
 lb2 = [minimum([x for x in nroyp[i]]) for i in 1:2] .* 0.5
-ub2 = [maximum([x for x in nroyp[i]]) for i in 1:2] .* 2
+ub2 = [maximum([x for x in nroyp[i]]) for i in 1:2] .* 2;
 ```
-
-```
-Error: UndefVarError: nroyp not defined
-```
-
 
 
 ```julia
-n_samples = 10000
-parameter_vals = QuasiMonteCarlo.sample(n_samples, lb2, ub2, LatinHypercubeSample());
+n_lhs = 10000
+parameter_vals = QuasiMonteCarlo.sample(n_lhs, lb2, ub2, LatinHypercubeSample());
 ```
-
-```
-Error: UndefVarError: lb2 not defined
-```
-
 
 
 ```julia
 irregular_grid = IrregularGrid(lb, ub, parameter_vals);
 ```
-
-```
-Error: UndefVarError: parameter_vals not defined
-```
-
 
 
 ```julia
@@ -344,7 +324,11 @@ gs_ir
 ```
 
 ```
-Error: UndefVarError: irregular_grid not defined
+LikelihoodSolution. retcode: Success
+Maximum likelihood: -108.62751418446815
+Maximum likelihood estimates: 2-element Vector{Float64}
+     i₀: 0.008346365306122448
+     β: 0.050695295918367356
 ```
 
 
@@ -353,34 +337,31 @@ Error: UndefVarError: irregular_grid not defined
 
 ## ML
 
-We can obtain the maximum likelhood estimate of the parameters using one of the algorithms in `Optimization.jl`. Here, we use `NelderMead` from `Optim.jl`, imported with `using OptimizationOptimJL` at the beginning of the notebook, using an updated initial estimate from our coarse grid search.
+We can obtain a more precise maximum likelhood estimate of the parameters using one of the algorithms in `Optimization.jl`. Here, we use `NelderMead` from `Optim.jl`, imported with `using OptimizationOptimJL` at the beginning of the notebook, using an updated initial estimate from our grid search.
 
 ```julia
 prob = update_initial_estimate(prob, gs_ir)
 sol = mle(prob, Optim.LBFGS())
-θ̂ = get_mle(sol)
+θ̂ = get_mle(sol);
 ```
-
-```
-Error: UndefVarError: gs_ir not defined
-```
-
 
 
 
 
 ## Plotting ML and likelhood surface
 
+In the below code, we plot out the likelihood surface, using the coarse grid to make computations faster.
+
 ```julia
 fig = Figure(fontsize=38)
 i₀_grid = get_range(regular_grid, 1)
-#i₀_grid_ir = [ProfileLikelihood.get_parameters(irregular_grid,i)[1] for i in 1:10000]
 β_grid = get_range(regular_grid, 2)
-#β_grid_ir = [ProfileLikelihood.get_parameters(irregular_grid,i)[2] for i in 1:10000]
-ax = Axis(fig[1, 1],
-    xlabel=L"i_0", ylabel=L"\beta")
+# Corresponding code for the irregular grid is below
+# i₀_grid = [ProfileLikelihood.get_parameters(irregular_grid,i)[1] for i in 1:n_lhs]
+# β_grid = [ProfileLikelihood.get_parameters(irregular_grid,i)[2] for i in 1:n_lhs]
+ax = Axis(fig[1, 1], xlabel=L"i_0", ylabel=L"\beta")
 co = heatmap!(ax, i₀_grid, β_grid, loglik_vals, colormap=Reverse(:matter))
-contour!(ax, i₀_grid, β_grid, loglik_vals, levels=40, color=:black, linewidth=1 / 4)
+contour!(ax, i₀_grid, β_grid, loglik_vals, levels=40, color=:black, linewidth=1/4)
 contour!(ax, i₀_grid, β_grid, loglik_vals, levels=[minimum(loglik_vals), maximum(loglik_vals)-crit_val], color=:red, linewidth=1 / 2)
 scatter!(ax, [θ[1]], [θ[2]], color=:blue, markersize=14)
 scatter!(ax, [θ̂[1]], [θ̂[2]], color=:red, markersize=14)
@@ -388,15 +369,13 @@ clb = Colorbar(fig[1, 2], co, label=L"\ell(i_0, \beta)", vertical=true)
 fig
 ```
 
-```
-Error: UndefVarError: θ̂ not defined
-```
-
-
+![](figures/ode_likelihoodintervals_26_1.png)
 
 
 
 ## Generating prediction intervals
+
+To generate prediction intervals, we compute the predicted mean of the number of new cases across the Latin hypercube sample, and take the minimum and maximum levels for those simulations within `crit_val` of the maximum likelihood value.
 
 ```julia
 function prediction_function(θ, data)
@@ -409,14 +388,13 @@ function prediction_function(θ, data)
     prob = remake(prob_ode,u0=[1000.0-I,I,0.0,0.0],p=[β,10.0,0.25],tspan=tspan)
     sol = solve(prob,Tsit5())
     return sol(t2)[4,:] .- sol(t1)[4,:]
-end
-```
-
-```
-prediction_function (generic function with 1 method)
+end;
 ```
 
 
+
+
+We will run the simulation over a fine grid of `npts = 1000` timepoints.
 
 ```julia
 npts = 1000
@@ -425,53 +403,49 @@ d = Dict("tspan" => tspan, "npts" => npts);
 ```
 
 
+
+
+This generates the predictions for the true parameter values and for the maximum likelihood estimates.
+
 ```julia
 exact_soln = prediction_function(θ, d)
-mle_soln = prediction_function(θ̂, d)
-```
-
-```
-Error: UndefVarError: θ̂ not defined
+mle_soln = prediction_function(θ̂, d);
 ```
 
 
+
+
+This generates the predictions for all the samples that fall within the likelihood region.
 
 ```julia
 threshold = maximum(loglik_vals_ir)-crit_val
 θₗₕₛ = [ProfileLikelihood.get_parameters(irregular_grid,i) for i in 1:10000 if loglik_vals_ir[i] >= threshold]
-lhs_soln = [prediction_function(theta,d) for theta in θₗₕₛ]
-```
-
-```
-Error: UndefVarError: loglik_vals_ir not defined
+pred_lhs = [prediction_function(theta,d) for theta in θₗₕₛ];
 ```
 
 
+
+
+We can then take the minimum and maximum over time as an estimate of our combined interval.
 
 ```julia
 lhs_lci = vec(minimum(hcat(pred_lhs...),dims=2))
 lhs_uci = vec(maximum(hcat(pred_lhs...),dims=2));
 ```
 
-```
-Error: UndefVarError: pred_lhs not defined
-```
-
-
 
 ```julia
-fig = Figure(fontsize=32, resolution=(500, 400))
+fig = Figure(fontsize=20, resolution=(600, 500))
 ax = Axis(fig[1, 1], width=400, height=300)
-lines!(ax, t_pred, lci, color=:black, linewidth=3)
-lines!(ax, t_pred, uci, color=:black, linewidth=3)
-band!(ax, t_pred, lci, uci, color=:grey)
-lines!(ax, t_pred, exact_soln, color=:red)
-lines!(ax, t_pred, mle_soln, color=:blue, linestyle=:dash)
+lines!(ax, t_pred, lhs_lci, color=:gray, linewidth=3)
+lines!(ax, t_pred, lhs_uci, color=:gray, linewidth=3)
+lines!(ax, t_pred, exact_soln, color=:red, label="True value")
+lines!(ax, t_pred, mle_soln, color=:blue, linestyle=:dash, label="ML estimate")
+band!(ax, t_pred, lhs_lci, lhs_uci, color=(:grey, 0.7), transparency=true, label="95% interval")
+axislegend(ax)
+ax.xlabel = "Time"
+ax.ylabel = "Number"
 fig
 ```
 
-```
-Error: UndefVarError: lci not defined
-```
-
-
+![](figures/ode_likelihoodintervals_32_1.png)

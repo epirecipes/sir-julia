@@ -284,72 +284,6 @@ itted
 
 
 
-## Grid search
-
-`ProfileLikelihood.jl` also provides methods to find maximum likelihood estimates using a grid search, which can also produce a full likelihood region. We can compare the profile likelihood intervals with a grid search of likelihood values. We consider bounds of `i₀` and `β` wider than the profile likelihood values.
-
-```julia
-lb2 = [confints[i][1] for i in 1:2]*0.5
-ub2 = [confints[i][2] for i in 1:2]*2;
-```
-
-
-
-
-### Regular grid
-
-We use a regular grid of parameter values to conduct a quick search of parameter space.
-
-```julia
-regular_grid = RegularGrid(lb2, ub2, 100);
-```
-
-
-```julia
-gs, loglik_vals = grid_search(prob, regular_grid; save_vals=Val(true), parallel = Val(true));
-```
-
-
-```julia
-fig = Figure(fontsize=38)
-i₀_grid = get_range(regular_grid, 1)
-β_grid = get_range(regular_grid, 2)
-ax = Axis(fig[1, 1],
-    xlabel=L"i_0", ylabel=L"\beta")
-co = heatmap!(ax, i₀_grid, β_grid, loglik_vals, colormap=Reverse(:matter))
-contour!(ax, i₀_grid, β_grid, loglik_vals, levels=40, color=:black, linewidth=1 / 4)
-scatter!(ax, [θ[1]], [θ[2]], color=:white, markersize=14)
-scatter!(ax, [gs[:i₀]], [gs[:β]], color=:blue, markersize=14)
-clb = Colorbar(fig[1, 2], co, label=L"\ell(i_0, \beta)", vertical=true)
-fig
-```
-
-![](figures/ode_profilelikelihood_22_1.png)
-
-
-
-### Latin hypercube sampling
-
-A more thorough search of parameter space can be conducted using [Latin Hypercube Sampling](https://en.wikipedia.org/wiki/Latin_hypercube_sampling); for completeness, the code to conduct LHS is below.
-
-```julia
-n_samples = 10000
-parameter_vals = QuasiMonteCarlo.sample(n_samples, lb2, ub2, LatinHypercubeSample());
-```
-
-
-```julia
-irregular_grid = IrregularGrid(lb2, ub2, parameter_vals);
-```
-
-
-```julia
-gs_ir, loglik_vals_ir = grid_search(prob, irregular_grid; save_vals=Val(true), parallel = Val(true));
-```
-
-
-
-
 ## Generating prediction intervals
 
 `ProfileLikelihood.jl` also provides a function to generate prediction intervals based on the profile likelihood intervals for individual parameters, and to combine the parameter-wise intervals to create a single interval. This requires a function that takes a vector of parameters, `θ`, with a second argument that can be used to pass information such as the time span and the number of data points. 
@@ -401,6 +335,7 @@ latex_names = [L"i_0", L"\beta"]
 for i in 1:2
     ax = Axis(fig[1, i], title=L"(%$(alp[i])): Profile-wise PI for %$(latex_names[i])",
         titlealign=:left, width=400, height=300)
+    band!(ax, t_pred, getindex.(parameter_wise[i], 1), getindex.(parameter_wise[1], 2), color=(:grey, 0.7), transparency=true)
     lines!(ax, t_pred, exact_soln, color=:red)
     lines!(ax, t_pred, mle_soln, color=:blue, linestyle=:dash)
     lines!(ax, t_pred, getindex.(parameter_wise[i], 1), color=:black, linewidth=3)
@@ -408,7 +343,7 @@ for i in 1:2
 end
 ax = Axis(fig[1,3], title=L"(c):$ $ Union of all intervals",
     titlealign=:left, width=400, height=300)
-#band!(ax, t_pred, getindex.(union_intervals, 1), getindex.(union_intervals, 2), color=:grey)
+band!(ax, t_pred, getindex.(union_intervals, 1), getindex.(union_intervals, 2), color=(:grey, 0.7), transparency=true)
 lines!(ax, t_pred, getindex.(union_intervals, 1), color=:black, linewidth=3)
 lines!(ax, t_pred, getindex.(union_intervals, 2), color=:black, linewidth=3)
 lines!(ax, t_pred, exact_soln, color=:red)
@@ -416,4 +351,4 @@ lines!(ax, t_pred, mle_soln, color=:blue, linestyle=:dash)
 fig
 ```
 
-![](figures/ode_profilelikelihood_30_1.png)
+![](figures/ode_profilelikelihood_23_1.png)
