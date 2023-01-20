@@ -104,6 +104,10 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 
 - [Local sensitivity of an ODE model using Zygote.jl and DiffEqSensitivity.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_local_sensitivity/ode_local_sensitivity.md)
 
+### Profile likelihood intervals
+
+- [Profile likelihood using ProfileLikelihood.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_profilelikelihood/ode_profilelikelihood.md)
+- [Profile likelihood using LikelihoodProfiler.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_likelihoodprofiler/ode_likelihoodprofiler.md)
 
 ### Surrogate models
 
@@ -126,7 +130,9 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
     - [Using a stochastic delay differential equation in StochasticDelayDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sdde/sdde.md)
     - [Using a fixed delay in a discrete event simulation using SimJulia (see end of file)](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
 - [An Erlang distribution for the infectious period using the method of stages is illustrated in this notebook using AlgebraicDynamics.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_algebraicdynamics/ode_algebraicdynamics.md)
-
+- Fractional differential equations
+  - [Using FdeSolver.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_fdesolver/ode_fdesolver.md)
+  - [Using FractionalDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_fractionaldiffeq/ode_fractionaldiffeq.md)
 
 ## Comments on implementations
 
