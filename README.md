@@ -7,7 +7,18 @@ Try the notebooks out in Binder:
 
 ## Model considered
 
-GitHub Markdown doesn't parse equations, so here's a description of the underlying SIR model.
+The model equations are as follows.
+
+$$
+\begin{align*}
+\dfrac{\mathrm dS}{\mathrm dt} &= -\frac{\beta c S I}{N}, \\
+\dfrac{\mathrm dI}{\mathrm dt} &= \frac{\beta c S I}{N} - \gamma I,\\ 
+\dfrac{\mathrm dR}{\mathrm dt} &= \gamma I, \\
+S(t) + I(t) + R(t) &= N
+\end{align*}
+$$
+
+Here's a description of the underlying SIR model.
 
 - The ordinary differential equation model considers:
   - Susceptible, S, with initial condition S(0)=990
@@ -23,36 +34,66 @@ There are two types of parameterization commonly used in this project; the 'stan
 
 The above process can be represented in different kinds of ways:
 
+### Ordinary differential equations
+
 - [Ordinary differential equation using the Euler method](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_euler/ode_euler.md)
 - [Ordinary differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode/ode.md)
 - [Ordinary differential equation using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mtk/ode_mtk.md)
 - [Ordinary differential equation using Modia.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_modia/ode_modia.md)
 - [Ordinary differential equation using ApproxFun.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_approxfun/ode_approxfun.md)
 - [Ordinary differential equation with composition using AlgebraicDynamics.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_algebraicdynamics/ode_algebraicdynamics.md)
+
+### Integral equations
+
 - [Volterra integral equation using the Adomian decomposition method](https://github.com/epirecipes/sir-julia/blob/master/markdown/adomian/adomian.md)
+
+### Stochastic differential equations
+
 - [Stochastic differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde/sde.md)
 - [Stochastic differential equation using StochasticDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_stochasticdiffeq/sde_stochasticdiffeq.md)
 - [Stochastic differential equation using Bridge.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_bridge/sde_bridge.md)
 - [Linear noise approximation (LNA) to the stochastic differential equation](https://github.com/epirecipes/sir-julia/blob/master/markdown/lna/lna.md)
 - [Multivariate birth process reparameterisation of the stochastic differential equation](https://github.com/epirecipes/sir-julia/blob/master/markdown/mbp/mbp.md)
 - [ODEs of means, variances, etc. through moment closure](https://github.com/epirecipes/sir-julia/blob/master/markdown/momentclosure/momentclosure.md)
+
+### Function maps
+
 - [Function map](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map/function_map.md)
 - [Function map using DynamicalSystems.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_dynamicalsystems/function_map_dynamicalsystems.md)
 - [Function map using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_mtk/function_map_mtk.md)
+
+### Stochastic Markov models
+
 - [Stochastic Markov model](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov/markov.md)
 - [Stochastic Markov model using Soss.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_soss/markov_soss.md)
+
+### Jump processes
+
 - [Jump process (Gillespie) using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process/jump_process.md)
     - [Jump process with a large number of states - in this case, the number of people some infects - captured by an InfiniteArray](https://github.com/epirecipes/sir-julia/blob/master/markdown/infinite_arrays/infinite_arrays.md)
 - [Jump process (Gillespie) using reaction networks from Catalyst.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_catalyst/jump_process_catalyst.md)
-- [Reaction network conversion to ODEs, SDEs and jump process using ModelingToolkit](https://github.com/epirecipes/sir-julia/blob/master/markdown/rn_mtk/rn_mtk.md)
-- [Petri net model to ODEs, SDEs, and jump process using Petri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_petri/pn_petri.md)
-- [Petri net model to ODEs, SDEs, and jump process using AlgebraicPetri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_algebraicpetri/pn_algebraicpetri.md)
 - [Jump process (Gillespie) using Gillespie.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_gillespie/jump_process_gillespie.md)
 - [Jump process using the Sellke construction](https://github.com/epirecipes/sir-julia/blob/master/markdown/sellke/sellke.md)
 - [Jump process using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_mtk/jump_process_mtk.md)
+
+### Petri nets
+
+- [Petri net model to ODEs, SDEs, and jump process using Petri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_petri/pn_petri.md)
+- [Petri net model to ODEs, SDEs, and jump process using AlgebraicPetri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_algebraicpetri/pn_algebraicpetri.md)
+
+### Discrete event simulations
+
 - [Discrete event simulation using SimJulia](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
+
+### Agent-based models
+
 - [Agent-based model using base Julia](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector/abm_vector.md) as well [as using DifferentialEquations](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector_diffeq/abm_vector_diffeq.md)
 - [Agent-based model using Agents.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm/abm.md)
+- [Transmission network individual-based model using Pathogen.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sim_pathogen/sim_pathogen.md)
+
+### Other representations
+
+- [Reaction network conversion to ODEs, SDEs and jump process using ModelingToolkit](https://github.com/epirecipes/sir-julia/blob/master/markdown/rn_mtk/rn_mtk.md)
 
 ## Generating simulated data
 
@@ -74,6 +115,7 @@ In addition to the above examples of simulation, there are also examples of infe
 - [Bayesian estimates of parameters of the ODE system using Approximate Bayesian Computation](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_abc/ode_abc.md)
 - [Bayesian estimates of parameters of the ODE system using Turing.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_turing/ode_turing.md)
 - [Bayesian estimates of parameters of the ODE system using NestedSamplers.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_nestedsampler/ode_nestedsampler.md)
+- [Bayesian inference of transmission network individual-based model parameters using Pathogen.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/infer_pathogen/infer_pathogen.md)
 
 ## Identifiability
 
