@@ -117,6 +117,11 @@ In addition to the above examples of simulation, there are also examples of infe
 - [Bayesian estimates of parameters of the ODE system using NestedSamplers.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_nestedsampler/ode_nestedsampler.md)
 - [Bayesian inference of transmission network individual-based model parameters using Pathogen.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/infer_pathogen/infer_pathogen.md)
 
+## Equilibrium analysis
+
+- [Steady state analysis of an SIR model with births and deaths](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_steadystate/ode_steadystate.md)
+- [Bifurcation/stroboscopic plot of a sinusoidally forced ODE model using brute force simulation](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_bifurcation_bruteforce/ode_bifurcation_bruteforce.md)
+
 ## Identifiability
 
 In conducting inference, it is important to know the extent to which parameters are identifiable from the available data.
