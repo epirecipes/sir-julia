@@ -27,7 +27,7 @@ using BenchmarkTools
 ```julia
 @parameters t β c γ
 @variables S(t) I(t) R(t)
-@derivatives D'~t
+D = Differential(t)
 N=S+I+R # This is recognized as a derived variable
 eqs = [D(S) ~ -β*c*I/N*S,
        D(I) ~ β*c*I/N*S-γ*I,
@@ -35,12 +35,12 @@ eqs = [D(S) ~ -β*c*I/N*S,
 ```
 
 ```julia
-sys = ODESystem(eqs);
+@named sys = ODESystem(eqs);
 ```
 
 ## Time domain
 
-We set the timespan for simulations, `tspan`, initial conditions, `u0`, and parameter values, `p` (which are unpacked above as `[β,γ]`).
+We set the timespan for simulations, `tspan`.
 
 ```julia
 δt = 0.1
@@ -61,7 +61,7 @@ u0 = [S => 990.0,
 
 ## Parameter values
 
-Similarly, the parameter values are defined by a dictionary.
+Similarly, the parameter values are also defined by a dictionary.
 
 ```julia
 p = [β=>0.05,
@@ -72,19 +72,28 @@ p = [β=>0.05,
 ## Running the model
 
 ```julia
-prob_ode = ODEProblem(sys,u0,tspan,p;jac=true);
+prob = ODEProblem(sys, u0, tspan, p; jac=true);
 ```
 
+If we use `DifferentialEquations.jl`, we don't need to specify a solver, the package will choose it for us.
+
 ```julia
-sol_ode = solve(prob_ode);
+sol = solve(prob);
 ```
+
+We can check which solver was chosen as follows.
+
+```julia
+sol.alg
+```
+
 ## Post-processing
 
 We can convert the output to a dataframe for convenience.
 
 ```julia
-df_ode = DataFrame(sol_ode(t)')
-df_ode[!,:t] = t;
+df = DataFrame(sol(t))
+rename!(df, [:t, :S, :I, :R]);
 ```
 
 ## Plotting
@@ -92,9 +101,8 @@ df_ode[!,:t] = t;
 We can now plot the results.
 
 ```julia
-@df df_ode plot(:t,
-    [:x1 :x2 :x3],
-    label=["S" "I" "R"],
+@df df plot(:t,
+    [:S :I :R],
     xlabel="Time",
     ylabel="Number")
 ```
@@ -102,6 +110,6 @@ We can now plot the results.
 ## Benchmarking
 
 ```julia
-@benchmark solve(prob_ode)
+@benchmark solve(prob)
 ```
 

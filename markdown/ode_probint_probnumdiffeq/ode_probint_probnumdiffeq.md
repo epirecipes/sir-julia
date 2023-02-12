@@ -61,7 +61,7 @@ tspan = (0.0,tmax);
 ## Initial conditions
 
 ```julia
-u0 = [990.0,10.0,0.0]; # S,I,R
+u0 = [990.0,10.0,0.0]; # S, I, R
 ```
 
 
@@ -70,7 +70,7 @@ u0 = [990.0,10.0,0.0]; # S,I,R
 ## Parameter values
 
 ```julia
-p = [0.05,10.0,0.25]; # β,c,γ
+p = [0.05,10.0,0.25]; # β, c, γ
 ```
 
 
@@ -88,7 +88,7 @@ Random.seed!(1234);
 ## Running the model
 
 ```julia
-prob_ode = ODEProblem(sir_ode!,u0,tspan,p);
+prob = ODEProblem(sir_ode!, u0, tspan, p);
 ```
 
 
@@ -97,8 +97,8 @@ prob_ode = ODEProblem(sir_ode!,u0,tspan,p);
 To use probabilistic integration, we just use one of the solvers from ProbNumDiffEq.jl. We'll use the `EK0` and the `EK1` solvers to compare their output. More information on the solvers can be found [here](https://nathanaelbosch.github.io/ProbNumDiffEq.jl/dev/solvers/).
 
 ```julia
-sol_ode_ek0 = solve(prob_ode,
-                EK0(prior=:ibm, order=3, diffusionmodel=DynamicDiffusion(), smooth=true),
+sol_ek0 = solve(prob,
+                EK0(prior=IWP(3), order=3, diffusionmodel=DynamicDiffusion(), smooth=true),
                 dt=δt,
                 abstol=1e-1,
                 reltol=1e-2);
@@ -106,8 +106,8 @@ sol_ode_ek0 = solve(prob_ode,
 
 
 ```julia
-sol_ode_ek1 = solve(prob_ode,
-                EK1(prior=:ibm, order=3, diffusionmodel=DynamicDiffusion(), smooth=true),
+sol_ek1 = solve(prob,
+                EK1(prior=IWP(3), order=3, diffusionmodel=DynamicDiffusion(), smooth=true),
                 dt=δt,
                 abstol=1e-1,
                 reltol=1e-2);
@@ -118,46 +118,43 @@ sol_ode_ek1 = solve(prob_ode,
 
 ## Post-processing
 
-We can look at the mean and standard deviation by examining the `pu` field of the solution. The following gives the mean and standard deviation of `S`, `I`, and `R` at `t=20.0` for the two solvers.
+We can look at the mean and standard deviation by examining the `pu` field of the solution. The following gives the mean and covariance of `S`, `I`, and `R` at `t=20.0` for the two solvers.
 
 ```julia
-s20_ek0 = sol_ode_ek0(20.0)
-[mean(s20_ek0) std(s20_ek0)]
+s20_ek0 = sol_ek0(20.0)
+mean(s20_ek0),cov(s20_ek0)
 ```
 
 ```
-3×2 Matrix{Float64}:
- 412.269  0.0566167
- 149.687  0.0566167
- 438.043  0.0566167
+([412.3272415762977, 149.70107409364672, 437.9716843300547], 3x3 PSDMatrice
+s.PSDMatrix{Float64, Matrix{Float64}}; R=[0.09502662562019484 0.0 0.0; 0.0 
+0.0 0.0; … ; 0.0 0.0 0.0; 0.0 0.0 0.0])
 ```
 
 
 
 ```julia
-s20_ek1 = sol_ode_ek1(20.0)
-[mean(s20_ek1) std(s20_ek1)]
+s20_ek1 = sol_ek1(20.0)
+mean(s20_ek1),cov(s20_ek1)
 ```
 
 ```
-3×2 Matrix{Float64}:
- 412.175  0.058913
- 149.699  0.0341972
- 438.126  0.0740423
+([412.1653392432258, 149.72708387675203, 438.10900691480066], 3x3 PSDMatric
+es.PSDMatrix{Float64, Matrix{Float64}}; R=[-0.06811469048663515 0.015699730
+101940465 0.044028396379241; 0.0 -0.029494698100947687 0.01113759904940917;
+ … ; 0.0 0.0 0.0; 0.0 0.0 0.0])
 ```
 
 
 
 
-
-The standard deviation differs for `S`, `I`, and `R` using the `EK1` solver, but overall, the standard deviations are small.
 
 We can also take samples from the trajectory using `ProbNumDiffEq.sample`.
 
 ```julia
 num_samples = 100
-samples_ode_ek0 = ProbNumDiffEq.sample(sol_ode_ek0, num_samples);
-samples_ode_ek1 = ProbNumDiffEq.sample(sol_ode_ek1, num_samples);
+samples_ek0 = ProbNumDiffEq.sample(sol_ek0, num_samples);
+samples_ek1 = ProbNumDiffEq.sample(sol_ek1, num_samples);
 ```
 
 
@@ -165,11 +162,11 @@ samples_ode_ek1 = ProbNumDiffEq.sample(sol_ode_ek1, num_samples);
 
 ## Plotting
 
-We can now plot the results; there is a default plotting method (e.g. using `plot(sol_ode_ek1)`), but the below accentuates the differences between samples (although it is low in this case, even on a log scale).
+We can now plot the results; there is a default plotting method (e.g. using `plot(sol_ek1)`), but the below accentuates the differences between samples (although it is low in this case, even on a log scale).
 
 ```julia
-p_ek0 = plot(sol_ode_ek0.t,
-         samples_ode_ek0[:, :, 1],
+p_ek0 = plot(sol_ek0.t,
+         samples_ek0[:, :, 1],
          label=["S" "I" "R"],
          color=[:blue :red :green],
          xlabel="Time",
@@ -177,8 +174,8 @@ p_ek0 = plot(sol_ode_ek0.t,
          title="EK0")
 for i in 2:num_samples
     plot!(p_ek0,
-          sol_ode_ek0.t,
-          samples_ode_ek0[:, :, i],
+          sol_ek0.t,
+          samples_ek0[:, :, i],
           label="",
           color=[:blue :red :green])
 end;
@@ -186,8 +183,8 @@ end;
 
 
 ```julia
-p_ek1 = plot(sol_ode_ek1.t,
-         samples_ode_ek1[:, :, 1],
+p_ek1 = plot(sol_ek1.t,
+         samples_ek1[:, :, 1],
          label=["S" "I" "R"],
          color=[:blue :green],
          xlabel="Time",
@@ -195,8 +192,8 @@ p_ek1 = plot(sol_ode_ek1.t,
          title="EK1")
 for i in 2:num_samples
     plot!(p_ek1,
-          sol_ode_ek1.t,
-          samples_ode_ek1[:, :, i],
+          sol_ek1.t,
+          samples_ek1[:, :, i],
           label="",
           color=[:blue :red :green],)
 end;
@@ -208,7 +205,7 @@ end;
 This shows the simulations around the peak.
 
 ```julia
-plot(p_ek0, p_ek1, layout = (1,2), xlim=(15,20),ylim=(100,1000),yaxis=:log10)
+plot(p_ek0, p_ek1, layout = (1,2), xlim=(15,20), ylim=(100,1000), yaxis=:log10)
 ```
 
 ![](figures/ode_probint_probnumdiffeq_15_1.png)
@@ -218,7 +215,7 @@ plot(p_ek0, p_ek1, layout = (1,2), xlim=(15,20),ylim=(100,1000),yaxis=:log10)
 This shows the simulations around the end of the timespan.
 
 ```julia
-plot(p_ek0, p_ek1, layout = (1,2), xlim=(35,40),ylim=(10,1000),yaxis=:log10)
+plot(p_ek0, p_ek1, layout = (1,2), xlim=(35,40), ylim=(10,1000), yaxis=:log10)
 ```
 
 ![](figures/ode_probint_probnumdiffeq_16_1.png)
@@ -228,45 +225,49 @@ plot(p_ek0, p_ek1, layout = (1,2), xlim=(35,40),ylim=(10,1000),yaxis=:log10)
 ## Benchmarking
 
 ```julia
-@benchmark solve(prob_ode,
-                 EK0(prior=:ibm, order=3, diffusionmodel=DynamicDiffusion(), smooth=true),
+@benchmark solve(prob,
+                 EK0(prior=IWP(3), order=3, diffusionmodel=DynamicDiffusion(), smooth=true),
                  abstol=1e-1,
                  reltol=1e-2)
 ```
 
 ```
-BenchmarkTools.Trial: 2595 samples with 1 evaluation.
- Range (min … max):  1.441 ms … 32.918 ms  ┊ GC (min … max): 0.00% … 86.73%
- Time  (median):     1.809 ms              ┊ GC (median):    0.00%
- Time  (mean ± σ):   1.917 ms ±  1.693 ms  ┊ GC (mean ± σ):  4.47% ±  4.83%
+BenchmarkTools.Trial: 2390 samples with 1 evaluation.
+ Range (min … max):  1.944 ms …  13.459 ms  ┊ GC (min … max): 0.00% … 83.89
+%
+ Time  (median):     2.076 ms               ┊ GC (median):    0.00%
+ Time  (mean ± σ):   2.090 ms ± 398.394 μs  ┊ GC (mean ± σ):  0.67% ±  2.97
+%
 
-               ▁█     █▁                                      
-  ▄▇▃▃▃▃▂▄▂▂█▅▂██▃▅▇▃▂██▂▂▂▂▂▂▂▂▂▁▂▁▂▂▁▁▁▁▁▂▁▂▁▁▁▁▂▁▁▁▁▁▁▁▂▂ ▃
-  1.44 ms        Histogram: frequency by time        2.92 ms <
+                                            ▄▇██▇▆▅▃▁▁        ▁
+  ▄▁▄▅▅▄▅▁▄▁▁▁▁▁▁▁▁▁▁▁▄▄▇▇▇▆▆▄▄▁▄▄▁▄▄▄▄▄▁▁▅████████████▇▅▅▆▅▇ █
+  1.94 ms      Histogram: log(frequency) by time      2.12 ms <
 
- Memory estimate: 482.14 KiB, allocs estimate: 2112.
+ Memory estimate: 319.02 KiB, allocs estimate: 1757.
 ```
 
 
 
 ```julia
-@benchmark solve(prob_ode,
-                 EK1(prior=:ibm, order=3, diffusionmodel=DynamicDiffusion(), smooth=true),
+@benchmark solve(prob,
+                 EK1(prior=IWP(3), order=3, diffusionmodel=DynamicDiffusion(), smooth=true),
                  abstol=1e-1,
                  reltol=1e-2)
 ```
 
 ```
-BenchmarkTools.Trial: 2773 samples with 1 evaluation.
- Range (min … max):  1.338 ms … 32.674 ms  ┊ GC (min … max): 0.00% … 87.11%
- Time  (median):     1.695 ms              ┊ GC (median):    0.00%
- Time  (mean ± σ):   1.793 ms ±  1.490 ms  ┊ GC (mean ± σ):  3.90% ±  4.48%
+BenchmarkTools.Trial: 2640 samples with 1 evaluation.
+ Range (min … max):  1.758 ms …  13.903 ms  ┊ GC (min … max): 0.00% … 86.00
+%
+ Time  (median):     1.878 ms               ┊ GC (median):    0.00%
+ Time  (mean ± σ):   1.891 ms ± 397.595 μs  ┊ GC (mean ± σ):  0.70% ±  2.88
+%
 
-  ▁▅▂  ▁  ▃ ▁▆▃ ▇▆▁▂▁ ▄█▄                                    ▁
-  ████▆██▆███████████▆███▇▆▄▄▃▃▄▆▃▅▃▃▁▃▃▁▁▃▄▁▁▁▁▁▁▁▁▁▃▁▁▁▃▁▃ █
-  1.34 ms      Histogram: log(frequency) by time      2.7 ms <
+                    ▁▁            ▂▅▇██▇▆▅▄▃▂▂▁▂              ▁
+  ▆▇█▇▇▆▁▅▁▄▁▄▅▁▁▁▇████▇▆▅▅▆▇▆▄▄▅▄███████████████▆▇▆▆▇▅▆▇▆▄▆▆ █
+  1.76 ms      Histogram: log(frequency) by time      1.95 ms <
 
- Memory estimate: 434.48 KiB, allocs estimate: 1921.
+ Memory estimate: 282.69 KiB, allocs estimate: 1567.
 ```
 
 

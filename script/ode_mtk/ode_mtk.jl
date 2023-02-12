@@ -9,14 +9,14 @@ using BenchmarkTools
 
 @parameters t β c γ
 @variables S(t) I(t) R(t)
-@derivatives D'~t
+D = Differential(t)
 N=S+I+R # This is recognized as a derived variable
 eqs = [D(S) ~ -β*c*I/N*S,
        D(I) ~ β*c*I/N*S-γ*I,
        D(R) ~ γ*I];
 
 
-sys = ODESystem(eqs);
+@named sys = ODESystem(eqs);
 
 
 δt = 0.1
@@ -35,22 +35,24 @@ p = [β=>0.05,
      γ=>0.25];
 
 
-prob_ode = ODEProblem(sys,u0,tspan,p;jac=true);
+prob = ODEProblem(sys, u0, tspan, p; jac=true);
 
 
-sol_ode = solve(prob_ode);
+sol = solve(prob);
 
 
-df_ode = DataFrame(sol_ode(t)')
-df_ode[!,:t] = t;
+sol.alg
 
 
-@df df_ode plot(:t,
-    [:x1 :x2 :x3],
-    label=["S" "I" "R"],
+df = DataFrame(sol(t))
+rename!(df, [:t, :S, :I, :R]);
+
+
+@df df plot(:t,
+    [:S :I :R],
     xlabel="Time",
     ylabel="Number")
 
 
-@benchmark solve(prob_ode)
+@benchmark solve(prob)
 
