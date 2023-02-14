@@ -29,8 +29,9 @@ function sir_trans(x, state, pars)
     state[3] += x[2]
 
     S, I, R = state
+    N = sum(state)
 
-    si_prob = rate2prob(I*β*Δt)
+    si_prob = rate2prob(I/N*β*Δt)
     ir_prob = rate2prob(γ*Δt)
     si_rv = MeasureTheory.Binomial(S, si_prob)
     ir_rv = MeasureTheory.Binomial(I, ir_prob)
