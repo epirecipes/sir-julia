@@ -95,6 +95,14 @@ The above process can be represented in different kinds of ways:
 
 - [Reaction network conversion to ODEs, SDEs and jump process using ModelingToolkit](https://github.com/epirecipes/sir-julia/blob/master/markdown/rn_mtk/rn_mtk.md)
 
+## Composing models
+
+Building models from smaller, re-usable components make it easier to build complex models quickly, and also makes it easier to document the development of these models.
+
+- [Composition of ODE models using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_compose/ode_compose.md)
+- [Composition of ODE models using AlgebraicDynamics.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_algebraicdynamics/ode_algebraicdynamics.md)
+- [Composition of petri net models using AlgebraicPetri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_algebraicpetri/pn_algebraicpetri.md)
+
 ## Generating simulated data
 
 We usually do not observe the trajectory of susceptible, infected, and recovered individuals. Rather, we often obtain data in terms of new cases aggregated over a particular timescale (e.g. a day or a week).
@@ -104,8 +112,9 @@ We usually do not observe the trajectory of susceptible, infected, and recovered
 ## Use of callbacks
 
 - [Changing parameter values at fixed times e.g. lockdown in an SIR model](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_lockdown/ode_lockdown.md)
-- [Preventing negative populations in stochastic differential equations](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_stochasticdiffeq/sde_stochasticdiffeq.md)
+- [Stopping simulations when infected individuals reach zero in stochastic differential equations](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_stochasticdiffeq/sde_stochasticdiffeq.md)
 - [Scheduling recovery times to model a fixed infectious period](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_delay/jump_process_delay.md)
+- [Preventing out-of-domain errors in a sinusoidally forced ODE model](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_bifurcation_bruteforce/ode_bifurcation_bruteforce.md)
 
 ## Inference
 

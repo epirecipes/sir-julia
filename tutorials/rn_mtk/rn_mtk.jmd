@@ -12,7 +12,8 @@ using DifferentialEquations
 using ModelingToolkit
 using OrdinaryDiffEq
 using StochasticDiffEq
-using DiffEqJump
+using JumpProcesses
+using FiniteStateProjection
 using Random
 using Plots
 ```
@@ -29,12 +30,12 @@ rxs = [Reaction((β*c)/N, [S,I], [I], [1,1], [2])
 ```
 
 ```julia
-rs  = ReactionSystem(rxs, t, [S,I,R], [β,c,γ])
+@named rs  = ReactionSystem(rxs, t, [S,I,R], [β,c,γ])
 ```
 
 ## Time domain
 
-We set the timespan for simulations, `tspan`, initial conditions, `u0`, and parameter values, `p` (which are unpacked above as `[β,γ]`).
+We set the timespan for simulations, `tspan`.
 
 ```julia
 tmax = 40.0
@@ -100,3 +101,13 @@ jsol = solve(jprob, SSAStepper())
 plot(jsol)
 ```
 
+### Finite state projection
+
+```julia
+fspsys = FSPSystem(rs)
+u0f = zeros(3, 1000)
+u0f[2,1] = 1.0
+pf = [0.05, 10.0, 0.25]
+fspprob = convert(ODEProblem, fspsys, u0f, tspan, pf)
+fspsol = solve(fspprob, Tsit5())
+```
