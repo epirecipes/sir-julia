@@ -76,6 +76,10 @@ The above process can be represented in different kinds of ways:
 - [Jump process using the Sellke construction](https://github.com/epirecipes/sir-julia/blob/master/markdown/sellke/sellke.md)
 - [Jump process using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_mtk/jump_process_mtk.md)
 
+### Finite state projection
+
+- [Solution of the master equation using FiniteStateProjection.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_fsp/ode_fsp.md)
+
 ### Petri nets
 
 - [Petri net model to ODEs, SDEs, and jump process using Petri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_petri/pn_petri.md)
@@ -170,7 +174,7 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 
 - [Surrogate models (single input/single output) of an ODE model using Surrogates.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_surrogate_1d_1d/ode_surrogate_1d_1d.md)
 - [Gaussian process surrogate model (two inputs/one output) of an ODE model using the Python package `mogp-emulator`, with an example of history matching](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mogp/ode_mogp.md)
-- [Bayes linear surrogate model (two inputs/one output) of an ODE model using the R package `hmer`, with an example of history matching](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_mhmer/ode_hmer.md)
+- [Bayes linear surrogate model (two inputs/one output) of an ODE model using the R package `hmer`, with an example of history matching](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_hmer/ode_hmer.md)
 
 ### Flexible models
 
