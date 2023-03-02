@@ -41,33 +41,39 @@ such as those based on stochastic Petri nets becomes more clear. The randomness 
 each of which is a counting process. Each event has an associated "state change" vector, which moves
 persons between compartments when it fires. This model is a discretization in time of that process.
 
-The function `sir_markov!` takes as input `x`, the number of times each counting process fired on the last step,
-`state`, a vector containing the values of (S, I, R), and `p`, a vector of parameters. The vector
-`state` is updated to account for those changes. The per-capita event probabilities are then calculated,
-and the number of times each event may occur is a binomial random variable. The transition kernel returned
-is a `productmeasure` because, conditional on the state at the "start" of the time step, the number of
-events of each type are independent.
+The function `sir_markov!` takes as input `x`, the number of times each counting process has fired up
+to that point, $N_{\text{inf}}(t), N_{\text{rec}}(t)$, `u0`, a vector containing the initial values 
+of (S, I, R), and `p`, a vector of parameters. 
+
+The per-capita event probabilities are then calculated, and the number of times each event may occur is a 
+binomial random variable. We use an `AffineTransform` combined with `pushfwd` to make sure that the
+bivariate Markov chain is defined on the cumulative number of firings.
+
+The transition kernel returned is a `productmeasure` because, conditional on the state at the "start" of the time step,
+the number of events of each type are independent.
 
 ```julia
-function sir_markov!(x, state, p)
+function sir_markov!(x, u0, p)
     (β,c,γ,δt) = p
 
+    S, I, R = u0
     @inbounds begin
-        state[1] -= x[1]
-        state[2] += x[1]
-        state[2] -= x[2]
-        state[3] += x[2]
+        S -= x[1]
+        I += x[1]
+        I -= x[2]
+        R += x[2]
     end
-
-    S, I, R = state
     N = S+I+R
 
     si_prob = rate_to_proportion(β*c*I/N, δt)
     ir_prob = rate_to_proportion(γ, δt)
     si_rv = MeasureTheory.Binomial(S, si_prob)
     ir_rv = MeasureTheory.Binomial(I, ir_prob)
+
+    N_inf = AffineTransform((μ=x[1],))
+    N_rec = AffineTransform((μ=x[2],))
     
-    productmeasure([si_rv, ir_rv])
+    productmeasure([pushfwd(N_inf, si_rv), pushfwd(N_rec, ir_rv)])
 end
 ```
 
@@ -118,7 +124,7 @@ p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
 We set a random number seed for reproducibility.
 
 ```julia
-Random.seed!(1234);
+Random.seed!(123);
 ```
 
 
@@ -133,13 +139,9 @@ Running this model involves:
 - Running the model, by using `take` to iterate the model our desired number of steps.
 - Reshape the output to a long matrix.
 
-```julia
-state = deepcopy(u0);
-```
-
 
 ```julia
-mc = Chain(x -> sir_markov!(x, state, p), productmeasure([Dirac(0), Dirac(0)]))
+mc = Chain(x -> sir_markov!(x, u0, p), productmeasure([Dirac(0), Dirac(0)]))
 r = rand(mc)
 samp = Iterators.take(r, nsteps)
 sir_trace = collect(samp)
@@ -154,10 +156,8 @@ sir_trace = transpose(hcat(sir_trace...))
 In order to get output comparable across implementations, we output the model at a fixed set of times.
 
 ```julia
-sir_out = zeros(Int, nsteps+1, 3)
-sir_out[1,:] = u0
+sir_out = transpose(hcat(fill(u0, nsteps+1)...))
 for i in 2:nsteps+1
-    sir_out[i,:] = sir_out[i-1,:] 
     sir_out[i,1] -= sir_trace[i-1,1]
     sir_out[i,2] += sir_trace[i-1,1]
     sir_out[i,2] -= sir_trace[i-1,2]
@@ -182,7 +182,7 @@ plot(
 )
 ```
 
-![](figures/markov_measure_12_1.png)
+![](figures/markov_measure_11_1.png)
 
 
 
@@ -198,16 +198,16 @@ end
 ```
 
 ```
-BenchmarkTools.Trial: 10000 samples with 346 evaluations.
- Range (min … max):  269.656 ns … 28.564 μs  ┊ GC (min … max):  0.00% … 97.
-77%
- Time  (median):     288.185 ns              ┊ GC (median):     0.00%
- Time  (mean ± σ):   348.858 ns ±  1.058 μs  ┊ GC (mean ± σ):  13.82% ±  4.
-50%
+BenchmarkTools.Trial: 10000 samples with 199 evaluations.
+ Range (min … max):  411.854 ns … 48.813 μs  ┊ GC (min … max): 0.00% … 98.9
+4%
+ Time  (median):     433.417 ns              ┊ GC (median):    0.00%
+ Time  (mean ± σ):   482.285 ns ±  1.453 μs  ┊ GC (mean ± σ):  9.52% ±  3.1
+3%
 
-   ▃▅▇██▇▆▆▅▅▄▄▄▃▃▃▂▂▂▁▁▁  ▁▂▂▂▁▁                              ▂
-  █████████████████████████████████▇██▇▇▇█▇▇▇▆▅▇▇▇▇▇▇███▇▆▇▇▆▆ █
-  270 ns        Histogram: log(frequency) by time       440 ns <
+         ▂▂▁▃▃▄▆█▇▆▃▂                                           
+  ▁▁▂▃▅▇█████████████▇▅▄▄▄▅▄▄▃▃▃▃▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁ ▃
+  412 ns          Histogram: frequency by time          500 ns <
 
  Memory estimate: 704 bytes, allocs estimate: 10.
 ```
