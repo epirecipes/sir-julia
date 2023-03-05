@@ -99,6 +99,11 @@ The above process can be represented in different kinds of ways:
 
 - [Reaction network conversion to ODEs, SDEs and jump process using ModelingToolkit](https://github.com/epirecipes/sir-julia/blob/master/markdown/rn_mtk/rn_mtk.md)
 
+## Optimal control
+
+- [Optimal control of an SIR epidemic using Optimization.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_lockdown_optimization/ode_lockdown_optimization.md)
+- [Optimal control of an SIR epidemic using InfiniteOpt.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_lockdown_infiniteopt/ode_lockdown_infiniteopt.md)
+
 ## Composing models
 
 Building models from smaller, re-usable components make it easier to build complex models quickly, and also makes it easier to document the development of these models.
