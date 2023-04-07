@@ -134,6 +134,7 @@ In addition to the above examples of simulation, there are also examples of infe
 - [Point estimates of parameters of the ODE system using Optim.jl and DiffEqParamEstim.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_optim/ode_optim.md)
 - [Bayesian estimates of parameters of the ODE system using Approximate Bayesian Computation](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_abc/ode_abc.md)
 - [Bayesian estimates of parameters of the ODE system using Turing.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_turing/ode_turing.md)
+- [Bayesian estimates of time-varying parameters of an ODE system using Turing.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_lockdown_inference/ode_lockdown_inference.md)
 - [Bayesian estimates of parameters of the ODE system using NestedSamplers.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_nestedsampler/ode_nestedsampler.md)
 
 ### Stochastic models
