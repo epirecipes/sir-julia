@@ -3,7 +3,7 @@ Simon Frost (@sdwfrost), 2023-04-07
 
 ## Introduction
 
-This implementation defines the model as a combination of two jump processes, infection and recovery. Unlike the examples based on `JumpProcesses.jl` or `Gillespie.jl`, this example uses [`DelaySSAToolkit.jl`](https://github.com/palmtree2013/DelaySSAToolkit.jl) to allow non-exponential passage times (such as time to recovery) without using techniques such as the linear chain trick, as illustrated in [this example](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_stages/ode_stages.md). It does this by modeling non-Markovian dynamics as callbacks, while Markovian dynamics are modeled using the standard SciML approach. A similar idea is illustrated in [this notebook by Sean Wu](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_delay/jump_process_delay.md).
+This implementation defines the model as a combination of two jump processes, infection and recovery. Unlike the examples based on `JumpProcesses.jl` or `Gillespie.jl`, this example uses [`DelaySSAToolkit.jl`](https://github.com/palmtree2013/DelaySSAToolkit.jl) to allow non-exponential passage times (such as time to recovery) without using techniques such as the linear chain trick, as illustrated in [this example](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_stages/ode_stages.md). It does this by modeling non-Markovian dynamics as callbacks, while Markovian dynamics are modeled using the standard SciML approach. A similar idea is illustrated in [this notebook by Sean Wu](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_delay/jump_process_delay.md). This example is based on the [SEIR model tutorial](https://palmtree2013.github.io/DelaySSAToolkit.jl/dev/tutorials/tutorials/) in the DelaySSAToolkit.jl documentation.
 
 ## Libraries
 
@@ -195,18 +195,18 @@ plot(djsol, xlabel="Time", ylabel="Number")
 ```
 
 ```
-BenchmarkTools.Trial: 2565 samples with 1 evaluation.
- Range (min … max):  1.385 ms …  12.892 ms  ┊ GC (min … max): 0.00% … 83.41
+BenchmarkTools.Trial: 2546 samples with 1 evaluation.
+ Range (min … max):  1.407 ms …  10.596 ms  ┊ GC (min … max): 0.00% … 80.91
 %
- Time  (median):     1.864 ms               ┊ GC (median):    0.00%
- Time  (mean ± σ):   1.948 ms ± 864.793 μs  ┊ GC (mean ± σ):  4.39% ±  8.14
+ Time  (median):     1.877 ms               ┊ GC (median):    0.00%
+ Time  (mean ± σ):   1.963 ms ± 840.933 μs  ┊ GC (mean ± σ):  4.27% ±  8.12
 %
 
-                ▁▃▄▄▇▆█▇▅▄▃▂                                   
-  ▂▂▂▂▂▂▃▂▃▃▄▅▆▇██████████████▄▄▄▃▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂ ▄
-  1.39 ms         Histogram: frequency by time        2.77 ms <
+    ▄█                                                         
+  ▂▃██▇▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂ ▂
+  1.41 ms         Histogram: frequency by time        9.91 ms <
 
- Memory estimate: 983.40 KiB, allocs estimate: 8651.
+ Memory estimate: 983.40 KiB, allocs estimate: 8596.
 ```
 
 
