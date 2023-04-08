@@ -202,6 +202,7 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 - Fixed (rather than exponential) distribution of infectious period:
     - [Using a delay differential equation and DelayDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/dde/dde.md)
     - [Using a fixed delay in a jump system, making use of the integrator](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_delay/jump_process_delay.md)
+    - [Using a gamma-distributed delay in a jump system using DelaySSAToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_delayssatoolkit/jump_process_delayssatoolkit.md)
     - [Using a stochastic delay differential equation in StochasticDelayDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sdde/sdde.md)
     - [Using a fixed delay in a discrete event simulation using SimJulia (see end of file)](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
 - An Erlang distribution for the infectious period using the method of stages:
