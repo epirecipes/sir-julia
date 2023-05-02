@@ -23,7 +23,8 @@ model = SDDP.LinearPolicyGraph(
     @variable(sp, 0 ≤ C, SDDP.State, initial_value = 0)
 
     @variable(sp, 0 ≤ υ_cumulative, SDDP.State, initial_value = 0)
-    @variable(sp, 0 ≤ υ ≤ υ_max, start = 0)
+    # @variable(sp, 0 ≤ υ ≤ υ_max, start = 0)
+    @variable(sp, 0 ≤ υ ≤ υ_max)
 
     # constraints on control    
     @constraint(sp, υ_cumulative.out == υ_cumulative.in + (δt * υ))
@@ -39,27 +40,47 @@ model = SDDP.LinearPolicyGraph(
     @NLconstraint(sp, I.out == I.in + infection - recovery)
     @NLconstraint(sp, C.out == C.in + infection)
 
-    @stageobjective(sp, C.out)
+    if t == nsteps
+        @stageobjective(sp, C.out)
+    else
+        @stageobjective(sp, 0)
+    end    
+
 end
 
-# # The solver works when we convert to a JuMP model
-# # I don't know how to extract the values from this, however
-# det = SDDP.deterministic_equivalent(model, Ipopt.Optimizer)
-# set_silent(det)
-# JuMP.optimize!(det)
-# JuMP.termination_status(det)
+SDDP.train(model; iteration_limit = 200)
 
-# The stability report is fine
-SDDP.numerical_stability_report(model)
-# The solver will fail at iteration 7
-SDDP.train(model; iteration_limit = 10)
-sims = SDDP.simulate(model, 1, [:S,:I,:υ])
-traj = [[sims[1][i][:S].in,sims[1][i][:I].in,sims[1][i][:υ]] for i in 1:nsteps]
-traj = transpose(hcat(traj...))
-plot(traj)
+# simulate from the optimal policy
+sims = SDDP.simulate(model, 1, [:S,:I, :C, :υ, :υ_cumulative])
 
-# debugging
-sp_moi = JuMP.read_from_file("./subproblem_67.mof.json")
+# traj = [[sims[1][i][:S].in,sims[1][i][:I].in,sims[1][i][:υ]] for i in 1:nsteps]
+# traj = transpose(hcat(traj...))
+# plot(traj)
 
-sp_moi = JuMP.read_from_file("./subproblem_22.mof.json")
-JuMP.latex_formulation(sp_moi)
+Plots.plot(
+    SDDP.publication_plot(sims, title = "S") do data
+        return data[:S].out
+    end,
+    SDDP.publication_plot(sims, title = "I") do data
+        return data[:I].out
+    end,
+    SDDP.publication_plot(sims, title = "C") do data
+        return data[:C].out
+    end,
+    SDDP.publication_plot(sims, title = "Control") do data
+        return data[:υ]
+    end,
+    SDDP.publication_plot(sims, title = "Cumulative control") do data
+        return data[:υ_cumulative].out
+    end;
+    xlabel = "Time"
+)
+
+# final cumulative infections
+sims[1][nsteps][:C]
+
+# # debugging
+# sp_moi = JuMP.read_from_file("./subproblem_67.mof.json")
+
+# sp_moi = JuMP.read_from_file("./subproblem_22.mof.json")
+# JuMP.latex_formulation(sp_moi)
