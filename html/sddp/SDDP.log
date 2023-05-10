@@ -1,0 +1,81 @@
+------------------------------------------------------------------------------
+                      SDDP.jl (c) Oscar Dowson, 2017-21
+
+Problem
+  Nodes           : 100
+  State variables : 4
+  Scenarios       : 1.00000e+00
+  Existing cuts   : false
+  Subproblem structure                           : (min, max)
+    Variables                                    : (10, 10)
+    JuMP.VariableRef in MOI.GreaterThan{Float64} : (6, 6)
+    JuMP.AffExpr in MOI.LessThan{Float64}        : (1, 1)
+    JuMP.VariableRef in MOI.LessThan{Float64}    : (1, 2)
+    JuMP.AffExpr in MOI.EqualTo{Float64}         : (1, 1)
+Options
+  Solver          : serial mode
+  Risk measure    : SDDP.Expectation()
+  Sampling scheme : SDDP.InSampleMonteCarlo
+
+Numerical stability report
+  Non-zero Matrix range     [1e+00, 1e+00]
+  Non-zero Objective range  [1e+00, 4e+01]
+  Non-zero Bounds range     [5e-01, 5e-01]
+  Non-zero RHS range        [1e+01, 1e+01]
+No problems detected
+
+ Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
+------------------------------------------------------------------------------
+                      SDDP.jl (c) Oscar Dowson, 2017-21
+
+Problem
+  Nodes           : 100
+  State variables : 4
+  Scenarios       : 1.00000e+00
+  Existing cuts   : false
+  Subproblem structure                           : (min, max)
+    Variables                                    : (10, 10)
+    JuMP.VariableRef in MOI.GreaterThan{Float64} : (6, 6)
+    JuMP.AffExpr in MOI.LessThan{Float64}        : (1, 1)
+    JuMP.VariableRef in MOI.LessThan{Float64}    : (1, 2)
+    JuMP.AffExpr in MOI.EqualTo{Float64}         : (1, 1)
+Options
+  Solver          : serial mode
+  Risk measure    : SDDP.Expectation()
+  Sampling scheme : SDDP.InSampleMonteCarlo
+
+Numerical stability report
+  Non-zero Matrix range     [1e+00, 1e+00]
+  Non-zero Objective range  [1e+00, 4e+01]
+  Non-zero Bounds range     [5e-01, 5e-01]
+  Non-zero RHS range        [1e+01, 1e+01]
+No problems detected
+
+ Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
+------------------------------------------------------------------------------
+                      SDDP.jl (c) Oscar Dowson, 2017-21
+
+Problem
+  Nodes           : 100
+  State variables : 4
+  Scenarios       : 1.00000e+00
+  Existing cuts   : false
+  Subproblem structure                           : (min, max)
+    Variables                                    : (10, 10)
+    JuMP.VariableRef in MOI.GreaterThan{Float64} : (6, 6)
+    JuMP.AffExpr in MOI.LessThan{Float64}        : (1, 1)
+    JuMP.VariableRef in MOI.LessThan{Float64}    : (1, 2)
+    JuMP.AffExpr in MOI.EqualTo{Float64}         : (1, 1)
+Options
+  Solver          : serial mode
+  Risk measure    : SDDP.Expectation()
+  Sampling scheme : SDDP.InSampleMonteCarlo
+
+Numerical stability report
+  Non-zero Matrix range     [1e+00, 1e+00]
+  Non-zero Objective range  [1e+00, 4e+01]
+  Non-zero Bounds range     [5e-01, 5e-01]
+  Non-zero RHS range        [1e+01, 1e+01]
+No problems detected
+
+ Iteration    Simulation       Bound         Time (s)    Proc. ID   # Solves
