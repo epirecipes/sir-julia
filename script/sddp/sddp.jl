@@ -1,5 +1,5 @@
 
-using SDDP, JuMP, HiGHS, Plots;
+using SDDP, JuMP, Ipopt, Plots;
 
 
 β = 0.5 # infectivity rate
@@ -20,7 +20,7 @@ model = SDDP.LinearPolicyGraph(
     stages = nsteps,
     sense = :Min,
     lower_bound = 0,
-    optimizer = HiGHS.Optimizer,
+    optimizer = Ipopt.Optimizer,
 ) do sp, t
 
     @variable(sp, 0 ≤ S, SDDP.State, initial_value = u0[1])

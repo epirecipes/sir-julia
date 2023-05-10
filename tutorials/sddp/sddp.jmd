@@ -25,7 +25,7 @@ The decision variable is the intensity of the intervention at each time point (n
 ## Libraries
 
 ```julia
-using SDDP, JuMP, HiGHS, Plots;
+using SDDP, JuMP, Ipopt, Plots;
 ```
 
 ## Parameters
@@ -76,7 +76,7 @@ model = SDDP.LinearPolicyGraph(
     stages = nsteps,
     sense = :Min,
     lower_bound = 0,
-    optimizer = HiGHS.Optimizer,
+    optimizer = Ipopt.Optimizer,
 ) do sp, t
 
     @variable(sp, 0 ≤ S, SDDP.State, initial_value = u0[1])
