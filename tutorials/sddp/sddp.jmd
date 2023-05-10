@@ -112,7 +112,7 @@ graph where the policy is optimized given an approximation of the overall object
 and backwards passes to improve the approximation.
 
 ```julia
-SDDP.train(model; iteration_limit = 100);
+SDDP.train(model; iteration_limit = 50, print_level = 0);
 ```
 
 ## Plotting

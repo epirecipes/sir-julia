@@ -49,7 +49,7 @@ model = SDDP.LinearPolicyGraph(
 end;
 
 
-SDDP.train(model; iteration_limit = 100);
+SDDP.train(model; iteration_limit = 50, print_level = 0);
 
 
 sims = SDDP.simulate(model, 1, [:S,:I, :C, :υ, :υ_cumulative]);
