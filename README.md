@@ -109,6 +109,7 @@ The above process can be represented in different kinds of ways:
 - [Optimal control of an SIR epidemic with non-pharmaceutical interventions using ODEs and InfiniteOpt.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_lockdown_infiniteopt/ode_lockdown_infiniteopt.md)
 - [Optimal control of an SIR epidemic with non-pharmaceutical interventions using a function map and JuMP.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_lockdown_jump/ode_lockdown_jump.md)
 - [Optimal control of an SIR epidemic with vaccination using a function map and JuMP.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_vaccine_jump/ode_vaccine_jump.md)
+- [Optimal control of an SIR epidemic with non-pharmaceutical interventions using a function map and stochastic dual dynamic programming with SDDP.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sddp/sddp.md)
 
 ## Composing models
 
