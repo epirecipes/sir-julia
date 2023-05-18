@@ -209,7 +209,7 @@ plot!(ts, C_opt, label="C")
 plot!(ts, υ_opt, label="Optimized υ")
 ```
 
-![](figures/ode_vaccine_jump_15_1.png)
+![](figures/function_map_vaccine_jump_15_1.png)
 
 
 
@@ -283,7 +283,7 @@ plot!(ts, C_opt, label="C")
 plot!(ts, υ_opt, label="Optimized υ")
 ```
 
-![](figures/ode_vaccine_jump_19_1.png)
+![](figures/function_map_vaccine_jump_19_1.png)
 
 
 

@@ -233,7 +233,7 @@ plot!(ts, υ_opt, label="Optimized υ")
 vspan!([t₁, t₂], color=:gray, alpha=0.5, label="Exact υ")
 ```
 
-![](figures/ode_lockdown_jump_16_1.png)
+![](figures/function_map_lockdown_jump_16_1.png)
 
 
 
