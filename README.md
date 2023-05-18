@@ -85,6 +85,10 @@ The above process can be represented in different kinds of ways:
 - [Petri net model to ODEs, SDEs, and jump process using Petri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_petri/pn_petri.md)
 - [Petri net model to ODEs, SDEs, and jump process using AlgebraicPetri.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pn_algebraicpetri/pn_algebraicpetri.md)
 
+### Stock and flow models
+
+- [Simple stock and flow model to an ODE using StockFlow.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_stockflow/ode_stockflow.md)
+
 ### Discrete event simulations
 
 - [Discrete event simulation using SimJulia](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
