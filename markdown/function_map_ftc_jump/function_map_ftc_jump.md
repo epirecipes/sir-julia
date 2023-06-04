@@ -1,0 +1,255 @@
+# 'Flattening the curve' of an SIR epidemic with a non-pharmaceutical intervention using JuMP.jl
+Simon Frost (@sdwfrost), 2023-04-27
+
+## Introduction
+
+This example considers the optimal control of an SIR epidemic through an intervention which reduces infection, according to the following set of equations. `S` is the number of susceptible individuals, `I` is the number of infected individuals, and `C` is the total number of cases. The infection rate is reduced according to a policy `υ(t)`. The optimal control problem is specified as the policy that minimizes the total cost, measured as the integral of `υ` over time, while keeping the number of infected individuals below a threshold `I_max`, in order to 'flatten the curve'.
+
+$$
+\begin{align*}
+\dfrac{\mathrm dS}{\mathrm dt} &= -\beta (1 - \upsilon(t)) S I, \\
+\dfrac{\mathrm dI}{\mathrm dt} &= \beta (1 - \upsilon(t)) S I - \gamma I,\\ 
+\dfrac{\mathrm dC}{\mathrm dt} &= \beta (1 - \upsilon(t)) S I\\
+\end{align*}
+$$
+
+We discretize the above system using a fixed time step (as in [this example](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map/function_map.md)), and then use `JuMP.jl` to optimize.
+
+## Libraries
+
+```julia
+using JuMP
+using Ipopt
+using Plots;
+```
+
+
+
+
+## Parameters
+
+We set the parameters, which includes the maximum intervention level, `υ_max`, and the threshold proportion of infected individuals, `I_max`.
+
+```julia
+β = 0.5 # infectivity rate
+γ = 0.25 # recovery rate
+υ_max = 0.5 # maximum intervention
+I_max = 0.1 # maximum allowable infectives at one time
+silent = true;
+```
+
+
+
+
+## Time domain
+
+We set the time horizon to be long enough for the system to settle down to an equilibrium. We use a grid of timepoints fine enough to capture a wide variety of policy shapes, but coarse enough to keep the number of policy parameters to optimize low.
+
+```julia
+t0 = 0.0 # start time
+tf = 100.0 # final time
+δt = 0.1 # timestep
+T = Int(tf/δt); # number of timesteps
+```
+
+
+
+
+## Initial conditions
+
+We set the initial conditions for the number of susceptibles, infecteds, and the total number of cases.
+
+```julia
+S₀ = 0.99
+I₀ = 0.01
+C₀ = 0.00;
+```
+
+
+
+
+## Model setup
+
+We specify a model using `JuMP.Model`, passing an optimizer.
+
+```julia
+model = Model(Ipopt.Optimizer)
+```
+
+```
+A JuMP Model
+Feasibility problem with:
+Variables: 0
+Model mode: AUTOMATIC
+CachingOptimizer state: EMPTY_OPTIMIZER
+Solver name: Ipopt
+```
+
+
+
+
+
+We now declare the number of timesteps, `T`, and vectors of our model variables, including the intervention level, `ν`,  each `T+1` steps long. We also define the total cost of the intervention, `υ_total`.
+
+```julia
+@variable(model, S[1:(T+1)])
+@variable(model, I[1:(T+1)])
+@variable(model, C[1:(T+1)])
+@variable(model, υ[1:(T+1)])
+@variable(model, υ_total);
+```
+
+
+
+
+We constrain the variables, `S`, `I`, and `C` to be at their initial conditions for the first element of the array, and between 0 and 1 (as we are using proportions) for the others, with the exception of the proportion of infected individuals, `I`, which is constrained to be less than `I_max`.
+
+```julia
+# Initial conditions
+@constraint(model, S[1]==S₀)
+@constraint(model, I[1]==I₀)
+@constraint(model, C[1]==C₀)
+
+# Constraints on variables
+@constraint(model, [t=2:(T+1)], 0 ≤  S[t] ≤ 1)
+@constraint(model, [t=2:(T+1)], 0 ≤  I[t] ≤ I_max)
+@constraint(model, [t=2:(T+1)], 0 ≤  C[t] ≤ 1);
+```
+
+
+
+
+We constrain our policy, `υ(t)` to lie between 0 and `υ_max`, and define the integral of the intervention to be equal to `υ_total`, assuming that the intervention is piecewise constant during each time step.
+
+```julia
+@constraint(model, [t=1:(T+1)], 0 ≤  υ[t] ≤ υ_max);
+@constraint(model, δt*sum(υ) == υ_total);
+```
+
+
+
+
+To simplify the model constraints, we define nonlinear expressions for infection and recovery. We only need a vector that is `T` steps long.
+
+```julia
+@NLexpression(model, infection[t=1:T], (1-exp(-(1 - υ[t]) * β * I[t] * δt)) * S[t])
+@NLexpression(model, recovery[t=1:T], (1-exp(-γ*δt)) * I[t]);
+```
+
+
+
+
+We now add additional constraints corresponding to the function map for `S`, `I`, and `C`. These have to be nonlinear constraints due to the inclusion of nonlinear expressions.
+
+```julia
+@NLconstraint(model, [t=1:T], S[t+1] == S[t] - infection[t])
+@NLconstraint(model, [t=1:T], I[t+1] == I[t] + infection[t] - recovery[t])
+@NLconstraint(model, [t=1:T], C[t+1] == C[t] + infection[t]);
+```
+
+
+
+
+We declare our objective as minimizing the total cost of the intervention plus the smoothing penalty.
+
+```julia
+@objective(model, Min, υ_total);
+```
+
+
+
+
+## Running the model
+
+We optimize the model in-place.
+
+```julia
+if silent
+    set_silent(model)
+end
+optimize!(model)
+```
+
+
+
+
+We can check the termination status of the optimizer, to check whether it has converged.
+
+```julia
+termination_status(model)
+```
+
+```
+LOCALLY_SOLVED::TerminationStatusCode = 4
+```
+
+
+
+
+
+## Post-processing
+
+We can now extract the optimized values of `S`, `I`, and `C`, as well as the optimal policy, `υ`, as follows. We also calculate the time-varying reproductive number, `Rₜ`, both in the presence and in the absence of interventions.
+
+```julia
+S_opt = value.(S)
+I_opt = value.(I)
+C_opt = value.(C)
+υ_opt = value.(υ)
+Rₜ_opt = β * S_opt/γ # absence of intervention
+Rₜ′_opt = Rₜ_opt .* (1 .- υ_opt) # in presence of intervention
+ts = collect(0:δt:tf);
+```
+
+
+
+
+We calculate the time at which `Rₜ==1` using a root-finding approach.
+
+```julia
+using DataInterpolations
+using NonlinearSolve
+Rₜ_interp = CubicSpline(Rₜ_opt,ts)
+f(u, p) = [Rₜ_interp(u[1]) - 1.0]
+u0 = [(tf-t0)/2]
+Rtprob = NonlinearProblem(f, u0)
+Rtsol = solve(Rtprob, NewtonRaphson(), abstol = 1e-9).u[1];
+```
+
+
+
+
+## Plotting
+
+```julia
+plot(ts, S_opt, label="S", xlabel="Time", ylabel="Number", legend=:right, xlim=(0,60))
+plot!(ts, I_opt, label="I")
+plot!(ts, C_opt, label="C")
+plot!(ts, υ_opt, label="Optimized υ")
+hline!([I_max], color=:gray, alpha=0.5, label="Threshold I")
+hline!([υ_max], color=:orange, alpha=0.5, label="Threshold υ")
+```
+
+![](figures/function_map_ftc_jump_16_1.png)
+
+
+
+The optimal policy involves a single lockdown, that increases rapidly at or shortly before infecteds reach their threshold level, after which the strength of the lockdown is decreased. We can consider the total cost as the area under the policy curve.
+
+A plot of `Rₜ` over time shows that the intervention targets `Rₜ=1` (including intervention) at the threshold level of infected individuals, while lockdown is stopped when `Rₜ==1` in the absence of an intervention, such that the infected population size will not increase.
+
+```julia
+plot(ts, Rₜ_opt, label="Rₜ", xlabel="Time", ylabel="Number", legend=:right, xlim=(0,60))
+plot!(ts, Rₜ′_opt, label="Rₜ including policy")
+plot!(ts, υ_opt, label="Optimized υ")
+vline!([Rtsol], color=:gray, alpha=0.5, label=false)
+hline!([1.0], color=:gray, alpha=0.5, label=false)
+```
+
+![](figures/function_map_ftc_jump_17_1.png)
+
+
+
+## Discussion
+
+Compared to [a model where the total number of infections is minimized](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_lockdown_jump/function_map_lockdown_jump.md), keeping infecteds below a threshold while minimizing the cost of the intervention also results in a single intervention period, but where the strength of the intervention wanes over time. However, there are some important barriers to translating this result to a real intervention policy. It may not be possible to fine tune the intensity of the intervention over time; rather a series of staged interventions with different intensities may be used. The impact of the intervention may be unknown prior to it being implemented; lower efficacies require the intervention to be initiated with a longer lead time before the infected threshold is reached. Stopping the intervention requires knowledge of what the 'R number' is in the absence of intervention; this requires reliable estimates of `Rₜ` as well as the intensity of the intervention, `υ`. These uncertainties are in addition to the usual uncertainty in model structure and parameter values of the underlying model.

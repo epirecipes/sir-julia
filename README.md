@@ -107,8 +107,9 @@ The above process can be represented in different kinds of ways:
 
 - [Optimal control of an SIR epidemic with non-pharmaceutical interventions using ODEs and Optimization.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_lockdown_optimization/ode_lockdown_optimization.md)
 - [Optimal control of an SIR epidemic with non-pharmaceutical interventions using ODEs and InfiniteOpt.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_lockdown_infiniteopt/ode_lockdown_infiniteopt.md)
-- [Optimal control of an SIR epidemic with non-pharmaceutical interventions using a function map and JuMP.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_lockdown_jump/function_map_lockdown_jump.md)
-- [Optimal control of an SIR epidemic with vaccination using a function map and JuMP.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_vaccine_jump/function_map_vaccine_jump.md)
+- [Optimal control of an SIR epidemic with non-pharmaceutical interventions using a function map and JuMP.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_lockdown_jump/function_map_lockdown_jump.md)
+- [Flattening the curve of an SIR epidemic with non-pharmaceutical interventions using a function map and JuMP.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_ftc_jump/function_map_ftc_jump.md)
+- [Optimal control of an SIR epidemic with vaccination using a function map and JuMP.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_vaccine_jump/function_map_vaccine_jump.md)
 - [Optimal control of an SIR epidemic with non-pharmaceutical interventions using a function map and stochastic dual dynamic programming with SDDP.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sddp/sddp.md)
 
 ## Composing models
