@@ -75,6 +75,7 @@ The above process can be represented in different kinds of ways:
 - [Jump process (Gillespie) using Gillespie.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_gillespie/jump_process_gillespie.md)
 - [Jump process using the Sellke construction](https://github.com/epirecipes/sir-julia/blob/master/markdown/sellke/sellke.md)
 - [Jump process using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_mtk/jump_process_mtk.md)
+- [Jump process using Fleck.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_fleck/jump_process_fleck.md)
 
 ### Finite state projection
 
