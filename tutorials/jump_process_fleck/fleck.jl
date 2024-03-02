@@ -53,7 +53,32 @@ function step!(model::SIRNonMarkov, sampler, when, which, rng)
     end
 end
 
+# recovery follows Dirac(4)
 sirmodel = SIRNonMarkov(deepcopy(u0), p, 0, prod(p[1:2]), Dirac(1/p[3]), 0.0)
+sampler = CombinedNextReaction{Tuple{Symbol,Int}}()
+rng = Xoshiro()
+
+output = zeros(prod(sirmodel.state[1:2])+sum(sirmodel.state[1:2])+1, 4)
+nout = 1
+output[nout,:] = [sirmodel.time; sirmodel.state]
+nout += 1
+
+initialize!(sirmodel, sampler, rng)
+
+(when, which) = next(sampler, sirmodel.time, rng)
+
+while when ≤ tmax
+    step!(sirmodel, sampler, when, which, rng)
+    (when, which) = next(sampler, sirmodel.time, rng)
+
+    output[nout,:] = [sirmodel.time; sirmodel.state]
+    nout += 1
+end
+
+plot(output[1:nout-1,1], output[1:nout-1,2:end])
+
+# recovery follows Gamma(4,1)
+sirmodel = SIRNonMarkov(deepcopy(u0), p, 0, prod(p[1:2]), Gamma(4,1), 0.0)
 sampler = CombinedNextReaction{Tuple{Symbol,Int}}()
 rng = Xoshiro()
 
