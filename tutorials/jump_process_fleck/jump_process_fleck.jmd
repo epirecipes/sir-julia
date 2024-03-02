@@ -1,12 +1,13 @@
 
 # Jump process using Fleck.jl
-Simon Frost (@sdwfrost), 2023-12-15
+Simon Frost (@sdwfrost) and Sean L. Wu (@slwu89), 2023-12-15
 
 ## Introduction
 
-This is an example of a jump process model using [Fleck.jl](https://github.com/adolgert/Fleck.jl), which samples continuous-time probability distributions with time-varying hazard rates; you provide the probability distribution functions, and it tells you which fires next. This example is taken from one written by `@slwu89` from the [Fleck.jl examples](https://github.com/adolgert/Fleck.jl/blob/main/examples/SIR.jl), and considers the simplest case of exponentially-distributed rates, as in the standard SIR model.
-
-Specifically, a [vector addition system](https://en.wikipedia.org/wiki/Vector_addition_system) is used, which shares similarities with Petri nets. The state is a vector, and the system is a list of transitions. Each transition is an array of values. Negative numbers mean the transition needs to take this many tokens from the state, meaning the state at those indices must be an integer at least that large. Positive numbers mean the transition places tokens into the state. Unlike chemical simulations, the rate need not depend on the number of combinations of species present.
+This is an example of a jump process model using [Fleck.jl](https://github.com/adolgert/Fleck.jl), which samples continuous-time probability distributions with time-varying hazard rates; you provide the probability distribution functions, and it tells you which fires next. 
+The core concepts of Fleck are that of a sampler and of clocks. Each clock corresponds to an event which may occur in the future. A sampler keeps track of all enabled clocks, via a key type that is used to uniquely identify them.
+The sampler knows the distributions of all clocks, and when they were enabled. The main things you can do are tell a sampler to `enable!` a new clock, `disable!` a current clock, and ask it which clock fires next and when, with `next`.
+Fleck has a panopoly of sampling algorithms, including the first reaction method, direct methods, next reaction methods, among others, so that users can design a sampling scheme most appropriate for their simulation.
 
 ## Libraries
 
@@ -17,28 +18,72 @@ using Distributions
 using Fleck
 ```
 
-## Transitions
+## Model struct
 
-The transitions of the vector addition system are defined by the `take` and `give` matrices. The `take` matrix defines the transitions that remove tokens from the state, and the `give` matrix defines the transitions that add tokens to the state. The `rates` vector defines the rates of the transitions, and is a vector of functions that take the state as input and return a distribution.
+Because Fleck is a library for users to depend upon to build their own stochastic modeling frameworks, we define a struct `SIRNonMarkov`
+to create a very small modeling applications just for SIR models here. Because every time a new clock is enabled, it needs a new
+key, we define a method `get_key!` that grabs a new integer and increments the counter stored in the struct.
+
+The SIR model we consider here has the standard Exponential clock for infection events, but allows recovery to follow a general distribution.
 
 ```julia
-function sir_vas(β, c, γ)
-    take = [
-        1 0;
-        1 1;
-        0 0;
-    ]
-    give = [
-        0 0;
-        2 0;
-        0 1;
-    ]
-    rates = [
-             (state) -> Exponential(1.0/(β*c*state[2]/sum(state)*state[1])),
-             (state) -> Exponential(1.0/(state[2] * γ))
-             ]
-    (take, give, rates)
-end;
+mutable struct SIRNonMarkov{T<:Distribution}
+    state::Vector{Int}
+    parameters::Vector{Float64}
+    next_key::Int
+    infection_rate::Float64
+    recovery_distribution::T
+    time::Float64
+end
+
+function get_key!(model::SIRNonMarkov)
+    key = model.next_key
+    model.next_key += 1
+    return key
+end
+```
+
+## Initialization
+
+To initialize the model, we need to enable the infection clock, and, for each initially infectious person, enable a recovery clock.
+
+```julia
+function initialize!(model::SIRNonMarkov, sampler, rng)
+    (β, c, γ) = model.parameters
+    # enable the infection transition
+    enable!(sampler, (:infection, get_key!(model)), Exponential(1.0/(β*c*model.state[2]/sum(model.state)*model.state[1])), model.time, model.time, rng)
+    # enable the recovery transitions
+    for _ in 1:model.state[2]
+        enable!(sampler, (:recovery, get_key!(model)), model.recovery_distribution, model.time, model.time, rng)
+    end
+end
+```
+
+## Stepping
+
+Given the next time `when` and key `which` telling us what clock fires next and when, we write a function that updates state. We assume that
+we are using `Tuple{Symbol,Int}` as a key, so the first element of the clock key tells us what kind of event fired.
+
+```julia
+function step!(model::SIRNonMarkov, sampler, when, which, rng)
+    (β, c, γ) = model.parameters
+    model.time = when
+    if first(which) == :infection
+        model.state[1] -= 1
+        model.state[2] += 1
+        # disable and reenable the infection clock after accounting for the new rate
+        disable!(sampler, which, model.time)
+        enable!(sampler, which, Exponential(1.0/(β*c*model.state[2]/sum(model.state)*model.state[1])), model.time, model.time, rng)
+        # enable a recovery event for the newly infected person
+        enable!(sampler, (:recovery, get_key!(model)), model.recovery_distribution, model.time, model.time, rng)
+    elseif first(which) == :recovery
+        model.state[2] -= 1
+        model.state[3] += 1
+        disable!(sampler, which, model.time)
+    else
+        error("unrecognized clock key: $(which)")
+    end
+end
 ```
 
 ## Time domain
@@ -68,57 +113,84 @@ rng = MersenneTwister(seed);
 
 ## Running the model
 
-We instantiate the `VectorAdditionSystem` model using the `take`, `give` and `rates` matrices.
+We make an instance of our model struct. First we use a Dirac (deterministic) recovery time. We choose the `CombinedNextReaction` sampler for our simulation,
+which is competitive across a variety of distribution types.
 
 ```julia
-take, give, rates = sir_vas(p...);
-vas = VectorAdditionSystem(take, give, rates);
+sirmodel = SIRNonMarkov(deepcopy(u0), p, 0, prod(p[1:2]), Dirac(1/p[3]), 0.0)
+sampler = CombinedNextReaction{Tuple{Symbol,Int}}()
+rng = Xoshiro()
 ```
 
-`DirectCall{T}` is a sampler for Exponential distributions. The type `T` is the type of an identifier for each transition (in this case, our states are integers, so we use `Int`). `FirstReaction{T}` is a sampler for any distribution, and it returns the first transition that fires. This is a more general sampler, but it is slower. As our rates are exponentially distributed, we can use the faster `DirectCall{T}` sampler.
+We store the output in a pre-allocated matrix.
 
 ```julia
-smplr = DirectCall{Int}();
-# smplr = FirstReaction{Int}();
+output = zeros(prod(sirmodel.state[1:2])+sum(sirmodel.state[1:2])+1, 4)
+nout = 1
+output[nout,:] = [sirmodel.time; sirmodel.state]
+nout += 1
 ```
 
-`VectorAdditionFSM` combines the model and a sampler into a finite state machine, which takes as input a model, an initializer, a sampler, and a random number generator.
+We then initialize and run the model.
 
 ```julia
-fsm = VectorAdditionFSM(vas, vas_initial(vas, u0), smplr, rng);
-```
+initialize!(sirmodel, sampler, rng)
 
-We set up a `Matrix`, `u`, to store the states, `S`, `I` and `R`, and a `Vector`, `t`, to store the times. The output array orientation (states as rows, times as columns) is chosen to be that used in `DifferentialEquations.jl`. We can fix the maximum size of these arrays ahead of time, as the population is closed, and so the maximum number of transitions is determined by the number of infected individuals (`I`, who have to recover) and the number of susceptibles (who have to both become infected and recover). If we had an open population, with immigration/birth and death, it may be easier to use a `GrowableArray` instead. `simstep!` tells the finite state machine to step. We set a stopping condition that the next transition is `nothing` (i.e. that there are no transmissions or recoveries, and the epidemic is over) or that the time is greater than `tmax`.
+(when, which) = next(sampler, sirmodel.time, rng)
 
-```julia
-t = Vector{Float64}(undef, u0[2] + 2*u0[1] + 1) # time is Float64
-u = Matrix{Int}(undef, length(u0), u0[2] + 2*u0[1] + 1) # states are Ints
-# Store initial conditions
-t[1] = 0.0
-u[1:end, 1] = u0
-let event_cnt = 1 # number of events; this format is used to avoid soft scope errors
-    while true
-        when, next_transition = simstep!(fsm)
-        if ((next_transition === nothing) | (when > tmax))
-            break
-        end
-        event_cnt = event_cnt + 1
-        t[event_cnt] = fsm.state.when
-        u[1:end, event_cnt] = fsm.state.state
-    end
-    global total_events = event_cnt
-end;
+while when ≤ tmax
+    step!(sirmodel, sampler, when, which, rng)
+    (when, which) = next(sampler, sirmodel.time, rng)
+
+    output[nout,:] = [sirmodel.time; sirmodel.state]
+    nout += 1
+end
 ```
 
 ## Plotting
 
 ```julia
 plot(
-    t[1:total_events],
-    u[1:end, 1:total_events]',
+    output[1:nout-1,1], 
+    output[1:nout-1,2:end],
     label=["S" "I" "R"],
     xlabel="Time",
     ylabel="Number"
 )
 ```
 
+## Changing the recovery distribution
+
+
+It is very simple to use other distributions in Fleck. We change the Dirac recovery distribution to a Gamma(4,1) and plot results.
+
+```julia
+sirmodel = SIRNonMarkov(deepcopy(u0), p, 0, prod(p[1:2]), Gamma(4,1), 0.0)
+sampler = CombinedNextReaction{Tuple{Symbol,Int}}()
+rng = Xoshiro()
+
+output = zeros(prod(sirmodel.state[1:2])+sum(sirmodel.state[1:2])+1, 4)
+nout = 1
+output[nout,:] = [sirmodel.time; sirmodel.state]
+nout += 1
+
+initialize!(sirmodel, sampler, rng)
+
+(when, which) = next(sampler, sirmodel.time, rng)
+
+while when ≤ tmax
+    step!(sirmodel, sampler, when, which, rng)
+    (when, which) = next(sampler, sirmodel.time, rng)
+
+    output[nout,:] = [sirmodel.time; sirmodel.state]
+    nout += 1
+end
+
+plot(
+    output[1:nout-1,1], 
+    output[1:nout-1,2:end],
+    label=["S" "I" "R"],
+    xlabel="Time",
+    ylabel="Number"
+)
+```
