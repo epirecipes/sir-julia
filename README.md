@@ -223,6 +223,15 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
   - [Using FdeSolver.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_fdesolver/ode_fdesolver.md)
   - [Using FractionalDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_fractionaldiffeq/ode_fractionaldiffeq.md)
 
+## Interoperability with other languages
+
+While this repository is mainly about Julia, it is also possible to use Julia to call code written in other languages. Here are some examples of how to define the vector field of an ODE in C, Python, and R.
+
+- [ODE with derivatives in C, accessed via `ccall`](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ccall/ode_ccall.md)
+- [ODE with derivatives in Python, accessed via PythonCall.jl, also demonstrating Python to Julia code conversion using `modelingtoolkitize`](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_pythoncall/ode_pythoncall.md)
+- [ODE with derivatives in R, accessed via RCall.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_rcall/ode_rcall.md)
+- [ODE with derivatives defined using the `odin` R package, accessed via RCall.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_rcall_odin/ode_rcall_odin.md)
+
 ## Comments on implementations
 
 Note that the implementations and choice of parameters may be suboptimal, and are intended to illustrate more-or-less the same underlying biological process with different mathematical representations. Additional optimizations may be obtained e.g. by using `StaticArrays`.
