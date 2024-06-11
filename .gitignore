@@ -31,3 +31,5 @@ Manifest.toml
 # Conda packages
 .CondaPkg
 
+# F90 modules
+*.mod
