@@ -1,5 +1,5 @@
 # Ordinary differential equation model with inference using Turing.jl
-Simon Frost (@sdwfrost), 2020-05-27
+Simon Frost (@sdwfrost), 2020-05-27, updated 2024-06-15
 
 ## Introduction
 
@@ -7,14 +7,16 @@ In this notebook, we try to infer the parameter values from a simulated dataset 
 
 ## Libraries
 
+
 ```julia
-using DifferentialEquations
-using DiffEqSensitivity
+using OrdinaryDiffEq
+using SciMLSensitivity
 using Random
 using Distributions
 using Turing
 using DataFrames
 using StatsPlots
+using BenchmarkTools
 ```
 
 
@@ -53,13 +55,7 @@ p = [0.05,10.0,0.25]; # β,c,γ
 
 ```julia
 prob_ode = ODEProblem(sir_ode!,u0,tspan,p);
-```
-
-
-```julia
-sol_ode = solve(prob_ode,
-            Tsit5(),
-            saveat = 1.0);
+sol_ode = solve(prob_ode, Tsit5(), saveat = 1.0);
 ```
 
 
@@ -119,7 +115,7 @@ This model estimates the initial proportion of the population that is infected, 
   sol_X = sol_C[2:end] - sol_C[1:(end-1)]
   l = length(y)
   for i in 1:l
-    y[i] ~ Poisson(sol_X[i])
+    y[i] ~ Poisson(abs(sol_X[i]))
   end
 end;
 ```
@@ -145,8 +141,8 @@ describe(ode_nuts)
 ```
 
 ```
-2-element Array{MCMCChains.ChainDataFrame,1}:
- Summary Statistics (2 x 7)
+2-element Vector{ChainDataFrame}:
+ Summary Statistics (2 x 8)
  Quantiles (2 x 6)
 ```
 
@@ -226,7 +222,7 @@ Xp = []
 for i in 1:10
     pred = predict(Y,ode_nuts)
     push!(Xp,pred[2:end,6])
-end
+end;
 ```
 
 
@@ -236,3 +232,26 @@ plot!(obstimes,Xp,legend=false)
 ```
 
 ![](figures/ode_turing_17_1.png)
+
+
+
+## Benchmarking
+
+```julia
+@benchmark sample(bayes_sir(Y),NUTS(0.65),10000,verbose=false,progress=false)
+```
+
+```
+BenchmarkTools.Trial: 2 samples with 1 evaluation.
+ Range (min … max):  4.195 s …   4.304 s  ┊ GC (min … max): 4.40% … 4.73%
+ Time  (median):     4.249 s              ┊ GC (median):    4.56%
+ Time  (mean ± σ):   4.249 s ± 76.827 ms  ┊ GC (mean ± σ):  4.56% ± 0.23%
+
+  █                                                       █  
+  █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
+  4.19 s         Histogram: frequency by time         4.3 s <
+
+ Memory estimate: 3.75 GiB, allocs estimate: 42428063.
+```
+
+

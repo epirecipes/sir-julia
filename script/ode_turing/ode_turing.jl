@@ -1,11 +1,16 @@
 
-using DifferentialEquations
-using DiffEqSensitivity
+using Pkg
+Pkg.instantiate()
+
+
+using OrdinaryDiffEq
+using SciMLSensitivity
 using Random
 using Distributions
 using Turing
 using DataFrames
 using StatsPlots
+using BenchmarkTools
 
 
 function sir_ode!(du,u,p,t)
@@ -32,11 +37,7 @@ p = [0.05,10.0,0.25]; # β,c,γ
 
 
 prob_ode = ODEProblem(sir_ode!,u0,tspan,p);
-
-
-sol_ode = solve(prob_ode,
-            Tsit5(),
-            saveat = 1.0);
+sol_ode = solve(prob_ode, Tsit5(), saveat = 1.0);
 
 
 C = Array(sol_ode)[4,:] # Cumulative cases
@@ -71,7 +72,7 @@ plot!(obstimes,X,legend=false)
   sol_X = sol_C[2:end] - sol_C[1:(end-1)]
   l = length(y)
   for i in 1:l
-    y[i] ~ Poisson(sol_X[i])
+    y[i] ~ Poisson(abs(sol_X[i]))
   end
 end;
 
@@ -129,9 +130,12 @@ Xp = []
 for i in 1:10
     pred = predict(Y,ode_nuts)
     push!(Xp,pred[2:end,6])
-end
+end;
 
 
 scatter(obstimes,Y,legend=false)
 plot!(obstimes,Xp,legend=false)
+
+
+@benchmark sample(bayes_sir(Y),NUTS(0.65),10000,verbose=false,progress=false)
 
