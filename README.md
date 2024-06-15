@@ -227,9 +227,18 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 
 While this repository is mainly about Julia, it is also possible to use Julia to call code written in other languages. Here are some examples of how to define the vector field of an ODE in C, Python, and R.
 
-- [ODE with derivatives in C, accessed via `ccall`](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ccall/ode_ccall.md)
-- [ODE with derivatives in Fortran 90, accessed via `ccall`](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ccall_f90/ode_ccall_f90.md)
-- [ODE with derivatives in Rust, accessed via `ccall`](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ccall_rust/ode_ccall_rust.md)
+### Using ccall
+
+Many languages can compile to shared libraries that can be accessed via `ccall`. Here are examples of how to define the vector field of an ODE in various languages, and call it using `ccall`.
+
+- [ODE with derivatives in C](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ccall/ode_ccall.md)
+- [ODE with derivatives in Fortran 90](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ccall_f90/ode_ccall_f90.md)
+- [ODE with derivatives in Rust](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ccall_rust/ode_ccall_rust.md)
+- [ODE with derivatives in FreePascal](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ccall_fpc/ode_ccall_fpc.md)
+- [ODE with derivatives in Zig](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ccall_zig/ode_ccall_zig.md)
+
+## Using Python and R
+
 - [ODE with derivatives in Python, accessed via PythonCall.jl, also demonstrating Python to Julia code conversion using `modelingtoolkitize`](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_pythoncall/ode_pythoncall.md)
 - [ODE with derivatives in R, accessed via RCall.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_rcall/ode_rcall.md)
 - [ODE with derivatives defined using the `odin` R package, accessed via RCall.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_rcall_odin/ode_rcall_odin.md)
