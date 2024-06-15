@@ -236,6 +236,7 @@ Many languages can compile to shared libraries that can be accessed via `ccall`.
 - [ODE with derivatives in Rust](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ccall_rust/ode_ccall_rust.md)
 - [ODE with derivatives in FreePascal](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ccall_fpc/ode_ccall_fpc.md)
 - [ODE with derivatives in Zig](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ccall_zig/ode_ccall_zig.md)
+- [ODE with derivatives in Nim](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_ccall_zig/ode_ccall_zig.md)
 
 ### Using Python and R
 
