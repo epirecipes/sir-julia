@@ -145,6 +145,8 @@ In addition to the above examples of simulation, there are also examples of infe
 - [Bayesian estimates of parameters of the ODE system using Turing.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_turing/ode_turing.md)
 - [Bayesian estimates of time-varying parameters of an ODE system using Turing.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_lockdown_inference/ode_lockdown_inference.md)
 - [Bayesian estimates of parameters of the ODE system using NestedSamplers.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_nestedsampler/ode_nestedsampler.md)
+- [Bayesian estimates of parameters of the ODE system using importance sampling, Markov Chain Monte Carlo and Sequential Monte Carlo with Gen.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_gen/ode_gen.md)
+
 
 ### Stochastic models
 
@@ -152,6 +154,7 @@ In addition to the above examples of simulation, there are also examples of infe
 - [Estimating the likelihood of a discrete-time Markov model using a simple particle filter](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_pfilter/markov_pfilter.md)
 - [Point estimates of parameters of a discrete-time Markov model using Ensemble Kalman Inversion](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_eki/markov_eki.md)
 - [Approximate posterior estimates of parameters of a discrete-time Markov model using Ensemble Kalman Sampling](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_eks/markov_eks.md)
+- [Bayesian estimates of parameters of a discrete-time Markov model using importance sampling, Markov Chain Monte Carlo and Sequential Monte Carlo with Gen.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_gen/markov_gen.md)
 
 ## Equilibrium analysis
 
