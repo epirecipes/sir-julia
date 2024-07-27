@@ -54,7 +54,7 @@ p = [0.05,10.0,0.25]; # β,c,γ
 
 
 ```julia
-prob_ode = ODEProblem(sir_ode!,u0,tspan,p);
+prob_ode = ODEProblem(sir_ode!,u0,tspan,p)
 sol_ode = solve(prob_ode, Tsit5(), saveat = 1.0);
 ```
 
@@ -95,7 +95,7 @@ plot!(obstimes,X,legend=false)
 This model estimates the initial proportion of the population that is infected, `i₀`, and the infection probability, `β`, assuming uniform priors on each, with the remaining parameters fixed.
 
 ```julia
-@model bayes_sir(y) = begin
+@model function bayes_sir(y)
   # Calculate number of timepoints
   l = length(y)
   i₀  ~ Uniform(0.0,1.0)
@@ -125,11 +125,17 @@ end;
 
 ### Fit using NUTS
 
-The following fits the model using the No U-Turn Sampler.
+The following fits the model using the No U-Turn Sampler, with 10000 samples.
 
 ```julia
-ode_nuts = sample(bayes_sir(Y),NUTS(0.65),10000);
+@time ode_nuts = sample(bayes_sir(Y), NUTS(0.65), 10000, verbose=false, progress=false);
 ```
+
+```
+5.790118 seconds (47.31 M allocations: 4.158 GiB, 4.29% gc time, 25.25% c
+ompilation time)
+```
+
 
 
 
@@ -141,7 +147,7 @@ describe(ode_nuts)
 ```
 
 ```
-2-element Vector{ChainDataFrame}:
+2-element Vector{MCMCChains.ChainDataFrame}:
  Summary Statistics (2 x 8)
  Quantiles (2 x 6)
 ```
@@ -238,20 +244,155 @@ plot!(obstimes,Xp,legend=false)
 ## Benchmarking
 
 ```julia
-@benchmark sample(bayes_sir(Y),NUTS(0.65),10000,verbose=false,progress=false)
+@benchmark sample(bayes_sir(Y), NUTS(0.65), 10000, verbose=false, progress=false)
 ```
 
 ```
 BenchmarkTools.Trial: 2 samples with 1 evaluation.
- Range (min … max):  4.195 s …   4.304 s  ┊ GC (min … max): 4.40% … 4.73%
- Time  (median):     4.249 s              ┊ GC (median):    4.56%
- Time  (mean ± σ):   4.249 s ± 76.827 ms  ┊ GC (mean ± σ):  4.56% ± 0.23%
+ Range (min … max):  4.227 s …    4.399 s  ┊ GC (min … max): 6.91% … 6.91%
+ Time  (median):     4.313 s               ┊ GC (median):    6.91%
+ Time  (mean ± σ):   4.313 s ± 121.877 ms  ┊ GC (mean ± σ):  6.91% ± 0.00%
 
-  █                                                       █  
-  █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
-  4.19 s         Histogram: frequency by time         4.3 s <
+  █                                                        █  
+  █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
+  4.23 s         Histogram: frequency by time          4.4 s <
 
- Memory estimate: 3.75 GiB, allocs estimate: 42428063.
+ Memory estimate: 3.82 GiB, allocs estimate: 43119187.
 ```
 
 
+
+
+
+## Coverage
+
+```julia
+using Base.Threads
+```
+
+
+
+
+We can check the number of threads available.
+
+```julia
+Threads.nthreads()
+```
+
+```
+8
+```
+
+
+
+```julia
+function sir_ode_solve(problem, l, i₀, β)
+    I = i₀*1000.0
+    S = 1000.0 - I
+    u0 = [S, I, 0.0, 0.0]
+    p = [β, 10.0, 0.25]
+    prob = remake(problem; u0=u0, p=p)
+    sol = solve(prob, Tsit5(), saveat = 1.0)
+    sol_C = view(sol, 4, :) # Cumulative cases
+    sol_X = Array{eltype(sol_C)}(undef, l)
+    @inbounds @simd for i in 1:length(sol_X)
+        sol_X[i] = sol_C[i + 1] - sol_C[i]
+    end
+    return sol_X
+end;
+```
+
+
+```julia
+function simulate_data(l, i₀, β)
+    prob = ODEProblem(sir_ode!, [990.0, 10.0, 0.0, 0.0], (0.0, l), [β, 10.0, 0.25])
+    X = sir_ode_solve(prob, l, i₀, β)
+    Y = rand.(Poisson.(X))
+    return X, Y
+end;
+```
+
+
+
+
+We can now use the `Threads.@threads` macro to parallelize the simulation and inference process.
+
+```julia
+nsims = 1000
+i₀_true = 0.01
+β_true = 0.05
+l = 40
+i₀_mean = Array{Float64}(undef, nsims)
+β_mean = Array{Float64}(undef, nsims)
+i₀_coverage = Array{Float64}(undef, nsims)
+β_coverage = Array{Float64}(undef, nsims)
+Threads.@threads for i in 1:nsims
+    X_sim, Y_sim = simulate_data(l, i₀_true, β_true)
+    r = sample(bayes_sir(Y_sim), NUTS(0.65), 10000, verbose=false, progress=false)
+    i₀_mean[i] = mean(r[:i₀])
+    i0_cov = sum(r[:i₀] .<= i₀_true) / length(r[:i₀])
+    β_mean[i] = mean(r[:β])
+    b_cov = sum(r[:β] .<= β_true) / length(r[:β])
+    i₀_coverage[i] = i0_cov
+    β_coverage[i] = b_cov
+end;
+```
+
+
+
+
+If the credible intervals are well calibrated, we expect that the distribution of the CDF of the true value (across multiple simulated datasets) should be uniform.
+
+```julia
+# Convenience function to check if the true value is within the credible interval
+function in_credible_interval(x, lwr=0.025, upr=0.975)
+    return x >= lwr && x <= upr
+end;
+```
+
+
+```julia
+pl_β_coverage = histogram(β_coverage, bins=0:0.1:1.0, label=false, title="β", ylabel="Density", density=true, xrotation=45, xlim=(0.0,1.0))
+pl_i₀_coverage = histogram(i₀_coverage, bins=0:0.1:1.0, label=false, title="i₀", ylabel="Density", density=true, xrotation=45, xlim=(0.0,1.0))
+plot(pl_β_coverage, pl_i₀_coverage, layout=(1,2), plot_title="Distribution of CDF of true value")
+```
+
+![](figures/ode_turing_25_1.png)
+
+
+
+The coverage of the 95% credible intervals is given by the proportion of simulations where the true value is within the interval.
+
+```julia
+sum(in_credible_interval.(β_coverage)) / nsims
+```
+
+```
+0.942
+```
+
+
+
+```julia
+sum(in_credible_interval.(i₀_coverage)) / nsims
+```
+
+```
+0.947
+```
+
+
+
+
+
+We can also look at the distribution of the posterior means, which should fall around the true value.
+
+```julia
+pl_β_mean = histogram(β_mean, label=false, title="β", ylabel="Density", density=true, xrotation=45, xlim=(0.045, 0.055))
+vline!([β_true], label="True value")
+pl_i₀_mean = histogram(i₀_mean, label=false, title="i₀", ylabel="Density", density=true, xrotation=45, xlim=(0.0,0.02))
+vline!([i₀_true], label="True value")
+plot(pl_β_mean, pl_i₀_mean, layout=(1,2), plot_title="Distribution of posterior means")
+```
+
+![](figures/ode_turing_28_1.png)

@@ -36,7 +36,7 @@ u0 = [990.0,10.0,0.0,0.0] # S,I.R,C
 p = [0.05,10.0,0.25]; # β,c,γ
 
 
-prob_ode = ODEProblem(sir_ode!,u0,tspan,p);
+prob_ode = ODEProblem(sir_ode!,u0,tspan,p)
 sol_ode = solve(prob_ode, Tsit5(), saveat = 1.0);
 
 
@@ -52,7 +52,7 @@ bar(obstimes,Y,legend=false)
 plot!(obstimes,X,legend=false)
 
 
-@model bayes_sir(y) = begin
+@model function bayes_sir(y)
   # Calculate number of timepoints
   l = length(y)
   i₀  ~ Uniform(0.0,1.0)
@@ -77,7 +77,7 @@ plot!(obstimes,X,legend=false)
 end;
 
 
-ode_nuts = sample(bayes_sir(Y),NUTS(0.65),10000);
+@time ode_nuts = sample(bayes_sir(Y), NUTS(0.65), 10000, verbose=false, progress=false);
 
 
 describe(ode_nuts)
@@ -137,5 +137,79 @@ scatter(obstimes,Y,legend=false)
 plot!(obstimes,Xp,legend=false)
 
 
-@benchmark sample(bayes_sir(Y),NUTS(0.65),10000,verbose=false,progress=false)
+@benchmark sample(bayes_sir(Y), NUTS(0.65), 10000, verbose=false, progress=false)
+
+
+using Base.Threads
+
+
+Threads.nthreads()
+
+
+function sir_ode_solve(problem, l, i₀, β)
+    I = i₀*1000.0
+    S = 1000.0 - I
+    u0 = [S, I, 0.0, 0.0]
+    p = [β, 10.0, 0.25]
+    prob = remake(problem; u0=u0, p=p)
+    sol = solve(prob, Tsit5(), saveat = 1.0)
+    sol_C = view(sol, 4, :) # Cumulative cases
+    sol_X = Array{eltype(sol_C)}(undef, l)
+    @inbounds @simd for i in 1:length(sol_X)
+        sol_X[i] = sol_C[i + 1] - sol_C[i]
+    end
+    return sol_X
+end;
+
+
+function simulate_data(l, i₀, β)
+    prob = ODEProblem(sir_ode!, [990.0, 10.0, 0.0, 0.0], (0.0, l), [β, 10.0, 0.25])
+    X = sir_ode_solve(prob, l, i₀, β)
+    Y = rand.(Poisson.(X))
+    return X, Y
+end;
+
+
+nsims = 1000
+i₀_true = 0.01
+β_true = 0.05
+l = 40
+i₀_mean = Array{Float64}(undef, nsims)
+β_mean = Array{Float64}(undef, nsims)
+i₀_coverage = Array{Float64}(undef, nsims)
+β_coverage = Array{Float64}(undef, nsims)
+Threads.@threads for i in 1:nsims
+    X_sim, Y_sim = simulate_data(l, i₀_true, β_true)
+    r = sample(bayes_sir(Y_sim), NUTS(0.65), 10000, verbose=false, progress=false)
+    i₀_mean[i] = mean(r[:i₀])
+    i0_cov = sum(r[:i₀] .<= i₀_true) / length(r[:i₀])
+    β_mean[i] = mean(r[:β])
+    b_cov = sum(r[:β] .<= β_true) / length(r[:β])
+    i₀_coverage[i] = i0_cov
+    β_coverage[i] = b_cov
+end;
+
+
+# Convenience function to check if the true value is within the credible interval
+function in_credible_interval(x, lwr=0.025, upr=0.975)
+    return x >= lwr && x <= upr
+end;
+
+
+pl_β_coverage = histogram(β_coverage, bins=0:0.1:1.0, label=false, title="β", ylabel="Density", density=true, xrotation=45, xlim=(0.0,1.0))
+pl_i₀_coverage = histogram(i₀_coverage, bins=0:0.1:1.0, label=false, title="i₀", ylabel="Density", density=true, xrotation=45, xlim=(0.0,1.0))
+plot(pl_β_coverage, pl_i₀_coverage, layout=(1,2), plot_title="Distribution of CDF of true value")
+
+
+sum(in_credible_interval.(β_coverage)) / nsims
+
+
+sum(in_credible_interval.(i₀_coverage)) / nsims
+
+
+pl_β_mean = histogram(β_mean, label=false, title="β", ylabel="Density", density=true, xrotation=45, xlim=(0.045, 0.055))
+vline!([β_true], label="True value")
+pl_i₀_mean = histogram(i₀_mean, label=false, title="i₀", ylabel="Density", density=true, xrotation=45, xlim=(0.0,0.02))
+vline!([i₀_true], label="True value")
+plot(pl_β_mean, pl_i₀_mean, layout=(1,2), plot_title="Distribution of posterior means")
 
