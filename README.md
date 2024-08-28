@@ -133,6 +133,7 @@ We usually do not observe the trajectory of susceptible, infected, and recovered
 - [Stopping simulations when infected individuals reach zero in stochastic differential equations](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde_stochasticdiffeq/sde_stochasticdiffeq.md)
 - [Scheduling recovery times to model a fixed infectious period](https://github.com/epirecipes/sir-julia/blob/master/markdown/jump_process_delay/jump_process_delay.md)
 - [Preventing out-of-domain errors in a sinusoidally forced ODE model](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_bifurcation_bruteforce/ode_bifurcation_bruteforce.md)
+- [A hybrid ODE/jump process model](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_jump_hybrid/ode_jump_hybrid.md)
 
 ## Inference
 
@@ -225,6 +226,7 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 - Fractional differential equations
   - [Using FdeSolver.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_fdesolver/ode_fdesolver.md)
   - [Using FractionalDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_fractionaldiffeq/ode_fractionaldiffeq.md)
+- [A hybrid ODE/jump process model](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_jump_hybrid/ode_jump_hybrid.md)
 
 ## Interoperability with other languages
 

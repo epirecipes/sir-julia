@@ -129,13 +129,13 @@ initial_ensemble_ss = EKP.construct_initial_ensemble(rng_ss, prior, N_ensemble_s
 
 ```julia
 eks_obj_ss = EKP.EnsembleKalmanProcess(initial_ensemble_ss, summary_stats, Γ, eks_process; rng=rng_ss)
-for i in 1:N_iterations_ss
+@time for i in 1:N_iterations_ss
     params_i = get_ϕ_final(prior, eks_obj_ss)
     # Without threads would be as follows
     # ss = hcat([get_summary_stats(params_i[:, i]) for i in 1:N_ensemble_ss]...)
     ss = hcat(ThreadsX.collect(get_summary_stats(params_i[:, i]) for i in 1:N_ensemble_ss)...)
     EKP.update_ensemble!(eks_obj_ss, ss)
-end;
+end
 ```
 
 The following generate the mean, θ, and empirical covariance, Γ, of the parameters in unconstrained space.
@@ -197,7 +197,7 @@ initial_ensemble_cs = EKP.construct_initial_ensemble(rng_cs, prior, N_ensemble_c
 
 ```julia
 eks_obj_cases = EKP.EnsembleKalmanProcess(initial_ensemble_cs, cases, Γ, eks_process; rng = rng_cs)
-for i in 1:N_iterations_cs
+@time for i in 1:N_iterations_cs
     params_i = get_ϕ_final(prior, eks_obj_cases)
     # cs = hcat([get_cases(params_i[:, i]) for i in 1:N_ensemble_cs]...)
     cs = hcat(ThreadsX.collect(get_cases(params_i[:, i]) for i in 1:N_ensemble_cs)...)
