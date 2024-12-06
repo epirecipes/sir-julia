@@ -1,12 +1,12 @@
 # Agent-based model using Agents.jl
-Simon Frost (@sdwfrost), 2020-04-27
+Simon Frost (@sdwfrost), 2020-04-27, updated 2024-12-06
 
 ## Introduction
 
 The agent-based model approach, implemented using [`Agents.jl`](https://github.com/JuliaDynamics/Agents.jl) taken here is:
 
 - Stochastic
-- Discrete in time
+- Discrete in time (using `StandardABM`; there is also an `EventQueueABM` for discrete-event simulation in Agents.jl)
 - Discrete in state
 
 ## Libraries
@@ -14,10 +14,9 @@ The agent-based model approach, implemented using [`Agents.jl`](https://github.c
 ```julia
 using Agents
 using Random
-using DataFrames
 using Distributions
-using DrWatson
-using StatsPlots
+using DrWatson: @dict
+using Plots
 using BenchmarkTools
 ```
 
@@ -26,9 +25,11 @@ using BenchmarkTools
 
 ## Utility functions
 
+In order to have a discrete time-step simulation be as close to the continuous time version, we write a convenience function to turn a rate over time into a proportion that can be plugged in to a random binomial number generator.
+
 ```julia
-function rate_to_proportion(r::Float64,t::Float64)
-    1-exp(-r*t)
+function rate_to_proportion(r::Float64,t ::Float64)
+    1 - exp(-r * t)
 end;
 ```
 
@@ -37,34 +38,11 @@ end;
 
 ## Transitions
 
-First, we have to define our agent, which has an `id`, and a `status` (`:S`,`:I`, or `:R`).
+First, we have to define our agent, which has a `status` (`:S`,`:I`, or `:R`). The standard SIR model is mass-action i.e. assumes that the population is well-mixed, and so we base our agent on `NoSpaceAgent` (which also has a member `id`.
 
 ```julia
-mutable struct Person <: AbstractAgent
-    id::Int64
+@agent struct Person(NoSpaceAgent)
     status::Symbol
-end
-```
-
-
-
-
-This utility function sets up the model, by setting parameter fields and adding agents to the model.
-
-```julia
-function init_model(β::Float64,c::Float64,γ::Float64,N::Int64,I0::Int64)
-    properties = @dict(β,c,γ)
-    model = ABM(Person; properties=properties)
-    for i in 1:N
-        if i <= I0
-            s = :I
-        else
-            s = :S
-        end
-        p = Person(i,s)
-        p = add_agent!(p,model)
-    end
-    return model
 end;
 ```
 
@@ -83,17 +61,17 @@ end;
 
 
 
-This is the transmission function; note that it operates on susceptibles making contact, rather than being focused on infected. This is an inefficient way of doing things, but shows the parallels between the different implementations.
+This is the transmission function; note that it operates on susceptibles making contact, rather than being focused on infected. This is an inefficient way of doing things, but shows the parallels between the different implementations. Note that the model properties, such as the contact rate `c` and the transmission probability `β`, are accessed via `.`.
 
 ```julia
 function transmit!(agent, model)
     # If I'm not susceptible, I return
     agent.status != :S && return
-    ncontacts = rand(Poisson(model.properties[:c]))
+    ncontacts = rand(Poisson(model.c))
     for i in 1:ncontacts
         # Choose random individual
         alter = random_agent(model)
-        if alter.status == :I && (rand() ≤ model.properties[:β])
+        if alter.status == :I && (rand() ≤ model.β)
             # An infection occurs
             agent.status = :I
             break
@@ -110,7 +88,7 @@ This is the recovery function.
 ```julia
 function recover!(agent, model)
     agent.status != :I && return
-    if rand() ≤ model.properties[:γ]
+    if rand() ≤ model.γ
             agent.status = :R
     end
 end;
@@ -130,12 +108,34 @@ recovered(x) = count(i == :R for i in x);
 
 
 
+This utility function sets up the model, by setting parameter fields and adding agents to the model. The constructor to `StandardABM` here takes the agent, followed by the `agent_step!` function, the model properties (passed as a `Dict`, and a random number generator. Other more complex models might also take a `model_step!` function.
+
+```julia
+function init_model(β::Float64, c::Float64, γ::Float64, N::Int64, I0::Int64, rng::AbstractRNG=Random.GLOBAL_RNG)
+    properties = @dict(β,c,γ)
+    model = StandardABM(Person; agent_step!, properties, rng)
+    for i in 1:N
+        if i <= I0
+            s = :I
+        else
+            s = :S
+        end
+        p = Person(;id=i,status=s)
+        p = add_agent!(p,model)
+    end
+    return model
+end;
+```
+
+
+
+
 ## Time domain
 
 ```julia
 δt = 0.1
 nsteps = 400
-tf = nsteps*δt
+tf = nsteps * δt
 t = 0:δt:tf;
 ```
 
@@ -146,8 +146,8 @@ t = 0:δt:tf;
 
 ```julia
 β = 0.05
-c = 10.0*δt
-γ = rate_to_proportion(0.25,δt);
+c = 10.0 * δt
+γ = rate_to_proportion(0.25, δt);
 ```
 
 
@@ -166,7 +166,8 @@ I0 = 10;
 ## Random number seed
 
 ```julia
-Random.seed!(1234);
+seed = 1234
+rng = Random.Xoshiro(seed);
 ```
 
 
@@ -175,21 +176,13 @@ Random.seed!(1234);
 ## Running the model
 
 ```julia
-abm_model = init_model(β,c,γ,N,I0)
+abm_model = init_model(β, c, γ, N, I0, rng);
 ```
-
-```
-AgentBasedModel with 1000 agents of type Person
- no space
- scheduler: fastest
- properties: Dict(:γ => 0.024690087971667385,:c => 1.0,:β => 0.05)
-```
-
 
 
 ```julia
 to_collect = [(:status, f) for f in (susceptible, infected, recovered)]
-abm_data, _ = run!(abm_model, agent_step!, nsteps; adata = to_collect);
+abm_data, _ = run!(abm_model, nsteps; adata = to_collect);
 ```
 
 
@@ -198,7 +191,7 @@ abm_data, _ = run!(abm_model, agent_step!, nsteps; adata = to_collect);
 ## Post-processing
 
 ```julia
-abm_data[!,:t] = t;
+abm_data[!, :t] = t;
 ```
 
 
@@ -207,9 +200,9 @@ abm_data[!,:t] = t;
 ## Plotting
 
 ```julia
-plot(t,abm_data[:,2],label="S",xlab="Time",ylabel="Number")
-plot!(t,abm_data[:,3],label="I")
-plot!(t,abm_data[:,4],label="R")
+plot(t, abm_data[:,2], label="S", xlab="Time", ylabel="Number")
+plot!(t, abm_data[:,3], label="I")
+plot!(t, abm_data[:,4], label="R")
 ```
 
 ![](figures/abm_16_1.png)
@@ -221,23 +214,22 @@ plot!(t,abm_data[:,4],label="R")
 
 ```julia
 @benchmark begin
-abm_model = init_model(β,c,γ,N,I0)
-abm_data, _ = run!(abm_model, agent_step!, nsteps; adata = to_collect)
+abm_model = init_model(β, c, γ, N, I0, rng)
+abm_data, _ = run!(abm_model, nsteps; adata = to_collect)
 end
 ```
 
 ```
-BenchmarkTools.Trial: 
-  memory estimate:  187.47 KiB
-  allocs estimate:  2328
-  --------------
-  minimum time:     398.471 ms (0.00% GC)
-  median time:      479.306 ms (0.00% GC)
-  mean time:        478.326 ms (0.00% GC)
-  maximum time:     581.843 ms (0.00% GC)
-  --------------
-  samples:          11
-  evals/sample:     1
+BenchmarkTools.Trial: 105 samples with 1 evaluation.
+ Range (min … max):  44.164 ms … 53.010 ms  ┊ GC (min … max): 0.00% … 0.00%
+ Time  (median):     47.850 ms              ┊ GC (median):    0.00%
+ Time  (mean ± σ):   47.909 ms ±  1.775 ms  ┊ GC (mean ± σ):  0.00% ± 0.00%
+
+             ▂▂▂ ▆ ▂     █▂▂  ▆▄▄                              
+  ▄▁▁▄▁▁▄▆▄▄▄█████▆█▄▄█▄█████▆███▆▆█▄▁▆▄▆▄▄▆▁▄▁▄▄▁▁▁▁▄▄▄▁▁▁▁▄ ▄
+  44.2 ms         Histogram: frequency by time          53 ms <
+
+ Memory estimate: 190.52 KiB, allocs estimate: 2383.
 ```
 
 
