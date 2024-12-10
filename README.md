@@ -93,6 +93,7 @@ The above process can be represented in different kinds of ways:
 ### Discrete event simulations
 
 - [Discrete event simulation using SimJulia](https://github.com/epirecipes/sir-julia/blob/master/markdown/des/des.md)
+- [Discrete event simulation using Agents.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/des_agentsjl/des_agentsjl.md)
 
 ### Agent-based models
 
