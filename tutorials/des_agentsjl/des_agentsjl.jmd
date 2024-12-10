@@ -32,7 +32,6 @@ First, we have to define our agent, which has a `status` (`:S`,`:I`, or `:R`). T
 end;
 ```
 
-
 This is the transmission function; note that it operates on susceptibles making contact, rather than being focused on infected. This is an inefficient way of doing things, but shows the parallels between the different implementations. Note that the model properties, such as the contact rate `c` and the transmission probability `β`, are accessed via `.`.
 
 ```julia

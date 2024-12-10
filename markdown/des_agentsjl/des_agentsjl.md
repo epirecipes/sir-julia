@@ -38,7 +38,6 @@ end;
 
 
 
-
 This is the transmission function; note that it operates on susceptibles making contact, rather than being focused on infected. This is an inefficient way of doing things, but shows the parallels between the different implementations. Note that the model properties, such as the contact rate `c` and the transmission probability `β`, are accessed via `.`.
 
 ```julia
@@ -213,16 +212,16 @@ end
 ```
 
 ```
-BenchmarkTools.Trial: 10 samples with 1 evaluation.
- Range (min … max):  525.836 ms … 593.823 ms  ┊ GC (min … max): 0.00% … 0.0
+BenchmarkTools.Trial: 12 samples with 1 evaluation.
+ Range (min … max):  423.642 ms … 433.366 ms  ┊ GC (min … max): 0.00% … 0.0
 0%
- Time  (median):     529.727 ms               ┊ GC (median):    0.00%
- Time  (mean ± σ):   535.866 ms ±  20.583 ms  ┊ GC (mean ± σ):  0.00% ± 0.0
+ Time  (median):     427.193 ms               ┊ GC (median):    0.00%
+ Time  (mean ± σ):   427.780 ms ±   3.021 ms  ┊ GC (mean ± σ):  0.00% ± 0.0
 0%
 
-  █  ▃                                                           
-  █▁▇█▇▇▁▁▇▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▇ ▁
-  526 ms           Histogram: frequency by time          594 ms <
+  █    █     █  █   █  ██  █     █                 ██         █  
+  █▁▁▁▁█▁▁▁▁▁█▁▁█▁▁▁█▁▁██▁▁█▁▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁██▁▁▁▁▁▁▁▁▁█ ▁
+  424 ms           Histogram: frequency by time          433 ms <
 
  Memory estimate: 1.63 MiB, allocs estimate: 10439.
 ```
