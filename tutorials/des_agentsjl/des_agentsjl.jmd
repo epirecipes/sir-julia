@@ -36,9 +36,6 @@ This is the transmission function; note that it operates on susceptibles making 
 
 ```julia
 function transmit!(agent, model)
-    if agent.status != :S
-        return
-    end
     # Choose random individual
     alter = random_agent(model)
     if alter.status == :I && (rand() ≤ model.β)
@@ -52,9 +49,6 @@ This is the recovery function.
 
 ```julia
 function recover!(agent, model)
-    if agent.status != :I
-        return
-    end
     agent.status = :R
 end;
 ```
@@ -63,13 +57,21 @@ By default, Agents.jl will schedule events based on an exponential distribution,
 
 ```julia
 function transmit_propensity(agent, model)
-    return model.c
-end;
+    if agent.status == :S
+        return model.c
+    else
+        return 0.0
+    end
+end
 ```
 
 ```julia
 function recovery_propensity(agent, model)
-    return model.γ
+    if agent.status == :I
+        return model.γ
+    else
+        return 0.0
+    end
 end;
 ```
 
