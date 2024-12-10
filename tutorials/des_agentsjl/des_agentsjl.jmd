@@ -9,8 +9,6 @@ The discrete event simulation approach, implemented using [`Agents.jl`](https://
 - Continuous in time (using `EventQueueABM`; there is also `StandardABM` for discrete-time simulation in Agents.jl)
 - Discrete in state
 
-**NB: This example is currently broken! The peak of infected individuals does not correspond to the expected value. This needs to be looked into further.**
-
 ## Libraries
 
 ```julia

@@ -9,8 +9,6 @@ The discrete event simulation approach, implemented using [`Agents.jl`](https://
 - Continuous in time (using `EventQueueABM`; there is also `StandardABM` for discrete-time simulation in Agents.jl)
 - Discrete in state
 
-**NB: This example is currently broken! The peak of infected individuals does not correspond to the expected value. This needs to be looked into further.**
-
 ## Libraries
 
 ```julia
@@ -42,9 +40,6 @@ This is the transmission function; note that it operates on susceptibles making 
 
 ```julia
 function transmit!(agent, model)
-    if agent.status != :S
-        return
-    end
     # Choose random individual
     alter = random_agent(model)
     if alter.status == :I && (rand() ≤ model.β)
@@ -61,9 +56,6 @@ This is the recovery function.
 
 ```julia
 function recover!(agent, model)
-    if agent.status != :I
-        return
-    end
     agent.status = :R
 end;
 ```
@@ -75,14 +67,27 @@ By default, Agents.jl will schedule events based on an exponential distribution,
 
 ```julia
 function transmit_propensity(agent, model)
-    return model.c
-end;
+    if agent.status == :S
+        return model.c
+    else
+        return 0.0
+    end
+end
 ```
+
+```
+transmit_propensity (generic function with 1 method)
+```
+
 
 
 ```julia
 function recovery_propensity(agent, model)
-    return model.γ
+    if agent.status == :I
+        return model.γ
+    else
+        return 0.0
+    end
 end;
 ```
 
@@ -210,16 +215,14 @@ end
 ```
 
 ```
-BenchmarkTools.Trial: 136 samples with 1 evaluation.
- Range (min … max):  35.019 ms …  39.593 ms  ┊ GC (min … max): 0.00% … 0.00
-%
- Time  (median):     36.945 ms               ┊ GC (median):    0.00%
- Time  (mean ± σ):   37.009 ms ± 858.417 μs  ┊ GC (mean ± σ):  0.00% ± 0.00
-%
+BenchmarkTools.Trial: 127 samples with 1 evaluation.
+ Range (min … max):  30.577 ms … 53.815 ms  ┊ GC (min … max): 0.00% … 0.00%
+ Time  (median):     39.184 ms              ┊ GC (median):    0.00%
+ Time  (mean ± σ):   39.480 ms ±  4.134 ms  ┊ GC (mean ± σ):  0.00% ± 0.00%
 
-              ▁         █▄▂ ▂   ▄▂ ▁▄                           
-  ▃▁▁▅▁▁▃▃▃▅▅███▃▃▆▅█▆▅██████▃▆███▅██▃▃▆█▅▆▁▅▃▃▁▅▃▁▁▁▃▁▁▁▁▁▁▃▃ ▃
-  35 ms           Histogram: frequency by time         39.5 ms <
+           ▆▄   ▁▁▁▃ ▄▃▄▆ █▁▁▆▁ ▁      ▁                       
+  ▄▁▄▁▁▁▁▆▄██▁▁▆████▄████▆█████▆█▇▄▆▆▁▇█▇▄▁▁▄▄▆▁▆▄▁▁▄▄▁▁▁▁▁▁▄ ▄
+  30.6 ms         Histogram: frequency by time        51.9 ms <
 
  Memory estimate: 206.27 KiB, allocs estimate: 1427.
 ```

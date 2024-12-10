@@ -13,9 +13,6 @@ end;
 
 
 function transmit!(agent, model)
-    if agent.status != :S
-        return
-    end
     # Choose random individual
     alter = random_agent(model)
     if alter.status == :I && (rand() ≤ model.β)
@@ -26,20 +23,25 @@ end;
 
 
 function recover!(agent, model)
-    if agent.status != :I
-        return
-    end
     agent.status = :R
 end;
 
 
 function transmit_propensity(agent, model)
-    return model.c
-end;
+    if agent.status == :S
+        return model.c
+    else
+        return 0.0
+    end
+end
 
 
 function recovery_propensity(agent, model)
-    return model.γ
+    if agent.status == :I
+        return model.γ
+    else
+        return 0.0
+    end
 end;
 
 
