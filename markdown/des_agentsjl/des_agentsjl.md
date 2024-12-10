@@ -155,11 +155,9 @@ c = 10.0
 
 ## Initial conditions
 
-We will use a large population size to ensure that the stochastic fluctuations are small, allowing better comparison with the deterministic model.
-
 ```julia
-N = 10000
-I0 = 100;
+N = 1000
+I0 = 10;
 ```
 
 
@@ -212,18 +210,18 @@ end
 ```
 
 ```
-BenchmarkTools.Trial: 12 samples with 1 evaluation.
- Range (min … max):  423.642 ms … 433.366 ms  ┊ GC (min … max): 0.00% … 0.0
-0%
- Time  (median):     427.193 ms               ┊ GC (median):    0.00%
- Time  (mean ± σ):   427.780 ms ±   3.021 ms  ┊ GC (mean ± σ):  0.00% ± 0.0
-0%
+BenchmarkTools.Trial: 136 samples with 1 evaluation.
+ Range (min … max):  35.019 ms …  39.593 ms  ┊ GC (min … max): 0.00% … 0.00
+%
+ Time  (median):     36.945 ms               ┊ GC (median):    0.00%
+ Time  (mean ± σ):   37.009 ms ± 858.417 μs  ┊ GC (mean ± σ):  0.00% ± 0.00
+%
 
-  █    █     █  █   █  ██  █     █                 ██         █  
-  █▁▁▁▁█▁▁▁▁▁█▁▁█▁▁▁█▁▁██▁▁█▁▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁██▁▁▁▁▁▁▁▁▁█ ▁
-  424 ms           Histogram: frequency by time          433 ms <
+              ▁         █▄▂ ▂   ▄▂ ▁▄                           
+  ▃▁▁▅▁▁▃▃▃▅▅███▃▃▆▅█▆▅██████▃▆███▅██▃▃▆█▅▆▁▅▃▃▁▅▃▁▁▁▃▁▁▁▁▁▁▃▃ ▃
+  35 ms           Histogram: frequency by time         39.5 ms <
 
- Memory estimate: 1.63 MiB, allocs estimate: 10439.
+ Memory estimate: 206.27 KiB, allocs estimate: 1427.
 ```
 
 

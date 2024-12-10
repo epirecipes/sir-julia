@@ -125,11 +125,9 @@ c = 10.0
 
 ## Initial conditions
 
-We will use a large population size to ensure that the stochastic fluctuations are small, allowing better comparison with the deterministic model.
-
 ```julia
-N = 10000
-I0 = 100;
+N = 1000
+I0 = 10;
 ```
 
 ## Random number seed
