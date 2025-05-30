@@ -47,6 +47,10 @@ The above process can be represented in different kinds of ways:
 
 - [Volterra integral equation using the Adomian decomposition method](https://github.com/epirecipes/sir-julia/blob/master/markdown/adomian/adomian.md)
 
+### Partial differential equations
+
+- [Partial differential equation 'age of infection' model using the method of lines and OrdinaryDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/pde_aoi_ordinarydiffeq/pde_aoi_ordinarydiffeq.md)
+
 ### Stochastic differential equations
 
 - [Stochastic differential equation using DifferentialEquations.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sde/sde.md)

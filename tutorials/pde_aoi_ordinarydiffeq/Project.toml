@@ -1,0 +1,5 @@
+[deps]
+DelayDiffEq = "bcd4f6db-9728-5f36-b5f7-82caef46ccdb"
+OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+Weave = "44d3d7a6-8a23-5bf8-98c5-b353f8df5ec9"

@@ -1,0 +1,246 @@
+# Partial differential equation (PDE) model of 'age of infection' using the method of lines and OrdinaryDiffEq.jl
+Simon Frost (@sdwfrost)
+2025-05-30
+
+## Introduction
+
+The standard SIR model described by a system of ordinary differential equations makes several simplifying assumptions about the natural history of infection. One is that the infectiousness is constant throughout the infectious period, and another is that the recovery rate is constant, leading to an exponential distribution of recovery times. In reality, the infectiousness and recovery rate may vary with the age of infection, which can be captured using a partial differential equation (PDE) approach. A common approach to solving PDEs is the [method of lines](https://en.wikipedia.org/wiki/Method_of_lines), which discretizes the spatial domain (in this case, the age of infection) and leaves the time variable continuous. This allows us to use the `OrdinaryDiffEq` package to solve the resulting system of ordinary differential equations.
+
+## Packages
+
+```julia
+using OrdinaryDiffEq
+using Plots;
+```
+
+
+
+
+## Transitions
+
+In this example, we discretize the age of infection into a finite number of bins, and model the 'ageing' process via a first-order [upwind scheme](https://en.wikipedia.org/wiki/Upwind_scheme), while the time variable is left continuous. We consider the density of infected individuals in each age bin, so the width of each age bin, `Δa`, enters into the equations as a scaling factor; smaller age bins mean that infectious individuals traverse through age stages more rapidly. Individuals who 'age out' of the infection are added to the removed compartment, and so the total population, `N` is conserved. The PDE model is defined as follows.
+
+```julia
+function pde_mol!(du, u, p, t)
+
+    # Extract discretization parameters
+    Δa = p.Δa
+    nI = p.nI
+
+    # Extract states
+    S = u[1]
+    I = @view u[2:nI+1]
+    R = u[end]
+    N = S+sum(I)*Δa+R  # total population
+
+    # Extract parameters
+    βvec = p.βvec
+    γvec = p.γvec
+
+    # Compute force of infection
+    λ = sum(βvec .* I * Δa)/N
+
+    # Compute derivatives
+    du[1] = dS = -λ * S                   # susceptibles
+
+    # First age bin (j = 1)
+    du[2] = -(I[1] - λ*S)/Δa - γvec[1]*I[1]
+
+    # Remaining bins (j = 2...nI)
+    @inbounds for j in 2:nI
+        du[j+1] = -(I[j] - I[j-1])/Δa - γvec[j]*I[j]
+    end
+
+    # Removed compartment
+    du[end] = dR = sum(γvec .* I * Δa) + I[nI]   # gain from recovery + ageing out
+end;
+```
+
+
+
+
+## Parameters
+
+In order for the PDE model to match our reference ODE model, we set the infectiousness and recovery rates to be constant across all ages of infection. In a more complex model, these could be functions of age, e.g. `β_a(a)` and `γ_a(a)`.
+
+```julia
+β = 0.5
+γ = 0.25                      
+β_a(a) = β                    # infectiousness profile, β(a)
+γ_a(a) = γ;                   # recovery rate γ(a)
+```
+
+
+
+
+We then define the time and age domains, discretizing the age domain into `nI` bins, each of width `Δa`. The age of infection is truncated at `amax`, which is the maximum age of infection we consider in the model. The infectiousness and recovery rates are evaluated on this grid.
+
+```julia
+tmax   = 40.0                  # Simulation time (days)
+tspan  = (0.0, tmax)           # time span for the simulation
+Δt     = 0.1                   # time step for the simulation output
+amax   = 40.0                  # truncate infection age domain (days)
+nI     = 400                  # number of age bins
+Δa     = amax / nI            # bin width
+ages   = range(Δa/2, stop=amax-Δa/2, length=nI)  # mid‑points
+βvec   = β_a.(ages)           # vectorise kernels on grid
+γvec   = γ_a.(ages);
+```
+
+
+
+
+We put the parameters into a `NamedTuple` for easy access in the ODE function.
+
+```julia
+p = (βvec=βvec, γvec=γvec, Δa=Δa, nI=nI);
+```
+
+
+
+
+## Initial conditions
+
+We have to set an initial condition on the age distribution of infected individuals; in the below, we use a 'top hat' initial condition, where we seed a small cohort of infected individuals in the first age bin, and all other infectious ompartments are empty at time `t=0`.
+
+```julia
+S0            = 990.0          # susceptibles at t = 0
+I0            = zeros(nI)      # infection‑age density
+I0[1]         = 1000.0 - S0    # seed a small cohort in first bin
+I0           /= Δa             # convert prevalence to (unnormalized) density
+R0            = 0.0            # removed at t = 0, not reproductive number
+u0 = vcat(S0, I0, R0);         # [S, I₁,...,Iₙ, R]
+```
+
+
+
+
+## Solving the discretized PDE
+
+Discretizing the PDE by age allows us to solve the model using the `OrdinaryDiffEq` package.
+
+```julia
+prob_pde_mol = ODEProblem(pde_mol!, u0, tspan, p)
+sol_pde_mol = solve(prob_pde_mol, Tsit5(), saveat=Δt);
+```
+
+
+
+
+## Result processing
+
+We extract the total population and the number of individuals in each compartment at each time point from the solution object. The total infected individuals are computed by summing the infection-age density across all age bins and multiplying by the bin width `Δa`.
+
+```julia
+t_points = sol_pde_mol.t                   # time points
+S_sol = sol_pde_mol[1, :]                  # susceptibles
+I_sol = sol_pde_mol[2:end-1, :]            # infection-age density
+Itotal_sol   = vec(sum(I_sol, dims=1)*Δa)  # total infected
+R_sol = sol_pde_mol[end, :]                # removed
+N_sol = S_sol .+ Itotal_sol .+ R_sol;      # total population
+```
+
+
+
+
+## Plotting
+
+```julia
+plot(t_points, S_sol, label="S", xlabel="Time", ylabel="Number")
+plot!(t_points, Itotal_sol, label="ΣI")
+plot!(t_points, R_sol, label="R")
+plot!(t_points, N_sol, label="N")
+```
+
+![](figures/pde_aoi_ordinarydiffeq_9_1.png)
+
+
+
+## Comparison with an ODE model
+
+While the above simulation looks superficially similar to those in other tutorials, we take a closer look by simulating the corresponding ODE model.
+
+```julia
+function sir_ode!(du,u,p,t)
+    (S,I,R) = u
+    N = S+I+R
+    (β,γ) = p
+    @inbounds begin
+        du[1] = -β*S*I/N
+        du[2] = β*S*I/N - γ*I
+        du[3] = γ*I
+    end
+    nothing
+end
+u0_ode = [S0, sum(I0)*Δa, R0]
+p_ode = (β, γ)
+prob_ode = ODEProblem(sir_ode!, u0_ode, tspan, p_ode)
+sol_ode = solve(prob_ode, Tsit5(), saveat = Δt);
+```
+
+
+```julia
+t_points_ode = sol_ode.t
+S_sol_ode = sol_ode[1,:]
+I_sol_ode = sol_ode[2,:]
+R_sol_ode = sol_ode[3,:]
+N_sol_ode = S_sol_ode + I_sol_ode + R_sol_ode;
+```
+
+
+
+
+Overlaying the dynamics of the PDE model show a good match with the ODE model.
+
+```julia
+l = @layout [a b;c d]
+p1 = plot(t_points_ode, S_sol_ode, label="S ODE", xlabel="Time", ylabel="Number",lw=4,ls=:dot)
+plot!(p1, t_points, S_sol, label="S PDE")
+p2 = plot(t_points_ode, I_sol_ode, label="I ODE", xlabel="Time", ylabel="Number",lw=4,ls=:dot)
+plot!(p2, t_points, Itotal_sol, label="I PDE")
+p3 = plot(t_points_ode, R_sol_ode, label="R ODE", xlabel="Time", ylabel="Number",lw=4,ls=:dot)
+plot!(p3, t_points, R_sol, label="R PDE")
+p4 = plot(t_points_ode, N_sol_ode, label="N ODE", xlabel="Time", ylabel="Number",lw=4,ls=:dot,ylim=(999,1001))
+plot!(p4, t_points, N_sol, label="N PDE")
+plot(p1, p2, p3, p4, layout=l)
+```
+
+![](figures/pde_aoi_ordinarydiffeq_12_1.png)
+
+
+
+## Discussion
+
+Using a partial differential equation (PDE) approach to model the age of infection allows a more flexible representation of the natural history of the disease. The above code can easily be adapted to consider e.g. time-varying infectiousness or recovery rates, at a cost of increased computational complexity. Approximations arise due to the discretization of the age of infection domain, with more bins leading to more accurate results but also longer computation times, as well as due to the upper boundary of the age of infection domain. In the above example, the age of infection was discretized into a fine grid, with an upper boundary that is sufficiently large to approximate the ODE dynamics.
+
+As an aside, we can modify the ODE model to including 'ageing out' of the infection using a delay differential equation model, which subtracts any remaining infectious individuals who were infected `amax` time units ago and adds them to the recovered compartment.
+
+```julia
+using DelayDiffEq
+function sir_dde!(du,u,h,p,t)
+    (S, I, R) = u
+    N= S + I + R
+    (β, γ, amax, S0, I0, R0) = p
+    (Sd, Id, Rd) = h(p, t-amax)
+    # β*Sd*Id/N = individuals infected at time t-amax
+    # exp(-γ*amax) = probability of not recovering between t-amax and t
+    outflow = exp(-γ*amax)*β*Sd*Id/N
+    @inbounds begin
+        du[1] = -β*S*I/N
+        du[2] = β*S*I/N - γ*I - outflow
+        du[3] = γ*I + outflow
+    end
+    nothing
+end
+# Assume that infectious individuals were introduced at time t=0 at the beginning of their infection
+function sir_history(p, t)
+    (β, γ, amax, S0, I0, R0) = p
+     N = S0 + I0 + R0
+    [N, 0.0, 0.0]
+end
+u0_dde = [S0, sum(I0)*Δa, R0] # Initial conditions the same as for the ODE model
+p_dde = (β, γ, amax, S0, sum(I0)*Δa, R0) # History function needs the initial conditions
+prob_dde = DDEProblem(DDEFunction(sir_dde!), u0_dde, sir_history, tspan, p_dde, constant_lags = [amax]);
+sol_dde = solve(prob_dde, MethodOfSteps(Tsit5()), saveat = Δt);
+```
+
