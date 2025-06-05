@@ -105,6 +105,11 @@ The above process can be represented in different kinds of ways:
 - [Agent-based model using Agents.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm/abm.md)
 - [Transmission network individual-based model using Pathogen.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sim_pathogen/sim_pathogen.md)
 
+
+### Survival dynamical systems/dynamical survival analysis
+
+- [Simulation of a survival dynamical system to generate line lists of infection and recovery times](https://github.com/epirecipes/sir-julia/blob/master/markdown/sds/sds.md)
+
 ### Other representations
 
 - [Reaction network conversion to ODEs, SDEs and jump process using ModelingToolkit](https://github.com/epirecipes/sir-julia/blob/master/markdown/rn_mtk/rn_mtk.md)
