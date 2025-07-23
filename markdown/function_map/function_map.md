@@ -9,13 +9,13 @@ The function map approach taken here is:
 - Discrete in time
 - Continuous in state
 
+This example uses `DiscreteProblem` and `FunctionMap` from `OrdinaryDiffEq.jl` to solve the SIR model in a discrete time setting.
+
 ## Libraries
 
 ```julia
-using DifferentialEquations
-using SimpleDiffEq
-using DataFrames
-using StatsPlots
+using OrdinaryDiffEq
+using Plots
 using BenchmarkTools
 ```
 
@@ -27,7 +27,7 @@ using BenchmarkTools
 To assist in comparison with the continuous time models, we define a function that takes a constant rate, `r`, over a timespan, `t`, and converts it to a proportion.
 
 ```julia
-@inline function rate_to_proportion(r::Float64,t::Float64)
+@inline function rate_to_proportion(r,t)
     1-exp(-r*t)
 end;
 ```
@@ -101,7 +101,7 @@ prob_map = DiscreteProblem(sir_map!,u0,tspan,p);
 
 
 ```julia
-sol_map = solve(prob_map,solver=FunctionMap);
+sol_map = solve(prob_map,FunctionMap());
 ```
 
 
@@ -109,11 +109,12 @@ sol_map = solve(prob_map,solver=FunctionMap);
 
 ## Post-processing
 
-We can convert the output to a dataframe for convenience.
-
 ```julia
-df_map = DataFrame(sol_map')
-df_map[!,:t] = t;
+# Extract state variables
+t = sol_map.t
+S = [u[1] for u in sol_map.u]
+I = [u[2] for u in sol_map.u]
+R = [u[3] for u in sol_map.u];
 ```
 
 
@@ -124,11 +125,11 @@ df_map[!,:t] = t;
 We can now plot the results.
 
 ```julia
-@df df_map plot(:t,
-    [:x1 :x2 :x3],
-    label=["S" "I" "R"],
-    xlabel="Time",
-    ylabel="Number")
+plot(t,
+     [S I R],
+     label=["S" "I" "R"],
+     xlabel="Time",
+     ylabel="Number")
 ```
 
 ![](figures/function_map_10_1.png)
@@ -138,21 +139,22 @@ We can now plot the results.
 ## Benchmarking
 
 ```julia
-@benchmark solve(prob_map,solver=FunctionMap)
+@benchmark solve(prob_map,FunctionMap())
 ```
 
 ```
-BenchmarkTools.Trial: 
-  memory estimate:  57.52 KiB
-  allocs estimate:  446
-  --------------
-  minimum time:     48.987 μs (0.00% GC)
-  median time:      53.770 μs (0.00% GC)
-  mean time:        62.717 μs (6.67% GC)
-  maximum time:     7.752 ms (91.60% GC)
-  --------------
-  samples:          10000
-  evals/sample:     1
+BenchmarkTools.Trial: 10000 samples with 1 evaluation per sample.
+ Range (min … max):  42.417 μs …  33.599 ms  ┊ GC (min … max): 0.00% … 99.7
+6%
+ Time  (median):     47.708 μs               ┊ GC (median):    0.00%
+ Time  (mean ± σ):   52.210 μs ± 335.542 μs  ┊ GC (mean ± σ):  6.42% ±  1.0
+0%
+
+    ▂▂▁▂▅█▇▆▇▄▅▃▃▂                                              
+  ▂▄█████████████████▆▇▆▆▆▅▄▅▃▄▃▃▃▂▂▂▂▂▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁ ▃
+  42.4 μs         Histogram: frequency by time         68.4 μs <
+
+ Memory estimate: 56.20 KiB, allocs estimate: 1238.
 ```
 
 

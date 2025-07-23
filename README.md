@@ -62,7 +62,8 @@ The above process can be represented in different kinds of ways:
 
 ### Function maps
 
-- [Function map](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map/function_map.md)
+- [Function map using base Julia](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_vanilla/function_map_vanilla.md)
+- [Function map using OrdinaryDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map/function_map.md)
 - [Function map using DynamicalSystems.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_dynamicalsystems/function_map_dynamicalsystems.md)
 - [Function map using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_mtk/function_map_mtk.md)
 

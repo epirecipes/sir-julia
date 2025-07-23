@@ -1,12 +1,10 @@
 
-using DifferentialEquations
-using SimpleDiffEq
-using DataFrames
-using StatsPlots
+using OrdinaryDiffEq
+using Plots
 using BenchmarkTools
 
 
-@inline function rate_to_proportion(r::Float64,t::Float64)
+@inline function rate_to_proportion(r,t)
     1-exp(-r*t)
 end;
 
@@ -42,19 +40,22 @@ p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
 prob_map = DiscreteProblem(sir_map!,u0,tspan,p);
 
 
-sol_map = solve(prob_map,solver=FunctionMap);
+sol_map = solve(prob_map,FunctionMap());
 
 
-df_map = DataFrame(sol_map')
-df_map[!,:t] = t;
+# Extract state variables
+t = sol_map.t
+S = [u[1] for u in sol_map.u]
+I = [u[2] for u in sol_map.u]
+R = [u[3] for u in sol_map.u];
 
 
-@df df_map plot(:t,
-    [:x1 :x2 :x3],
-    label=["S" "I" "R"],
-    xlabel="Time",
-    ylabel="Number")
+plot(t,
+     [S I R],
+     label=["S" "I" "R"],
+     xlabel="Time",
+     ylabel="Number")
 
 
-@benchmark solve(prob_map,solver=FunctionMap)
+@benchmark solve(prob_map,FunctionMap())
 

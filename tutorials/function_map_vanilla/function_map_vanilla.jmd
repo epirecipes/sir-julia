@@ -1,5 +1,5 @@
 # Function map
-Simon Frost (@sdwfrost), 2020-04-27
+Simon Frost (@sdwfrost), 2025-07-23
 
 ## Introduction
 
@@ -9,12 +9,11 @@ The function map approach taken here is:
 - Discrete in time
 - Continuous in state
 
-This example uses `DiscreteProblem` and `FunctionMap` from `OrdinaryDiffEq.jl` to solve the SIR model in a discrete time setting.
+This example uses the same function signature as `DiscreteProblem`, but uses a simple function to run the simulation, which has less overhead than SciML's `solve`.
 
 ## Libraries
 
 ```julia
-using OrdinaryDiffEq
 using Plots
 using BenchmarkTools
 ```
@@ -49,15 +48,28 @@ function sir_map!(du,u,p,t)
 end;
 ```
 
+```julia
+function solve_map(f, u0, nsteps, p)
+    # Pre-allocate array with correct type
+    sol = similar(u0, length(u0), nsteps + 1)
+    # Initialize the first column with the initial state
+    sol[:, 1] = u0
+    # Iterate over the time steps
+    @inbounds for t in 2:nsteps+1
+        u = @view sol[:, t-1] # Get the current state
+        du = @view sol[:, t] # Prepare the next state
+        f(du, u, p, t)       # Call the function to update du
+    end
+    return sol
+end;
+```
+
 ## Time domain
 
-Note that even though I'm using fixed time steps, `DifferentialEquations.jl` complains if I pass integer timespans, so I set the timespan to be `Float64`.
-
 ```julia
-δt = 0.1
+δt = 0.1 # Time step
 nsteps = 400
 tmax = nsteps*δt
-tspan = (0.0,nsteps)
 t = 0.0:δt:tmax;
 ```
 
@@ -78,21 +90,17 @@ p = [0.05,10.0,0.25,δt]; # β,c,γ,δt
 ## Running the model
 
 ```julia
-prob_map = DiscreteProblem(sir_map!,u0,tspan,p);
-```
-
-```julia
-sol_map = solve(prob_map,FunctionMap());
+sol_map = solve_map(sir_map!, u0, nsteps, p)
 ```
 
 ## Post-processing
 
+We can convert the output to a dataframe for convenience.
+
 ```julia
-# Extract state variables
-t = sol_map.t
-S = [u[1] for u in sol_map.u]
-I = [u[2] for u in sol_map.u]
-R = [u[3] for u in sol_map.u];
+S = sol_map[1,:]
+I = sol_map[2,:]
+R = sol_map[3,:];
 ```
 
 ## Plotting
@@ -110,6 +118,6 @@ plot(t,
 ## Benchmarking
 
 ```julia
-@benchmark solve(prob_map,FunctionMap())
+@benchmark solve_map(sir_map!, u0, nsteps, p)
 ```
 
