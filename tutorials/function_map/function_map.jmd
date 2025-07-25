@@ -1,4 +1,4 @@
-# Function map
+# Function map using DiscreteProblem and FunctionMap
 Simon Frost (@sdwfrost), 2020-04-27
 
 ## Introduction
@@ -15,8 +15,9 @@ This example uses `DiscreteProblem` and `FunctionMap` from `OrdinaryDiffEq.jl` t
 
 ```julia
 using OrdinaryDiffEq
+using SimpleDiffEq
 using Plots
-using BenchmarkTools
+using BenchmarkTools;
 ```
 
 ## Utility functions
@@ -110,6 +111,11 @@ plot(t,
 ## Benchmarking
 
 ```julia
-@benchmark solve(prob_map,FunctionMap())
+@benchmark solve(prob_map, FunctionMap())
 ```
 
+Using `FunctionMap` is much slower than using a loop to fill in the entries of a pre-allocated array, as in [another example](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_vanilla/function_map_vanilla.md). Instead, we can use `SimpleFunctionMap` from `SimpleDiffEq.jl` to get a significant speedup.
+
+```julia
+@benchmark solve(prob_map, SimpleFunctionMap())
+```

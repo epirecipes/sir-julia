@@ -1,4 +1,4 @@
-# Function map
+# Function map using DiscreteProblem and FunctionMap
 Simon Frost (@sdwfrost), 2020-04-27
 
 ## Introduction
@@ -15,8 +15,9 @@ This example uses `DiscreteProblem` and `FunctionMap` from `OrdinaryDiffEq.jl` t
 
 ```julia
 using OrdinaryDiffEq
+using SimpleDiffEq
 using Plots
-using BenchmarkTools
+using BenchmarkTools;
 ```
 
 
@@ -139,22 +140,47 @@ plot(t,
 ## Benchmarking
 
 ```julia
-@benchmark solve(prob_map,FunctionMap())
+@benchmark solve(prob_map, FunctionMap())
 ```
 
 ```
 BenchmarkTools.Trial: 10000 samples with 1 evaluation per sample.
- Range (min … max):  42.417 μs …  33.599 ms  ┊ GC (min … max): 0.00% … 99.7
-6%
- Time  (median):     47.708 μs               ┊ GC (median):    0.00%
- Time  (mean ± σ):   52.210 μs ± 335.542 μs  ┊ GC (mean ± σ):  6.42% ±  1.0
-0%
+ Range (min … max):  37.750 μs …  17.281 ms  ┊ GC (min … max): 0.00% … 99.5
+5%
+ Time  (median):     42.041 μs               ┊ GC (median):    0.00%
+ Time  (mean ± σ):   45.951 μs ± 213.678 μs  ┊ GC (mean ± σ):  6.48% ±  1.4
+1%
 
-    ▂▂▁▂▅█▇▆▇▄▅▃▃▂                                              
-  ▂▄█████████████████▆▇▆▆▆▅▄▅▃▄▃▃▃▂▂▂▂▂▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁ ▃
-  42.4 μs         Histogram: frequency by time         68.4 μs <
+    ▅▆▇▅█▅▄█▅▇▅▇▄▄▃▂▂▂▁                                         
+  ▂▄████████████████████▇█▇▇▅▆▅▅▄▄▄▄▄▃▄▃▂▂▂▂▂▂▂▂▂▂▂▁▂▁▁▁▁▁▁▁▁▁ ▄
+  37.8 μs         Histogram: frequency by time         56.3 μs <
 
  Memory estimate: 56.20 KiB, allocs estimate: 1238.
+```
+
+
+
+
+
+Using `FunctionMap` is much slower than using a loop to fill in the entries of a pre-allocated array, as in [another example](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_vanilla/function_map_vanilla.md). Instead, we can use `SimpleFunctionMap` from `SimpleDiffEq.jl` to get a significant speedup.
+
+```julia
+@benchmark solve(prob_map, SimpleFunctionMap())
+```
+
+```
+BenchmarkTools.Trial: 10000 samples with 1 evaluation per sample.
+ Range (min … max):  14.917 μs …  17.758 ms  ┊ GC (min … max): 0.00% … 99.7
+0%
+ Time  (median):     16.750 μs               ┊ GC (median):    0.00%
+ Time  (mean ± σ):   18.923 μs ± 177.415 μs  ┊ GC (mean ± σ):  9.36% ±  1.0
+0%
+
+     ▄▇▃▅█▃▄▃▂▃▃▁▃▃                                             
+  ▁▂▄██████████████▇▇▆▅▆▅▅▅▃▄▃▃▂▃▂▂▂▁▂▂▂▂▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁ ▃
+  14.9 μs         Histogram: frequency by time           24 μs <
+
+ Memory estimate: 35.08 KiB, allocs estimate: 806.
 ```
 
 

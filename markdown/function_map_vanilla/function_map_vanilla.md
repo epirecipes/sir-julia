@@ -160,13 +160,13 @@ plot(t,
 
 ```
 BenchmarkTools.Trial: 10000 samples with 1 evaluation per sample.
- Range (min … max):  11.875 μs … 38.667 μs  ┊ GC (min … max): 0.00% … 0.00%
- Time  (median):     12.541 μs              ┊ GC (median):    0.00%
- Time  (mean ± σ):   12.770 μs ±  1.391 μs  ┊ GC (mean ± σ):  0.00% ± 0.00%
+ Range (min … max):  11.625 μs … 59.000 μs  ┊ GC (min … max): 0.00% … 0.00%
+ Time  (median):     12.500 μs              ┊ GC (median):    0.00%
+ Time  (mean ± σ):   12.830 μs ±  2.181 μs  ┊ GC (mean ± σ):  0.00% ± 0.00%
 
-  ▅██▅▄▇▅▇▆▅▄▅▄▂▂▂▁                                           ▂
-  ███████████████████▆▇█▇▇█▇▆▇▇▇▇▇▆▇▇▇▆▆▅▅▆▅▅▆▅▄▅▅▅▅▅▂▃▄▄▃▄▅▂ █
-  11.9 μs      Histogram: log(frequency) by time      18.9 μs <
+   ▇ ▇ ▁█                                                      
+  ▅█▃█▇███▆▅▄▄▃▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁ ▂
+  11.6 μs         Histogram: frequency by time        20.6 μs <
 
  Memory estimate: 9.58 KiB, allocs estimate: 3.
 ```

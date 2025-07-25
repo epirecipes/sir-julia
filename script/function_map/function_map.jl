@@ -1,7 +1,8 @@
 
 using OrdinaryDiffEq
+using SimpleDiffEq
 using Plots
-using BenchmarkTools
+using BenchmarkTools;
 
 
 @inline function rate_to_proportion(r,t)
@@ -57,5 +58,8 @@ plot(t,
      ylabel="Number")
 
 
-@benchmark solve(prob_map,FunctionMap())
+@benchmark solve(prob_map, FunctionMap())
+
+
+@benchmark solve(prob_map, SimpleFunctionMap())
 
