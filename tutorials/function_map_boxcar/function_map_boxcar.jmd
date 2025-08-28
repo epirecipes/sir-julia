@@ -1,0 +1,323 @@
+# Boxcar method for discrete-time SIR model with age-of-infection classes
+Sandra Montes (@slmontes) and Simon Frost (@sdwfrost)
+2025-08-14
+
+## Introduction
+
+The standard SIR model in discrete time assumes that the infectious period follows a geometric distribution, which may not be realistic for many diseases. The boxcar method allows us to approximate more realistic distributions of the infectious period by dividing the infected class into multiple age-of-infection classes, each with its own recovery hazard, such that infected individuals transition through age-of-infection classes.
+
+## Libraries
+
+```julia
+using Distributions
+using DistributionsAD # enables AD rules for logpdf
+using SimpleDiffEq
+using Random
+using Plots;
+```
+
+We set the random number seed for reproducibility.
+
+```julia
+seed = 1234
+Random.seed!(seed);
+```
+
+## Helper functions
+
+We define a function to convert a rate to a proportion over a time interval; this allows us to map a rate for a continuous time process to a discrete time process (such that the discrete process tends towards the continuous time one as Δt→0.
+
+```julia
+@inline function rate_to_proportion(r, Δt = 1.0)
+    if r < 0 || isnan(r)
+        return 0.0
+    elseif isinf(r)
+        return 1.0
+    else
+        result = 1 - exp(-r * Δt)
+        # Ensure result is valid
+        return isnan(result) ? 0.0 : max(min(result, 1.0), 0.0)
+    end
+end;
+```
+
+We generate a discrete hazard vector of length `K` from a distribution, truncated to `0:(K-1)`. This results in a hazard vector that has 1 as its last element, ensuring that individuals will eventually recover. In Distributions.jl, the geometric distribution has support `0, 1, 2, ...`, but is sometimes defined on `1, 2, ...` in other contexts; we assert that the lower bound is zero. Care has been taken to ensure that the function is compatible with automatic differentiation (AD), allowing it to be used in AD-dependent inference methods.
+
+```julia
+function hazard_vector(dist::Distribution{Univariate,Discrete}, K::Integer)
+    @assert minimum(dist) == 0 "Minimum of distribution is not zero!"
+    ks = 0:(K-1)
+
+    # Unnormalised log-weights over the truncated support
+    logw = logpdf.(Ref(dist), ks)  # stays AD-friendly
+
+    # Normalise: logpmf = logw - logZ (stable log-sum-exp)
+    m = maximum(logw)
+    logZ = m + log(sum(exp.(logw .- m)))
+    logpmf = logw .- logZ
+    pmf = exp.(logpmf)
+
+    # Survival: P(X ≥ i) for i = 0..K-1
+    sf = reverse(cumsum(reverse(pmf)))
+
+    T = eltype(pmf)
+    default_h = T(0.01)
+    isok = (sf .> zero(T)) .& isfinite.(sf)
+    h = ifelse.(isok, pmf ./ sf, default_h)
+
+    # Clamp to [0, 1]
+    clamp.(h, zero(T), one(T))
+end;
+```
+
+The `mean` function in Distributions.jl does not currently support truncated distributions, so we define a function to calculate the mean of a truncated geometric distribution.
+
+```julia
+function truncated_geometric_mean(p::Real, K::Integer)
+    @assert 0 < p < 1
+    @assert K ≥ 1
+    q = 1 - p
+    num = q - K*q^K + (K-1)*q^(K+1)
+    den = p * (1 - q^K)
+    return num / den
+end;
+```
+
+## Transitions
+
+For comparison purposes, we implement a standard SIR model in discrete time with a single stage. This model uses transitions based on the Poisson distribution ([Allen et al. (1991)](https://doi.org/10.1016/0025-5564(91)90051-J) rather than an Euler approximation ([Allen (1994)](https://doi.org/10.1016/0025-5564(94)90025-6)).
+
+```julia
+function sir_map!(du, u, p, t)
+    (β, pγ, Δt) = p
+
+    # Extract state variables
+    (S, I, R) = u
+    N = S + I + R     # total population
+    
+    # Calculate new infections
+    λ = rate_to_proportion(β * I / N, Δt)
+    new_inf = λ * S
+    new_rec = pγ * I
+
+    # Update
+    du[1] = S - new_inf 
+    du[2] = I + new_inf - new_rec
+    du[3] = R + new_rec
+    
+    return nothing
+end;
+```
+
+We implement the boxcar method with `K` age-of-infection classes, each with its own recovery hazard, which is specified in the vector `h`, and replaces the single recovery probability `pγ` used in the model above.
+
+```julia
+function sir_boxcar_map!(du, u, p, t)
+    # Unpack parameters
+    (β, h, K, Δt) = p
+    # Extract state variables and process
+    T = eltype(u)
+    S = u[1]
+    ΣI = sum(u[2:K+1])
+    R = u[K+2]
+    N = S + ΣI + R
+
+    # Calculate new infections
+    λ = rate_to_proportion(β * ΣI / N, Δt)
+    new_inf = λ * S
+
+    # Update S and start R accumulator
+    du[1] = S - new_inf
+    du[K+2] = R
+
+    # Initialize infected classes for next step
+    @inbounds begin
+        du[2] = new_inf
+        for k in 2:K
+            du[k+1] = zero(T)
+        end
+    end
+
+    # Progress cohorts
+    @inbounds for k in 1:K
+        current_I = u[k+1]
+        leave = current_I * h[k]
+        stay = current_I - leave
+        if k < K
+            du[k+2] += stay
+        end
+        du[K+2] += leave
+    end
+
+    return nothing
+end;
+```
+
+## Parameters
+
+We simulate over a time period of 40 time units with a time step of 1.0. To allow us to generalize to different time steps, we define the number of time steps as `nsteps = tmax/Δt`.
+
+```julia
+tmax = 40
+Δt = 1.0
+nsteps = Int(tmax/Δt);
+```
+
+The infectivity parameter is shared between the models.
+
+```julia
+β = 0.5;
+```
+
+We set the recovery parameters for the standard geometric model.
+
+```julia
+μ = 4.0    # Mean infectious period in standard exponential model
+γ = 1.0/μ  # Recovery rate in standard exponential model
+pγ = rate_to_proportion(γ, Δt)
+p = (β, pγ, Δt);
+```
+
+Note that this gives a mean infectious period that is different from the mean of the exponential distribution.
+
+```julia
+mean(Exponential(μ)), mean(Geometric(pγ))*Δt
+```
+
+The above difference gets smaller as the time step `Δt` gets smaller. An alternative approach would be to set the mean of the geometric distribution to be equal to the mean of the exponential distribution, i.e. `pγ = 1/(μ + 1)`.
+
+To implement the boxcar method, we need to define a discrete distribution for the infectious period. Here we use a geometric distribution with the same mean as the standard discrete-time SIR model, and then generated a hazard vector based on a truncated distributions with an upper bound of `K`.
+
+```julia
+K = nsteps
+d = Geometric(pγ)
+h = hazard_vector(d, K)
+p_boxcar = (β, h, K, Δt);
+```
+
+We choose the number of stages, `K` to be equal to the number of time steps in order to avoid issues with truncation of the infectious period distribution. The mean of the truncated geometric distribution is then very close to the mean of the untruncated distribution, and if we start the initial infected individuals in the first age of infection class, then these individuals will not be affected by the truncation.
+
+```julia
+mean(d), truncated_geometric_mean(pγ,K)
+```
+
+In practice, a smaller number of stages may be sufficient to capture the dynamics.
+
+## Initial conditions
+
+To initialize the model, we assume that a small proportion `ρ` of the population is infected, with the remainder being susceptible.
+
+```julia
+ρ = 0.01
+u0 = [1.0 - ρ, ρ, 0.0];
+```
+
+In the boxcar model, we place all initial infected individuals in the first age-of-infection class. Alternative initial conditions include distributing the initial infected individuals evenly across all age-of-infection classes, or using the stationary distribution of the infectious period distribution.
+
+```julia
+u0_boxcar = zeros(K+2)
+u0_boxcar[1] = 1.0 - ρ
+u0_boxcar[2] = ρ;
+```
+
+## Solving the models
+
+We can now run both models and extract the results.
+
+```julia
+prob = DiscreteProblem(sir_map!, u0, (0, nsteps), p)
+sol = solve(prob, SimpleFunctionMap())
+S = sol[1, :]
+ΣI = sol[2, :]
+R = sol[3, :]
+N = S .+ ΣI .+ R;
+```
+
+For the boxcar model, we sum the infected individuals across all age-of-infection classes to get the total number of infected individuals at each time step.
+
+```julia
+prob_boxcar = DiscreteProblem(sir_boxcar_map!, u0_boxcar, (0, nsteps), p_boxcar)
+sol_boxcar = solve(prob_boxcar, SimpleFunctionMap())
+S_boxcar = sol_boxcar[1, :]
+ΣI_boxcar = sum.(eachcol(@view sol_boxcar[2:K+1, :]))
+R_boxcar = sol_boxcar[K+2, :]
+N_boxcar = S_boxcar .+ ΣI_boxcar .+ R_boxcar;
+```
+
+## Plotting the results
+
+A plot of the results show that the boxcar method produces an epidemic curve very close to the standard discrete-time SIR model, as expected since both models assume a geometric distribution for the infectious period. We plot out the total population size of the model, in order to check that it remains constant.
+
+```julia
+p_gvsbox = plot(0:Δt:tmax, [S, ΣI, R, N], 
+             label=["S - Standard" "I - Standard" "R - Standard" "N - Standard"],
+             color=[:blue :red :green], linewidth=2, linestyle=:solid,
+             xlabel="Time Step", ylabel="Population",
+             title="Population Dynamics: Standard vs Boxcar Method",
+             legend=:topright, grid=true)
+
+plot!(p_gvsbox, 0:Δt:tmax, [S_boxcar, ΣI_boxcar, R_boxcar, N_boxcar], 
+      label=["S - Boxcar" "I - Boxcar" "R - Boxcar" "N - Boxcar"],
+      color=[:lightblue :orange :lightgreen], linewidth=2, linestyle=:dash)
+
+p_gvsbox
+```
+
+The results aren't *exactly* the same due to numerical differences in the way that the two models are implemented, but they are very close (the maximum absolute difference is on the order of 1e-4).
+
+```julia
+maximum([maximum(abs.(S .- S_boxcar)), maximum(abs.(ΣI .- ΣI_boxcar)), maximum(abs.(R .- R_boxcar))])
+```
+
+## Assuming a negative binomial infectious period
+
+The geometric distribution is a special case of the negative binomial distribution with shape parameter `r = 1`. We can use the negative binomial distribution to approximate a more realistic infectious period by choosing a shape parameter `r > 1`.
+
+The mean of a geometric distribution with support `0, 1, 2, ...` and success probability `p` is `(1 - p) / p`. The mean of a negative binomial distribution with shape parameter `r` and success probability `p` is `r * (1 - p) / p`. To match the means of the two distributions, we set the success probability of the negative binomial distribution to be `p_nb = (r * p) / (1 - p + r * p)`.
+
+```julia
+nb_r = 4   # Shape parameter
+nb_p = (nb_r * pγ)/(1 - pγ + nb_r*pγ)
+nb_d = NegativeBinomial(nb_r, nb_p)
+h_nb = hazard_vector(nb_d, K)
+p_boxcar_nb = (β, h_nb, K, Δt);
+```
+
+We can check that the mean of the negative binomial distribution is very close to the mean of the geometric distribution.
+
+```julia
+mean(d)*Δt, mean(nb_d)*Δt
+```
+
+The standard deviation of the negative binomial is less than the geometric, assuming `r > 1`.
+
+```julia
+std(d)*Δt, std(nb_d)*Δt
+```
+
+Running the negative binomial model simply involves passing a different hazard_vector to the boxcar model.
+
+```julia
+prob_boxcar_nb = DiscreteProblem(sir_boxcar_map!, u0_boxcar, (0, nsteps), p_boxcar_nb)
+sol_boxcar_nb = solve(prob_boxcar_nb, SimpleFunctionMap())
+S_boxcar_nb = sol_boxcar_nb[1, :]
+ΣI_boxcar_nb = sum.(eachcol(@view sol_boxcar_nb[2:K+1, :]))
+R_boxcar_nb = sol_boxcar_nb[K+2, :];
+```
+
+```julia
+p_gvsnb = plot(0:Δt:tmax, [S_boxcar, ΣI_boxcar, R_boxcar], 
+             label=["S - G" "I - G" "R - G"],
+             color=[:blue :red :green], linewidth=2, linestyle=:solid,
+             xlabel="Time Step", ylabel="Population",
+             title="Population Dynamics: Geometric Boxcar vs NB Boxcar",
+             legend=:topright, grid=true)
+
+plot!(p_gvsnb, 0:Δt:tmax, [S_boxcar_nb, ΣI_boxcar_nb, R_boxcar_nb], 
+      label=["S - NB" "I - NB" "R - NB"],
+      color=[:blue :red :green], linewidth=2, linestyle=:dash)
+
+p_gvsnb
+```
+
+Assuming a negative binomial (with a less dispersed infectious period) results in an earlier, higher epidemic peak.

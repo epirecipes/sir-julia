@@ -221,7 +221,7 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 - [A universal ODE, modeling force of infection using a neural network](https://github.com/epirecipes/sir-julia/blob/master/markdown/ude/ude.md)
 - [A partially specified ODE, modeling force of infection using a basis](https://github.com/epirecipes/sir-julia/blob/master/markdown/psm/psm.md)
 
-## Extensions
+## Non exponential/geometric infectious periods
 
 - Fixed (rather than exponential) distribution of infectious period:
     - [Using a delay differential equation and DelayDiffEq.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/dde/dde.md)
@@ -232,6 +232,10 @@ When solving continuous-time models like ODEs, the discretization can lead to nu
 - An Erlang distribution for the infectious period using the method of stages:
   - [Using AlgebraicDynamics.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_algebraicdynamics/ode_algebraicdynamics.md)
   - [Using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_stages/ode_stages.md)
+- A negative binomial distribution for the infectious period:
+  - [Using a function map and a boxcar model](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_boxcar/function_map_boxcar.md)
+
+  ## Other extensions
 - Multigroup models
   - [A multigroup ODE model using ModelingToolkit.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_multigroup/ode_multigroup.md)
 - Fractional differential equations
