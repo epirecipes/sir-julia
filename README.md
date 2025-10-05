@@ -167,6 +167,7 @@ In addition to the above examples of simulation, there are also examples of infe
 - [Point estimates of parameters of a discrete-time Markov model using Ensemble Kalman Inversion](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_eki/markov_eki.md)
 - [Approximate posterior estimates of parameters of a discrete-time Markov model using Ensemble Kalman Sampling](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_eks/markov_eks.md)
 - [Bayesian estimates of parameters of a discrete-time Markov model using importance sampling, Markov Chain Monte Carlo and Sequential Monte Carlo with Gen.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_gen/markov_gen.md)
+- [Simulation and inference of a discrete-time Markov model using particle MCMC with PartiallyObservedMarkovProcesses.jl and Turing.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_pomp/markov_pomp.md)
 
 ## Equilibrium analysis
 
