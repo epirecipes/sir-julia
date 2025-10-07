@@ -53,7 +53,7 @@ end;
 
 p = (β = 0.5, # Infectivity
      γ = 0.25, # Recovery rate
-     q = 0.5, # Fraction of new cases observed
+     q = 0.75, # Fraction of new cases observed
      N  = 1000.0, # Total population size (as a float)
      S₀ = 990, # Initial susceptibles
      I₀ = 10, # Initial infected
@@ -61,7 +61,7 @@ p = (β = 0.5, # Infectivity
 
 
 t₀ = 0.0
-δt = 0.1
+δt = 1.0
 times = collect(0:1.0:40.0);
 
 
@@ -178,7 +178,7 @@ using StatsPlots;
 
 @model function sir_particle_mcmc_fixed_q(P)
     # Priors for the parameters we want to estimate
-    β ~ Uniform(0.25, 0.75)
+    β ~ Uniform(0.1, 0.9)
     I₀ ~ DiscreteUniform(5, 50)
     
     # Create parameter tuple with current MCMC values
@@ -215,7 +215,7 @@ plot(chain_fixed_q)
 
 @model function sir_particle_mcmc_incorrect_q(P)
     # Priors for the parameters we want to estimate
-    β ~ Uniform(0.25, 0.75)
+    β ~ Uniform(0.1, 0.9)
     I₀ ~ DiscreteUniform(5, 50)
     
     # Create parameter tuple with current MCMC values
@@ -250,9 +250,47 @@ describe(chain_incorrect_q)
 plot(chain_incorrect_q)
 
 
-@model function sir_particle_mcmc_estimate_q(P, Z_obs, ZN)
+@model function sir_particle_mcmc_estimate_q(P)
     # Priors for the parameters we want to estimate
-    β ~ Uniform(0.25, 0.75)
+    β ~ Uniform(0.1, 0.9)
+    I₀ ~ DiscreteUniform(5, 50)
+    q ~ Uniform(0.25, 0.75)
+
+    # Create parameter tuple with current MCMC values
+    current_params = merge(P.params, (β=β, I₀=I₀, q=q))
+
+    # Compute particle filter likelihood
+    pf_result = pfilter(P, Np=1000, params=current_params)  # Reduced particles for speed
+    
+    # Add the log-likelihood to the model
+    Turing.@addlogprob! pf_result.logLik
+    
+    return nothing
+end;
+
+
+sir_model_estimate_q = sir_particle_mcmc_estimate_q(P);
+
+
+n_samples = 11000
+n_chains = 2
+chain_estimate_q = sample(sir_model_estimate_q,
+                           MH(),
+                           MCMCThreads(),
+                           n_samples,
+                           n_chains;
+                           progress=false);
+
+
+describe(chain_estimate_q)
+
+
+plot(chain_estimate_q)
+
+
+@model function sir_particle_mcmc_estimate_q_prevalence(P, Z, ZN)
+    # Priors for the parameters we want to estimate
+    β ~ Uniform(0.1, 0.9)
     I₀ ~ DiscreteUniform(5, 50)
     q ~ Uniform(0.25, 0.75)
     
@@ -265,7 +303,7 @@ plot(chain_incorrect_q)
     # Calculate contribution from end prevalence study
     zp = pf_result.traj[end][:R]/1000.0
     zp = max(min(zp,1.0),0.0) # To ensure boundedness
-    Z_obs ~ Binomial(ZN, zp)
+    Z ~ Binomial(ZN, zp)
 
     # Add the log-likelihood to the model
     Turing.@addlogprob! pf_result.logLik
@@ -274,21 +312,21 @@ plot(chain_incorrect_q)
 end;
 
 
-sir_model_estimate_q = sir_particle_mcmc_estimate_q(P, Z, ZN);
+sir_model_estimate_q_prevalence = sir_particle_mcmc_estimate_q_prevalence(P, Z, ZN);
 
 
 n_samples = 11000
 n_chains = 2
-chain_estimate_q = sample(sir_model_estimate_q,
-                          MH(),
-                          MCMCThreads(),
-                          n_samples,
-                          n_chains;
-                          progress=false);
+chain_estimate_q_prevalence = sample(sir_model_estimate_q_prevalence,
+                                     MH(),
+                                     MCMCThreads(),
+                                     n_samples,
+                                     n_chains;
+                                     progress=false);
 
 
-describe(chain_estimate_q)
+describe(chain_estimate_q_prevalence)
 
 
-plot(chain_estimate_q)
+plot(chain_estimate_q_prevalence)
 

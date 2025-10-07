@@ -105,7 +105,7 @@ end;
 ```julia
 p = (β = 0.5, # Infectivity
      γ = 0.25, # Recovery rate
-     q = 0.5, # Fraction of new cases observed
+     q = 0.75, # Fraction of new cases observed
      N  = 1000.0, # Total population size (as a float)
      S₀ = 990, # Initial susceptibles
      I₀ = 10, # Initial infected
@@ -117,11 +117,11 @@ p = (β = 0.5, # Infectivity
 
 ## Times
 
-`POMP.jl` consider two timescales; one for the stochastic process (here in time steps of `δt=0.1`), and one for the observation process (`times`).
+`POMP.jl` consider two timescales; one for the stochastic process, and one for the observation process (`times`), which is usually at a coarser timescale than the stochastic process. To keep things fast for the purposes of this demonstration, we use a discrete time step of `δt=1.0` for the stochastic process,the same as the observation interval.
 
 ```julia
 t₀ = 0.0
-δt = 0.1
+δt = 1.0
 times = collect(0:1.0:40.0);
 ```
 
@@ -179,7 +179,7 @@ dat = DataFrame(time = time_vec, Y=Y_vec);
 
 
 
-In order to provide information on the underreporting, we consider a case where at the final timepoint, we take a sample of individuals (`ZN`) from the population and make a random draw of how many recovered individuals there are in this sample (`Z`). This is intended to mimic the situation where we conduct a cross-sectional prevalence survey.
+In order to provide additional information on the underreporting, we consider a case where at the final timepoint, we take a sample of individuals (`ZN`) from the population and make a random draw of how many recovered individuals there are in this sample (`Z`). This is intended to mimic the situation where we conduct a cross-sectional prevalence survey.
 
 ```julia
 ZN = 100
@@ -250,7 +250,7 @@ println(
 ```
 
 ```
-PartiallyObservedMarkovProcesses.jl likelihood estimate: -95.49
+PartiallyObservedMarkovProcesses.jl likelihood estimate: -101.52
 ```
 
 
@@ -332,12 +332,12 @@ using StatsPlots;
 
 ### Fixed underreporting
 
-We first consider estimating the infectivity, `β`, and the initial number of infected individuals, `I₀`, keeping all other parameters fixed at their true values, including the underreporting parameter, `q`. We define a Turing model, passing the `PompObject` returned from `pomp`, which contains the data and the parameters. This is a thing wrapper around `POMP.pfilter`, where we just have to define priors on the parameters we wish to estimate, and add the log likelihood returned from the particle filter using `Turing.@addlogprob!`.
+We first consider estimating the infectivity, `β`, and the initial number of infected individuals, `I₀`, keeping all other parameters fixed at their true values, including the underreporting parameter, `q`. We define a Turing model, passing the `PompObject` returned from `pomp`, which contains the data and the parameters. This is a thin wrapper around `POMP.pfilter`, where we just have to define priors on the parameters we wish to estimate, and add the log likelihood returned from the particle filter using `Turing.@addlogprob!`.
 
 ```julia
 @model function sir_particle_mcmc_fixed_q(P)
     # Priors for the parameters we want to estimate
-    β ~ Uniform(0.25, 0.75)
+    β ~ Uniform(0.1, 0.9)
     I₀ ~ DiscreteUniform(5, 50)
     
     # Create parameter tuple with current MCMC values
@@ -384,33 +384,9 @@ describe(chain_fixed_q)
 ```
 
 ```
-Chains MCMC chain (11000×5×2 Array{Float64, 3}):
-
-Iterations        = 1:1:11000
-Number of chains  = 2
-Samples per chain = 11000
-Wall duration     = 1131.74 seconds
-Compute duration  = 2263.3 seconds
-parameters        = β, I₀
-internals         = lp, logprior, loglikelihood
-
-Summary Statistics
-  parameters      mean       std      mcse   ess_bulk   ess_tail      rhat 
-  ess_per_sec
-      Symbol   Float64   Float64   Float64    Float64    Float64   Float64 
-      Float64
-
-           β    0.4983    0.0296    0.0012   565.8847   731.0941    1.0110 
-       0.2500
-          I₀   10.0940    3.0813    0.1149   721.1719   674.9711    1.0021 
-       0.3186
-
-Quantiles
-  parameters      2.5%     25.0%     50.0%     75.0%     97.5%
-      Symbol   Float64   Float64   Float64   Float64   Float64
-
-           β    0.4443    0.4772    0.4988    0.5170    0.5563
-          I₀    5.0000    8.0000   10.0000   12.0000   17.0000
+2-element Vector{ChainDataFrame}:
+ Summary Statistics (2 x 8)
+ Quantiles (2 x 6)
 ```
 
 
@@ -430,7 +406,7 @@ It is common in analyses of case data to assume that all cases have been observe
 ```julia
 @model function sir_particle_mcmc_incorrect_q(P)
     # Priors for the parameters we want to estimate
-    β ~ Uniform(0.25, 0.75)
+    β ~ Uniform(0.1, 0.9)
     I₀ ~ DiscreteUniform(5, 50)
     
     # Create parameter tuple with current MCMC values
@@ -469,33 +445,9 @@ describe(chain_incorrect_q)
 ```
 
 ```
-Chains MCMC chain (11000×5×2 Array{Float64, 3}):
-
-Iterations        = 1:1:11000
-Number of chains  = 2
-Samples per chain = 11000
-Wall duration     = 1083.85 seconds
-Compute duration  = 2158.66 seconds
-parameters        = β, I₀
-internals         = lp, logprior, loglikelihood
-
-Summary Statistics
-  parameters      mean       std      mcse   ess_bulk   ess_tail      rhat 
-  ess_per_sec
-      Symbol   Float64   Float64   Float64    Float64    Float64   Float64 
-      Float64
-
-           β    0.3357    0.0339    0.0042    56.5941    49.5686    1.2505 
-       0.0262
-          I₀    8.1401    1.8145    0.2174    65.9397    61.9345    1.2658 
-       0.0305
-
-Quantiles
-  parameters      2.5%     25.0%     50.0%     75.0%     97.5%
-      Symbol   Float64   Float64   Float64   Float64   Float64
-
-           β    0.2727    0.3144    0.3334    0.3568    0.3972
-          I₀    5.0000    7.0000    8.0000    9.0000   12.0000
+2-element Vector{ChainDataFrame}:
+ Summary Statistics (2 x 8)
+ Quantiles (2 x 6)
 ```
 
 
@@ -512,12 +464,74 @@ While the estimate of the initial number of infected has not changed much, the e
 
 ## Estimation of underreporting
 
+Estimating additional parameters simply involves adding an additional prior for the parameter, and merging the new value into the parameter tuple passed to `pfilter`. Here, we estimate `β`, `I₀`, and the underreporting parameter, `q`.
+
+```julia
+@model function sir_particle_mcmc_estimate_q(P)
+    # Priors for the parameters we want to estimate
+    β ~ Uniform(0.1, 0.9)
+    I₀ ~ DiscreteUniform(5, 50)
+    q ~ Uniform(0.25, 0.75)
+
+    # Create parameter tuple with current MCMC values
+    current_params = merge(P.params, (β=β, I₀=I₀, q=q))
+
+    # Compute particle filter likelihood
+    pf_result = pfilter(P, Np=1000, params=current_params)  # Reduced particles for speed
+    
+    # Add the log-likelihood to the model
+    Turing.@addlogprob! pf_result.logLik
+    
+    return nothing
+end;
+```
+
+
+```julia
+sir_model_estimate_q = sir_particle_mcmc_estimate_q(P);
+```
+
+
+```julia
+n_samples = 11000
+n_chains = 2
+chain_estimate_q = sample(sir_model_estimate_q,
+                           MH(),
+                           MCMCThreads(),
+                           n_samples,
+                           n_chains;
+                           progress=false);
+```
+
+
+```julia
+describe(chain_estimate_q)
+```
+
+```
+2-element Vector{ChainDataFrame}:
+ Summary Statistics (3 x 8)
+ Quantiles (3 x 6)
+```
+
+
+
+```julia
+plot(chain_estimate_q)
+```
+
+![](figures/markov_pomp_35_1.png)
+
+
+
+## Estimation of underreporting using a prevalence survey
+
 We can use additional information in order to estimate and correct for underreporting. Here, we assume that we have information on how many individuals have recovered at the end of the observation period. We assume that `ZN` individuals are sampled, and `Z_obs` are recovered; in practice, such information could come from a prevalence survey. This example shows how we can combine information from the `POMP.jl` model with external information specified within the `Turing.jl` model.
 
 ```julia
-@model function sir_particle_mcmc_estimate_q(P, Z_obs, ZN)
+@model function sir_particle_mcmc_estimate_q_prevalence(P, Z, ZN)
     # Priors for the parameters we want to estimate
-    β ~ Uniform(0.25, 0.75)
+    β ~ Uniform(0.1, 0.9)
     I₀ ~ DiscreteUniform(5, 50)
     q ~ Uniform(0.25, 0.75)
     
@@ -530,7 +544,7 @@ We can use additional information in order to estimate and correct for underrepo
     # Calculate contribution from end prevalence study
     zp = pf_result.traj[end][:R]/1000.0
     zp = max(min(zp,1.0),0.0) # To ensure boundedness
-    Z_obs ~ Binomial(ZN, zp)
+    Z ~ Binomial(ZN, zp)
 
     # Add the log-likelihood to the model
     Turing.@addlogprob! pf_result.logLik
@@ -541,63 +555,36 @@ end;
 
 
 ```julia
-sir_model_estimate_q = sir_particle_mcmc_estimate_q(P, Z, ZN);
+sir_model_estimate_q_prevalence = sir_particle_mcmc_estimate_q_prevalence(P, Z, ZN);
 ```
 
 
 ```julia
 n_samples = 11000
 n_chains = 2
-chain_estimate_q = sample(sir_model_estimate_q,
-                          MH(),
-                          MCMCThreads(),
-                          n_samples,
-                          n_chains;
-                          progress=false);
+chain_estimate_q_prevalence = sample(sir_model_estimate_q_prevalence,
+                                     MH(),
+                                     MCMCThreads(),
+                                     n_samples,
+                                     n_chains;
+                                     progress=false);
 ```
 
 
 ```julia
-describe(chain_estimate_q)
+describe(chain_estimate_q_prevalence)
 ```
 
 ```
-Chains MCMC chain (11000×6×2 Array{Float64, 3}):
-
-Iterations        = 1:1:11000
-Number of chains  = 2
-Samples per chain = 11000
-Wall duration     = 1121.16 seconds
-Compute duration  = 2241.54 seconds
-parameters        = β, I₀, q
-internals         = lp, logprior, loglikelihood
-
-Summary Statistics
-  parameters      mean       std      mcse   ess_bulk   ess_tail      rhat 
-  ess_per_sec
-      Symbol   Float64   Float64   Float64    Float64    Float64   Float64 
-      Float64
-
-           β    0.5032    0.0297    0.0026   129.2553   122.0157    1.0316 
-       0.0577
-          I₀    9.8818    3.1391    0.3237    95.7679    94.6632    1.0423 
-       0.0427
-           q    0.4989    0.0248    0.0020   143.1766   148.4273    1.0242 
-       0.0639
-
-Quantiles
-  parameters      2.5%     25.0%     50.0%     75.0%     97.5%
-      Symbol   Float64   Float64   Float64   Float64   Float64
-
-           β    0.4357    0.4852    0.5023    0.5248    0.5566
-          I₀    6.0000    7.0000    9.0000   11.0000   18.0000
-           q    0.4560    0.4859    0.4958    0.5125    0.5480
+2-element Vector{ChainDataFrame}:
+ Summary Statistics (3 x 8)
+ Quantiles (3 x 6)
 ```
 
 
 
 ```julia
-plot(chain_estimate_q)
+plot(chain_estimate_q_prevalence)
 ```
 
-![](figures/markov_pomp_35_1.png)
+![](figures/markov_pomp_40_1.png)
