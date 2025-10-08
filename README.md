@@ -159,6 +159,7 @@ In addition to the above examples of simulation, there are also examples of infe
 - [Bayesian estimates of parameters of the ODE system using NestedSamplers.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_nestedsampler/ode_nestedsampler.md)
 - [Bayesian estimates of parameters of the ODE system using importance sampling, Markov Chain Monte Carlo and Sequential Monte Carlo with Gen.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_gen/ode_gen.md)
 - [Bayesian estimates of parameters of the ODE system using message passing using RxInfer.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/ode_rxinfer/ode_rxinfer.md)
+- [Bayesian estimates of parameters of a function map system using Turing.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/function_map_turing/function_map_turing.md)
 
 ### Stochastic models
 
