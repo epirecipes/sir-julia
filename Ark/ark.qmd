@@ -1,0 +1,156 @@
+---
+title: 'Agent-based model using Ark.jl'
+author: "Sean L. Wu (@slwu89)"
+format:
+    pdf: 
+        code-overflow: wrap
+    html: 
+        code-overflow: wrap
+    gfm: default
+engine: julia
+---
+
+## Introduction
+
+Here we implement an agent-based model (ABM) using [Ark.jl](https://github.com/mlange-42/Ark.jl). This package implements an Entity Component System (ECS), which is a design pattern frequently used to achieve high performance in video games with large numbers of entities in the game world which must be updated on some clock. ECS favors composition over inheritance, as entities are no more than a unique identifier, and are defined by what data objects they reference. More information about ECS frameworks can be found at [https://en.wikipedia.org/wiki/Entity_component_system](https://en.wikipedia.org/wiki/Entity_component_system) or [https://github.com/SanderMertens/ecs-faq](https://github.com/SanderMertens/ecs-faq).
+
+The ABM implemented here is:
+
+  * Stochastic
+  * Discrete in time
+  * Discrete in state
+
+## Libraries
+
+```{julia}
+using Ark, Random, Plots;
+```
+
+## Utility functions
+
+In order to have a discrete time-step simulation be as close to the continuous time version, we write a convenience function to turn a rate defined in continuous time into a probability over a discrete time step.
+
+```{julia}
+function rate_to_probability(r::T, t::T) where {T<:AbstractFloat}
+    1 - exp(-r * t)
+end;
+```
+
+## Parameters
+
+Now we specify parameters. We take a small discrete time step, and consider the model to be a discretization of a "true" underlying continuous time stochastic process. We start with 0 recovered individuals, so we just need to specify the total population size and the number of initial infecteds for the initial state.
+
+```{julia}
+# Time domain parameters
+δt = 0.1
+nsteps = 400
+tf = nsteps * δt
+t = 0:δt:tf;
+
+# System parameters
+β = 0.05
+c = 10.0
+γ = rate_to_probability(0.25, δt);
+
+# Initial conditions
+N = 1_000
+I0 = 5;
+```
+
+## Components
+
+In an ECS, an entity is only defined by what components it has. For a simple SIR model, only the disjoint set of health states (S, I, and R) define the state of an entity. We define an abstract `HealthState` class and 3 singleton types to denote this set of possible states (components).
+
+```{julia}
+abstract type HealthState end
+struct S <: HealthState end
+struct I <: HealthState end
+struct R <: HealthState end;
+```
+
+We also want a helper function that will get the number of entities with each state (component). To do so, we utilize the query mechanism from Ark.jl. The `get_count` method takes as first argument the world of the ECS, and the second argument is any subtype of `HealthState`. The `@Query` macro returns an iterable of all entities with that component. For more information on these features, please see the Ark.jl documentation: <https://mlange-42.github.io/Ark.jl/stable/index.html>
+
+```{julia}
+function get_count(world, ::Type{T}) where {T<:HealthState}
+	count = 0
+	for (entities, ) in @Query(world, (), with=(T, ))
+	    count += length(entities)
+	end
+	return count
+end;
+```
+
+## Simulation
+
+Now we can define the simulation. We first set up the simulation `World` and add the possible components to it, as well as the entities with their initial state. In the simulation loop, we first sample the entities making S to I and I to R transitions, keeping those objects in 2 vectors. We then use `@exchange_components` to change state by adding and removing the appropriate components to each entity.
+
+```{julia}
+function run_sir()
+
+	# set up world, add initial entities
+	world = World(S,I,R)
+	new_entities!(world, N-I0, (S(),))
+	new_entities!(world, I0, (I(),))
+
+	# output
+	trajectory = zeros(Int, nsteps+1, length(subtypes(HealthState)))
+	trajectory[1, :] = [get_count(world, T) for T in (S, I, R)]
+
+	# vectors to contain Entities making state transitions on this step
+	i_to_r = Entity[]
+	s_to_i = Entity[]
+
+	# run sim
+	for t in 1:nsteps
+	    # S->I
+	    i = get_count(world, I)
+	    foi = β * c * i/N
+	    prob = rate_to_probability(foi, δt)
+	    for (entities, ) in @Query(world, (), with=(S, ))
+	        @inbounds for i in eachindex(entities)
+	            if rand() <= prob
+	                push!(s_to_i, entities[i])
+	            end
+	        end
+	    end
+	    # I->R
+	    for (entities, ) in @Query(world, (), with=(I, ))
+	        @inbounds for i in eachindex(entities)
+	            if rand() <= γ
+	                push!(i_to_r, entities[i])
+	            end
+	        end
+	    end
+	    # apply transitions
+	    for entity in s_to_i
+	        @exchange_components!(world, entity, add = (I(),), remove = (S,))
+	    end
+	    for entity in i_to_r
+	        @exchange_components!(world, entity, add = (R(),), remove = (I,))
+	    end
+	    # record state
+	    trajectory[t+1, :] = [get_count(world, T) for T in (S, I, R)]
+        # reuse vectors to avoid allocations
+	    resize!(i_to_r, 0)
+	    resize!(s_to_i, 0)
+	end
+	
+	return trajectory
+end;
+```
+
+## Running the model
+
+Now we can run the model and plot output.
+
+```{julia}
+trajectory = run_sir()
+
+plot(
+    t,
+    trajectory,
+    label=["S" "I" "R"],
+    xlabel="Time",
+    ylabel="Number"
+)
+```
