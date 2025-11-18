@@ -2,10 +2,6 @@
 title: 'Agent-based model using Ark.jl'
 author: "Sean L. Wu (@slwu89)"
 format:
-    pdf: 
-        code-overflow: wrap
-    html: 
-        code-overflow: wrap
     gfm: default
 engine: julia
 ---

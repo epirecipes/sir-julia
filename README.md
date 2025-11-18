@@ -105,6 +105,7 @@ The above process can be represented in different kinds of ways:
 - [Agent-based model using base Julia](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector/abm_vector.md) as well [as using DifferentialEquations](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm_vector_diffeq/abm_vector_diffeq.md)
 - [Agent-based model using Agents.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/abm/abm.md)
 - [Transmission network individual-based model using Pathogen.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/sim_pathogen/sim_pathogen.md)
+- [Agent-based moel using Ark.jl](https://github.com/epirecipes/sir-julia/blob/master/markdown/markov_ark/markov_ark.md)
 
 
 ### Survival dynamical systems/dynamical survival analysis
