@@ -19,7 +19,7 @@ The ABM implemented here is:
 ## Libraries
 
 ```{julia}
-using Ark, Random, Plots;
+using Ark, Random, Plots, BenchmarkTools;
 ```
 
 ## Utility functions
@@ -149,4 +149,10 @@ plot(
     xlabel="Time",
     ylabel="Number"
 )
+```
+
+## Benchmarking
+
+```{julia}
+@benchmark run_sir()
 ```

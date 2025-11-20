@@ -1,4 +1,4 @@
-using Ark, Random, Plots;
+using Ark, Random, Plots, BenchmarkTools;
 
 function rate_to_probability(r::T, t::T) where {T<:AbstractFloat}
     1 - exp(-r * t)
@@ -94,3 +94,5 @@ plot(
     xlabel="Time",
     ylabel="Number"
 )
+
+@benchmark run_sir()
