@@ -23,7 +23,7 @@ The ABM implemented here is:
 ## Libraries
 
 ``` julia
-using Ark, Random, Plots;
+using Ark, Random, Plots, BenchmarkTools;
 ```
 
 ## Utility functions
@@ -177,3 +177,20 @@ plot(
 ```
 
 ![](markov_ark_files/figure-commonmark/cell-8-output-1.svg)
+
+## Benchmarking
+
+``` julia
+@benchmark run_sir()
+```
+
+    BenchmarkTools.Trial: 359 samples with 1 evaluation per sample.
+     Range (min … max):  12.689 ms … 24.490 ms  ┊ GC (min … max): 0.00% … 42.69%
+     Time  (median):     13.654 ms              ┊ GC (median):    0.00%
+     Time  (mean ± σ):   13.936 ms ±  1.107 ms  ┊ GC (mean ± σ):  2.37% ±  4.86%
+
+           ▅▂▄▇█▅▇▄▃▃  ▃▁▁▁▁       ▂                               
+      ▅▃▃▅▅██████████▇▇█████▇▅▃▇▇▃▆█▇▅▄▅▅▅▅▇▃▁▃▁▁▃▃▃▁▅▃▃▁▁▁▁▁▁▃▃▃ ▄
+      12.7 ms         Histogram: frequency by time        16.5 ms <
+
+     Memory estimate: 6.11 MiB, allocs estimate: 218081.
